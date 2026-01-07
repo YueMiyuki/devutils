@@ -54,5 +54,5 @@ export function ToolContent() {
     );
   }
 
-  return <ToolComponent tabId={activeTab.id} />;
+  return <ToolComponent key={activeTab.id} tabId={activeTab.id} />;
 }

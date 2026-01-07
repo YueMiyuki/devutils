@@ -150,7 +150,7 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
           }
           return 100;
         }
-        return prev + Math.random() * 15;
+        return Math.min(100, prev + Math.random() * 15);
       });
     }, 100);
 

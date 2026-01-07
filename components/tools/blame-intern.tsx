@@ -142,7 +142,7 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
       toast.success("Blame history generated!", {
         description: `${internName} has been successfully blamed.`,
       });
-    }, 800);
+    }, 1800);
   };
 
   const copyGitLog = async () => {

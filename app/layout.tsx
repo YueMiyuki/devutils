@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { BossModeListener } from "@/components/boss-mode-listener";
@@ -29,6 +30,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Toaster />
           {children}
           <BossModeListener />
         </ThemeProvider>

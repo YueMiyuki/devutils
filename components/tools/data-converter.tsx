@@ -98,6 +98,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
     const fields: string[] = [];
     let currentField = "";
     let inQuotes = false;
+    let wasQuoted = false;
 
     for (let i = 0; i < line.length; i++) {
       const char = line[i];
@@ -109,16 +110,20 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
           i++;
         } else {
           inQuotes = !inQuotes;
+          wasQuoted = true;
         }
       } else if (char === delimiter && !inQuotes) {
-        fields.push(currentField.trim());
+        // Only trim unquoted fields; preserve whitespace in quoted fields
+        fields.push(wasQuoted ? currentField : currentField.trim());
         currentField = "";
+        wasQuoted = false;
       } else {
         currentField += char;
       }
     }
 
-    fields.push(currentField.trim());
+    // Only trim unquoted fields; preserve whitespace in quoted fields
+    fields.push(wasQuoted ? currentField : currentField.trim());
     return fields;
   };
 
@@ -371,7 +376,29 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
     }
 
     if (typeof data === "string") {
-      if (data.includes("\n") || data.includes(":") || data.includes("#")) {
+      // YAML special characters that require quoting:
+      // : # [ ] { } & * ! @ ` | > - ? , newlines, leading/trailing spaces
+      const needsQuoting =
+        data.includes("\n") ||
+        data.includes(":") ||
+        data.includes("#") ||
+        data.includes("[") ||
+        data.includes("]") ||
+        data.includes("{") ||
+        data.includes("}") ||
+        data.includes("&") ||
+        data.includes("*") ||
+        data.includes("!") ||
+        data.includes("|") ||
+        data.includes(">") ||
+        data.includes("@") ||
+        data.includes("`") ||
+        data.startsWith("-") ||
+        data.startsWith("?") ||
+        data.startsWith(",") ||
+        data !== data.trim();
+
+      if (needsQuoting) {
         return `"${data.replace(/"/g, '\\"')}"`;
       }
       return data;

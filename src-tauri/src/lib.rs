@@ -9,9 +9,16 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
     // On macOS, open Terminal.app with the command
     #[cfg(target_os = "macos")]
     {
-        // Escape for shell execution (bash/zsh) - same as directory escaping
-        let escaped_command = command.replace("'", "'\\''");
-        let escaped_directory = directory.replace("'", "'\\''");
+        // THANKS CUBIC
+        // Two layers of escaping needed:
+        // 1. Shell escaping (single quotes) for bash/zsh execution
+        // 2. AppleScript escaping (double quotes) for AppleScript string safety
+        let escaped_command = command
+            .replace("'", "'\\''")      // Shell: escape single quotes
+            .replace("\"", "\\\"");     // AppleScript: escape double quotes
+        let escaped_directory = directory
+            .replace("'", "'\\''")      // Shell: escape single quotes
+            .replace("\"", "\\\"");     // AppleScript: escape double quotes
 
         let script = format!(
             r#"tell application "Terminal"
@@ -34,8 +41,13 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
     // On Windows, open cmd.exe with the command
     #[cfg(target_os = "windows")]
     {
-        // Escape cmd.exe special characters: ^ & | < > " %
-        let escape_cmd = |s: &str| -> String {
+        // For directory (inside double quotes): use "" to escape quotes
+        let escape_quoted = |s: &str| -> String {
+            s.replace("\"", "\"\"")
+        };
+
+        // For command (outside quotes): use ^ to escape special characters
+        let escape_unquoted = |s: &str| -> String {
             s.chars()
                 .flat_map(|c| match c {
                     '^' | '&' | '|' | '<' | '>' | '"' | '%' => vec!['^', c],
@@ -46,8 +58,8 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
 
         Command::new("cmd")
             .args(["/C", "start", "cmd", "/K", &format!("cd /d \"{}\" && {}",
-                escape_cmd(&directory),
-                escape_cmd(&command))])
+                escape_quoted(&directory),
+                escape_unquoted(&command))])
             .spawn()
             .map_err(|e| format!("Failed to open terminal: {}", e))?;
 

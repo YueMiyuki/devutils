@@ -9,5 +9,4 @@ onlyBuiltDependencies:
   - "@swc/core"
   - optipng-bin
   - pngquant-bin
-  - tauri
   - zopflipng-bin

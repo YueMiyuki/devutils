@@ -119,9 +119,23 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
       }
 
       // Extract headers
-      const headerRegex = /-H\s+['"]([^'"]+)['"]/gi;
+      // Match both single-quoted and double-quoted headers separately
+      // to preserve quotes inside values
+      const headerRegexSingle = /-H\s+'([^']+)'/gi;
+      const headerRegexDouble = /-H\s+"([^"]+)"/gi;
+
       let headerMatch;
-      while ((headerMatch = headerRegex.exec(trimmed)) !== null) {
+
+      // Process single-quoted headers
+      while ((headerMatch = headerRegexSingle.exec(trimmed)) !== null) {
+        const [key, ...valueParts] = headerMatch[1].split(":");
+        if (key && valueParts.length > 0) {
+          result.headers[key.trim()] = valueParts.join(":").trim();
+        }
+      }
+
+      // Process double-quoted headers
+      while ((headerMatch = headerRegexDouble.exec(trimmed)) !== null) {
         const [key, ...valueParts] = headerMatch[1].split(":");
         if (key && valueParts.length > 0) {
           result.headers[key.trim()] = valueParts.join(":").trim();
