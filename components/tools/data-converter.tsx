@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -94,19 +94,43 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
     [autoFixEnabled],
   );
 
+  const parseCSVLine = (line: string, delimiter = ","): string[] => {
+    const fields: string[] = [];
+    let currentField = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      const nextChar = line[i + 1];
+
+      if (char === '"') {
+        if (inQuotes && nextChar === '"') {
+          currentField += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === delimiter && !inQuotes) {
+        fields.push(currentField.trim());
+        currentField = "";
+      } else {
+        currentField += char;
+      }
+    }
+
+    fields.push(currentField.trim());
+    return fields;
+  };
+
   const parseCsv = (input: string, delimiter = ","): unknown[] => {
     const lines = input.trim().split("\n");
     if (lines.length < 1) throw new Error("Empty CSV");
 
-    const headers = lines[0]
-      .split(delimiter)
-      .map((h) => h.trim().replace(/^"|"$/g, ""));
+    const headers = parseCSVLine(lines[0], delimiter);
     const result: Record<string, string>[] = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i]
-        .split(delimiter)
-        .map((v) => v.trim().replace(/^"|"$/g, ""));
+      const values = parseCSVLine(lines[i], delimiter);
       const row: Record<string, string> = {};
       headers.forEach((header, idx) => {
         row[header] = values[idx] || "";
@@ -121,6 +145,14 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
     // Simple XML parser for basic structures
     const parser = new DOMParser();
     const doc = parser.parseFromString(input, "text/xml");
+
+    // Check for parse errors
+    const parserError = doc.querySelector("parsererror");
+    if (parserError) {
+      const errorText =
+        parserError.textContent || doc.documentElement.innerHTML;
+      throw new Error(`Invalid XML: ${errorText}`);
+    }
 
     const parseNode = (node: Element): unknown => {
       const result: Record<string, unknown> = {};
@@ -407,15 +439,18 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputText, sourceFormat, targetFormat, autoFixEnabled]);
 
-  const handleInputChange = (value: string) => {
-    setInputText(value);
-    // Auto-convert on change if we have content
-    if (value.trim()) {
-      setTimeout(convert, 0);
+  // Auto-convert when input changes
+  useEffect(() => {
+    if (inputText.trim()) {
+      convert();
     } else {
       setOutputText("");
       setError(null);
     }
+  }, [inputText, convert]);
+
+  const handleInputChange = (value: string) => {
+    setInputText(value);
   };
 
   const clearAll = () => {

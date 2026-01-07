@@ -8,10 +8,8 @@ import { BossModeListener } from "@/components/boss-mode-listener";
 import "@/lib/i18n";
 
 // These import Geist font
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _geist = Geist({ subsets: ["latin"] });
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const geist = Geist({ subsets: ["latin"] });
+const geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -19,7 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${geist.className} ${geistMono.className}`}
+      suppressHydrationWarning
+    >
       <body className="font-sans antialiased">
         <ThemeProvider
           attribute="class"

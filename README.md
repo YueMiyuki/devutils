@@ -5,6 +5,7 @@ This is an App built with [Tauri](https://tauri.app/) and [Next.js](https://next
 First, clone the repo, then:
 
 ```bash
+pnpm install
 pnpm tauri build
 ```
 

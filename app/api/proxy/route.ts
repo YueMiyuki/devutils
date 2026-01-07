@@ -1,29 +1,5 @@
 import { NextRequest } from "next/server";
 
-// Whitelist of safe headers that can be proxied
-const ALLOWED_HEADERS = new Set([
-  "content-type",
-  "accept",
-  "accept-language",
-  "accept-encoding",
-  "user-agent",
-  "cache-control",
-]);
-
-// Dangerous headers that must be blocked
-const BLOCKED_HEADERS = new Set([
-  "authorization",
-  "cookie",
-  "host",
-  "origin",
-  "referer",
-  "x-forwarded-for",
-  "x-forwarded-host",
-  "x-forwarded-proto",
-  "x-real-ip",
-  "proxy-authorization",
-]);
-
 function sanitizeHeaders(
   headers: Record<string, string> | undefined,
 ): Record<string, string> {
@@ -34,18 +10,6 @@ function sanitizeHeaders(
   const sanitized: Record<string, string> = {};
 
   for (const [key, value] of Object.entries(headers)) {
-    const normalizedKey = key.toLowerCase();
-
-    // Block dangerous headers
-    if (BLOCKED_HEADERS.has(normalizedKey)) {
-      continue;
-    }
-
-    // Only allow whitelisted headers
-    if (!ALLOWED_HEADERS.has(normalizedKey)) {
-      continue;
-    }
-
     // Validate header value (no CRLF injection)
     if (typeof value === "string" && !/[\r\n]/.test(value)) {
       sanitized[key] = value;
@@ -67,11 +31,16 @@ export async function POST(request: NextRequest) {
 
     const sanitizedHeaders = sanitizeHeaders(headers);
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
     const response = await fetch(url, {
       method,
       headers: sanitizedHeaders,
       body: method !== "GET" && body ? body : undefined,
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     const endTime = Date.now();
     const responseTime = endTime - startTime;
