@@ -94,19 +94,64 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
     [autoFixEnabled],
   );
 
+  const parseCsvRow = (row: string, delimiter: string): string[] => {
+    const values: string[] = [];
+    let current = "";
+    let inQuotes = false;
+    let i = 0;
+
+    while (i < row.length) {
+      const char = row[i];
+
+      if (inQuotes) {
+        if (char === '"') {
+          // Check for escaped quote (double quote)
+          if (i + 1 < row.length && row[i + 1] === '"') {
+            current += '"';
+            i += 2;
+            continue;
+          }
+          // End of quoted field
+          inQuotes = false;
+          i++;
+          continue;
+        }
+        current += char;
+        i++;
+      } else {
+        if (char === '"') {
+          // Start of quoted field
+          inQuotes = true;
+          i++;
+          continue;
+        }
+        if (char === delimiter) {
+          // End of field
+          values.push(current.trim());
+          current = "";
+          i++;
+          continue;
+        }
+        current += char;
+        i++;
+      }
+    }
+
+    // Add the last field
+    values.push(current.trim());
+
+    return values;
+  };
+
   const parseCsv = (input: string, delimiter = ","): unknown[] => {
     const lines = input.trim().split("\n");
     if (lines.length < 1) throw new Error("Empty CSV");
 
-    const headers = lines[0]
-      .split(delimiter)
-      .map((h) => h.trim().replace(/^"|"$/g, ""));
+    const headers = parseCsvRow(lines[0], delimiter);
     const result: Record<string, string>[] = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i]
-        .split(delimiter)
-        .map((v) => v.trim().replace(/^"|"$/g, ""));
+      const values = parseCsvRow(lines[i], delimiter);
       const row: Record<string, string> = {};
       headers.forEach((header, idx) => {
         row[header] = values[idx] || "";
