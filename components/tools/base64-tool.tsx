@@ -168,6 +168,109 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
     return decodeBase64(base64);
   };
 
+  // Encode bytes to Base16 (Hex)
+  const encodeBytesToBase16 = (bytes: Uint8Array): string => {
+    return Array.from(bytes)
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("")
+      .toUpperCase();
+  };
+
+  // Encode bytes to Base32
+  const encodeBytesToBase32 = (bytes: Uint8Array): string => {
+    const BASE32_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    let bits = 0;
+    let value = 0;
+    let output = "";
+
+    for (let i = 0; i < bytes.length; i++) {
+      value = (value << 8) | bytes[i];
+      bits += 8;
+
+      while (bits >= 5) {
+        output += BASE32_ALPHABET[(value >>> (bits - 5)) & 31];
+        bits -= 5;
+      }
+    }
+
+    if (bits > 0) {
+      output += BASE32_ALPHABET[(value << (5 - bits)) & 31];
+    }
+
+    while (output.length % 8 !== 0) {
+      output += "=";
+    }
+
+    return output;
+  };
+
+  // Encode bytes to Base64
+  const encodeBytesToBase64 = (bytes: Uint8Array): string => {
+    const binaryString = Array.from(bytes)
+      .map((byte) => String.fromCharCode(byte))
+      .join("");
+    return btoa(binaryString);
+  };
+
+  // Encode bytes to Base64URL
+  const encodeBytesToBase64URL = (bytes: Uint8Array): string => {
+    return encodeBytesToBase64(bytes)
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  };
+
+  // Encode bytes to ASCII85
+  const encodeBytesToAscii85 = (bytes: Uint8Array): string => {
+    let output = "";
+
+    for (let i = 0; i < bytes.length; i += 4) {
+      let value = 0;
+      const count = Math.min(4, bytes.length - i);
+
+      for (let j = 0; j < count; j++) {
+        value = value * 256 + bytes[i + j];
+      }
+
+      if (count < 4) {
+        for (let j = count; j < 4; j++) {
+          value = value * 256;
+        }
+      }
+
+      if (value === 0 && count === 4) {
+        output += "z";
+      } else {
+        const encoded = [];
+        for (let j = 0; j < 5; j++) {
+          encoded.unshift(String.fromCharCode(33 + (value % 85)));
+          value = Math.floor(value / 85);
+        }
+        output += encoded.slice(0, count + 1).join("");
+      }
+    }
+
+    return "<~" + output + "~>";
+  };
+
+  // Encode bytes according to selected format
+  const encodeBytesToFormat = (bytes: Uint8Array, format: BaseFormat): string => {
+    switch (format) {
+      case "base16":
+        return encodeBytesToBase16(bytes);
+      case "base32":
+        return encodeBytesToBase32(bytes);
+      case "base64":
+        return encodeBytesToBase64(bytes);
+      case "base64url":
+        return encodeBytesToBase64URL(bytes);
+      case "ascii85":
+        return encodeBytesToAscii85(bytes);
+      default:
+        throw new Error("Unsupported format");
+    }
+  };
+
   // ASCII85 encoding/decoding
   const encodeAscii85 = (text: string): string => {
     const utf8Bytes = new TextEncoder().encode(text);
@@ -410,11 +513,27 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
     setError(null);
 
     try {
-      // For large files, process in chunks
-      const CHUNK_SIZE = Math.floor((1024 * 1024) / 3) * 3; // 1,048,575 bytes (~1MB, aligned to 3 bytes)
+      // Get chunk alignment based on format (to ensure proper encoding boundaries)
+      const getChunkAlignment = (format: BaseFormat): number => {
+        switch (format) {
+          case "base16": return 1; // Each byte is independent
+          case "base32": return 5; // 5 bytes -> 8 chars
+          case "base64": return 3; // 3 bytes -> 4 chars
+          case "base64url": return 3;
+          case "ascii85": return 4; // 4 bytes -> 5 chars
+          default: return 1;
+        }
+      };
 
-      if (file.size > CHUNK_SIZE * 10) {
-        // Stream large files
+      const alignment = getChunkAlignment(baseFormat);
+      const BASE_CHUNK = 1024 * 1024; // ~1MB base
+      const CHUNK_SIZE = Math.floor(BASE_CHUNK / alignment) * alignment;
+
+      // For ASCII85, chunking is complex due to 'z' shorthand, so process entire file
+      const canStreamChunks = baseFormat !== "ascii85";
+
+      if (file.size > CHUNK_SIZE * 10 && canStreamChunks) {
+        // Stream large files in chunks
         const chunks: string[] = [];
         let offset = 0;
 
@@ -422,10 +541,7 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
           const chunk = file.slice(offset, offset + CHUNK_SIZE);
           const arrayBuffer = await chunk.arrayBuffer();
           const bytes = new Uint8Array(arrayBuffer);
-          const binaryString = Array.from(bytes)
-            .map((byte) => String.fromCharCode(byte))
-            .join("");
-          chunks.push(btoa(binaryString));
+          chunks.push(encodeBytesToFormat(bytes, baseFormat));
 
           offset += CHUNK_SIZE;
           setProgress(Math.min((offset / file.size) * 100, 100));
@@ -436,13 +552,10 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
 
         setFileResult(chunks.join(""));
       } else {
-        // Small files - process directly
+        // Small files or ASCII85 - process entire file at once
         const arrayBuffer = await file.arrayBuffer();
         const bytes = new Uint8Array(arrayBuffer);
-        const binaryString = Array.from(bytes)
-          .map((byte) => String.fromCharCode(byte))
-          .join("");
-        setFileResult(btoa(binaryString));
+        setFileResult(encodeBytesToFormat(bytes, baseFormat));
         setProgress(100);
       }
     } catch {
