@@ -194,13 +194,13 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
     value: string,
   ) => {
     const newHeaders = [...headers];
-    newHeaders[index][field] = value;
+    newHeaders[index] = { ...newHeaders[index], [field]: value };
     setHeaders(newHeaders);
   };
 
   const toggleHeader = (index: number) => {
     const newHeaders = [...headers];
-    newHeaders[index].enabled = !newHeaders[index].enabled;
+    newHeaders[index] = { ...newHeaders[index], enabled: !newHeaders[index].enabled };
     setHeaders(newHeaders);
   };
 
