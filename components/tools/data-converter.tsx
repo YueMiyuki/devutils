@@ -122,6 +122,14 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(input, "text/xml");
 
+    // Check for XML parsing errors - DOMParser doesn't throw, it returns a parsererror element
+    const parseError = doc.querySelector("parsererror");
+    if (parseError) {
+      throw new Error(
+        `Invalid XML: ${parseError.textContent?.split("\n")[0] || "Parse error"}`,
+      );
+    }
+
     const parseNode = (node: Element): unknown => {
       const result: Record<string, unknown> = {};
 
