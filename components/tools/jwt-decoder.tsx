@@ -158,14 +158,15 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
 
   // Update countdown every second
   useEffect(() => {
-    if (!decoded?.payload?.exp) {
+    const exp = decoded?.payload?.exp;
+    // Validate that exp is a finite number before using it as a timestamp
+    if (typeof exp !== "number" || !Number.isFinite(exp)) {
       setCountdown(null);
       setIsExpired(false);
       return;
     }
 
     const updateCountdown = () => {
-      const exp = decoded.payload.exp as number;
       const { text, expired } = getTimeUntilExpiry(exp);
       setCountdown(text);
       setIsExpired(expired);
@@ -225,15 +226,18 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
 
   const renderValue = (key: string, value: unknown) => {
     if (key === "iat" || key === "exp" || key === "nbf") {
-      const ts = value as number;
-      return (
-        <div className="flex flex-col">
-          <span className="font-mono">{ts}</span>
-          <span className="text-xs text-muted-foreground">
-            {formatTimestamp(ts)}
-          </span>
-        </div>
-      );
+      // Validate that the value is a finite number before treating it as a timestamp
+      if (typeof value === "number" && Number.isFinite(value)) {
+        return (
+          <div className="flex flex-col">
+            <span className="font-mono">{value}</span>
+            <span className="text-xs text-muted-foreground">
+              {formatTimestamp(value)}
+            </span>
+          </div>
+        );
+      }
+      // Fall through to default rendering if not a valid number
     }
 
     if (typeof value === "object") {
