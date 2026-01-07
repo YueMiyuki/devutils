@@ -1,0 +1,122 @@
+{
+  "app": {
+    "title": "瑞士军刀开发工具",
+    "description": "多标签开发者工具套件"
+  },
+  "sidebar": {
+    "title": "瑞士军刀",
+    "utilityTools": "实用工具",
+    "funTools": "趣味工具",
+    "settings": "设置",
+    "collapse": "收起侧边栏",
+    "expand": "展开侧边栏"
+  },
+  "tools": {
+    "curlConverter": {
+      "name": "cURL 转换器",
+      "shortName": "cURL",
+      "description": "将 cURL 命令转换为 API 请求"
+    },
+    "jwtDecoder": {
+      "name": "JWT 开罐器",
+      "shortName": "JWT",
+      "description": "解码和调试 JWT 令牌",
+      "decodeTab": "解码令牌",
+      "generateTab": "生成令牌",
+      "tokenInput": "JWT 令牌",
+      "paste": "粘贴",
+      "clear": "清空",
+      "header": "头部",
+      "payload": "载荷",
+      "signature": "签名",
+      "expires": "过期时间",
+      "expired": "已过期",
+      "valid": "有效",
+      "invalid": "无效",
+      "invalidToken": "无效的 JWT 令牌",
+      "customHeader": "自定义头部 (JSON)",
+      "customPayload": "自定义载荷 (JSON)",
+      "secretKey": "密钥",
+      "secretKeyDescription": "输入您的密钥以生成使用 HMAC-SHA256 的加密有效 JWT 令牌。",
+      "generateToken": "生成令牌",
+      "generatedToken": "生成的令牌",
+      "copy": "复制"
+    },
+    "base64": {
+      "name": "Base 螺丝刀",
+      "shortName": "Base",
+      "description": "支持文件的 Base16/32/64/URL/85 编码/解码"
+    },
+    "jsonCsv": {
+      "name": "JSON/CSV 旋转刀",
+      "shortName": "转换",
+      "description": "在数据格式之间转换"
+    },
+    "blameIntern": {
+      "name": "甩锅实习生订书机",
+      "shortName": "甩锅",
+      "description": "生成假的 git 历史记录甩锅给 Jordan"
+    },
+    "deployRoulette": {
+      "name": "部署轮盘旋转器",
+      "shortName": "部署",
+      "description": "60/40 几率：部署或被 Rickroll"
+    },
+    "bossMode": {
+      "name": "老板模式诱饵",
+      "shortName": "老板",
+      "description": "老板来了时的假电子表格紧急按钮",
+      "title": "老板模式诱饵",
+      "subtitle": "老板走过来时立即覆盖假的 Excel 电子表格",
+      "settings": "设置",
+      "settingsDescription": "配置您的紧急按钮",
+      "enable": "启用老板模式",
+      "enableDescription": "全局监听紧急按键",
+      "panicKey": "紧急按键",
+      "change": "更改",
+      "cancel": "取消",
+      "pressAnyKey": "按任意键...",
+      "testDecoy": "测试诱饵屏幕",
+      "active": "老板模式已激活",
+      "inactive": "老板模式未激活",
+      "pressToActivate": "按 {key} 激活诱饵",
+      "panicKeySet": "紧急按键设置为：{key}",
+      "decoyPreview": "诱饵预览",
+      "decoyPreviewDescription": "老板会看到什么",
+      "disclaimer": "免责声明",
+      "disclaimerText": "此工具仅供娱乐用途。我们不对使用本工具引起的任何职业相关后果负责。请负责任地使用，风险自负。",
+      "activated": "老板模式已激活！",
+      "activatedDescription": "按任意键或点击以关闭"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "theme": "主题",
+    "themeDescription": "在亮色和暗色模式之间切换",
+    "light": "亮色",
+    "dark": "暗色",
+    "system": "系统",
+    "language": "语言",
+    "languageDescription": "选择您的首选语言",
+    "english": "English",
+    "chinese": "中文"
+  },
+  "common": {
+    "close": "关闭",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "remove": "移除",
+    "search": "搜索",
+    "filter": "筛选",
+    "sort": "排序",
+    "refresh": "刷新",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "warning": "警告",
+    "info": "信息"
+  }
+}
