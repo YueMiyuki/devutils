@@ -73,7 +73,8 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
   const decodeBase16 = (text: string): string => {
     const hex = text.trim().replace(/\s/g, "");
     if (!/^[0-9A-Fa-f]*$/.test(hex)) throw new Error("Invalid hex string");
-    if (hex.length % 2 !== 0) throw new Error("Invalid hex string: odd number of characters");
+    if (hex.length % 2 !== 0)
+      throw new Error("Invalid hex string: odd number of characters");
     const bytes = new Uint8Array(hex.length / 2);
     for (let i = 0; i < hex.length; i += 2) {
       bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
@@ -255,7 +256,10 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
   };
 
   // Encode bytes according to selected format
-  const encodeBytesToFormat = (bytes: Uint8Array, format: BaseFormat): string => {
+  const encodeBytesToFormat = (
+    bytes: Uint8Array,
+    format: BaseFormat,
+  ): string => {
     switch (format) {
       case "base16":
         return encodeBytesToBase16(bytes);
@@ -517,12 +521,18 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
       // Get chunk alignment based on format (to ensure proper encoding boundaries)
       const getChunkAlignment = (format: BaseFormat): number => {
         switch (format) {
-          case "base16": return 1; // Each byte is independent
-          case "base32": return 5; // 5 bytes -> 8 chars
-          case "base64": return 3; // 3 bytes -> 4 chars
-          case "base64url": return 3;
-          case "ascii85": return 4; // 4 bytes -> 5 chars
-          default: return 1;
+          case "base16":
+            return 1; // Each byte is independent
+          case "base32":
+            return 5; // 5 bytes -> 8 chars
+          case "base64":
+            return 3; // 3 bytes -> 4 chars
+          case "base64url":
+            return 3;
+          case "ascii85":
+            return 4; // 4 bytes -> 5 chars
+          default:
+            return 1;
         }
       };
 
