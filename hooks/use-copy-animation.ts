@@ -31,7 +31,8 @@ export function useCopyAnimation() {
       return text;
     } catch (err) {
       toast.error("Failed to read from clipboard");
-      throw err;
+      console.error(err);
+      return "";
     }
   }, [triggerCopyAnimation]);
 

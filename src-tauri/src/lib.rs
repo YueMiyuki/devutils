@@ -9,13 +9,17 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
     // On macOS, open Terminal.app with the command
     #[cfg(target_os = "macos")]
     {
+        // Escape for shell execution (bash/zsh) - same as directory escaping
+        let escaped_command = command.replace("'", "'\\''");
+        let escaped_directory = directory.replace("'", "'\\''");
+
         let script = format!(
             r#"tell application "Terminal"
                 activate
                 do script "cd '{}' && {}"
             end tell"#,
-            directory.replace("'", "'\\''"),
-            command.replace("\"", "\\\"")
+            escaped_directory,
+            escaped_command
         );
 
         Command::new("osascript")
@@ -55,18 +59,20 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
     {
         let terminals = ["gnome-terminal", "konsole", "xfce4-terminal", "xterm"];
 
+        // Escape both directory and command for shell execution
         let escaped_directory = directory.replace("'", "'\\''");
+        let escaped_command = command.replace("'", "'\\''");
 
         for term in terminals {
             let result = match term {
                 "gnome-terminal" => Command::new(term)
-                    .args(["--", "bash", "-c", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, command)])
+                    .args(["--", "bash", "-c", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, escaped_command)])
                     .spawn(),
                 "konsole" => Command::new(term)
-                    .args(["-e", "bash", "-c", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, command)])
+                    .args(["-e", "bash", "-c", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, escaped_command)])
                     .spawn(),
                 _ => Command::new(term)
-                    .args(["-e", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, command)])
+                    .args(["-e", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, escaped_command)])
                     .spawn(),
             };
 

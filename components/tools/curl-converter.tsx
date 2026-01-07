@@ -37,6 +37,7 @@ interface ParsedRequest {
 }
 
 interface KeyValue {
+  id: string;
   key: string;
   value: string;
   enabled: boolean;
@@ -52,7 +53,12 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
   const [method, setMethod] = useState("GET");
   const [url, setUrl] = useState("");
   const [headers, setHeaders] = useState<KeyValue[]>([
-    { key: "Content-Type", value: "application/json", enabled: true },
+    {
+      id: crypto.randomUUID(),
+      key: "Content-Type",
+      value: "application/json",
+      enabled: true,
+    },
   ]);
   const [body, setBody] = useState("");
   const [response, setResponse] = useState<string | null>(null);
@@ -142,24 +148,21 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
   }, []);
 
   const handlePasteFromClipboard = async () => {
-    try {
-      const text = await pasteWithAnimation();
-      setCurlInput(text);
-      const parsed = parseCurl(text);
-      if (parsed) {
-        setMethod(parsed.method);
-        setUrl(parsed.url);
-        setHeaders(
-          Object.entries(parsed.headers).map(([key, value]) => ({
-            key,
-            value,
-            enabled: true,
-          })),
-        );
-        setBody(parsed.body || "");
-      }
-    } catch {
-      // Error already handled by pasteWithAnimation
+    const text = await pasteWithAnimation();
+    setCurlInput(text);
+    const parsed = parseCurl(text);
+    if (parsed) {
+      setMethod(parsed.method);
+      setUrl(parsed.url);
+      setHeaders(
+        Object.entries(parsed.headers).map(([key, value]) => ({
+          id: crypto.randomUUID(),
+          key,
+          value,
+          enabled: true,
+        })),
+      );
+      setBody(parsed.body || "");
     }
   };
 
@@ -171,6 +174,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
       setUrl(parsed.url);
       setHeaders(
         Object.entries(parsed.headers).map(([key, value]) => ({
+          id: crypto.randomUUID(),
           key,
           value,
           enabled: true,
@@ -181,7 +185,10 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
   };
 
   const addHeader = () => {
-    setHeaders([...headers, { key: "", value: "", enabled: true }]);
+    setHeaders([
+      ...headers,
+      { id: crypto.randomUUID(), key: "", value: "", enabled: true },
+    ]);
   };
 
   const removeHeader = (index: number) => {
@@ -194,13 +201,16 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
     value: string,
   ) => {
     const newHeaders = [...headers];
-    newHeaders[index][field] = value;
+    newHeaders[index] = { ...newHeaders[index], [field]: value };
     setHeaders(newHeaders);
   };
 
   const toggleHeader = (index: number) => {
     const newHeaders = [...headers];
-    newHeaders[index].enabled = !newHeaders[index].enabled;
+    newHeaders[index] = {
+      ...newHeaders[index],
+      enabled: !newHeaders[index].enabled,
+    };
     setHeaders(newHeaders);
   };
 
@@ -277,7 +287,12 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
     setMethod("GET");
     setUrl("");
     setHeaders([
-      { key: "Content-Type", value: "application/json", enabled: true },
+      {
+        id: crypto.randomUUID(),
+        key: "Content-Type",
+        value: "application/json",
+        enabled: true,
+      },
     ]);
     setBody("");
     setResponse(null);
@@ -391,7 +406,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
 
             <TabsContent value="headers" className="space-y-2 mt-2">
               {headers.map((header, index) => (
-                <div key={index} className="flex gap-2 items-center">
+                <div key={header.id} className="flex gap-2 items-center">
                   <input
                     type="checkbox"
                     checked={header.enabled}

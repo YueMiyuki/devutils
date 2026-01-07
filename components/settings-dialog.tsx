@@ -38,7 +38,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   // Handle language code properly for zh-TW
   const currentLang =
-    i18n.language === "zh-TW" ? "zh-TW" : i18n.language.split("-")[0];
+    i18n.language === "zh-TW" ? "zh-TW" : i18n.language?.split("-")[0] || "en";
 
   // Prevent hydration mismatch by waiting for client-side mount
   useEffect(() => {

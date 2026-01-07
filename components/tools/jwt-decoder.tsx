@@ -120,10 +120,8 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
   };
 
   const handlePaste = async () => {
-    try {
-      const text = await pasteWithAnimation();
-      handleTokenChange(text);
-    } catch {}
+    const text = await pasteWithAnimation();
+    handleTokenChange(text);
   };
 
   const formatTimestamp = (ts: number): string => {

@@ -6,13 +6,13 @@ DevUtils is a developer utilities desktop application built with Next.js and Tau
 
 ## Tech Stack
 
-- **Frontend**: Next.js 16.0.10 (App Router) with React 19.2.0
-- **Desktop Framework**: Tauri 2.9.6
+- **Frontend**: Next.js 16 (App Router) with React 19.2
+- **Desktop Framework**: Tauri 2
 - **Language**: TypeScript 5 (strict mode)
-- **Styling**: Tailwind CSS 4.1.9
+- **Styling**: Tailwind CSS 4
 - **UI Components**: shadcn/ui (New York style) with Radix UI primitives
 - **Icons**: Lucide React
-- **State Management**: Zustand 5.0.9
+- **State Management**: Zustand 5
 - **Form Handling**: React Hook Form with Zod validation
 - **Package Manager**: pnpm
 
