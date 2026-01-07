@@ -30,8 +30,20 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
     // On Windows, open cmd.exe with the command
     #[cfg(target_os = "windows")]
     {
+        // Escape cmd.exe special characters: ^ & | < > " %
+        let escape_cmd = |s: &str| -> String {
+            s.chars()
+                .flat_map(|c| match c {
+                    '^' | '&' | '|' | '<' | '>' | '"' | '%' => vec!['^', c],
+                    _ => vec![c],
+                })
+                .collect()
+        };
+
         Command::new("cmd")
-            .args(["/C", "start", "cmd", "/K", &format!("cd /d \"{}\" && {}", directory, command)])
+            .args(["/C", "start", "cmd", "/K", &format!("cd /d \"{}\" && {}",
+                escape_cmd(&directory),
+                escape_cmd(&command))])
             .spawn()
             .map_err(|e| format!("Failed to open terminal: {}", e))?;
 
@@ -43,16 +55,19 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
     {
         let terminals = ["gnome-terminal", "konsole", "xfce4-terminal", "xterm"];
 
+        let escaped_directory = directory.replace("'", "'\\''");
+        let escaped_command = command.replace("'", "'\\''");
+
         for term in terminals {
             let result = match term {
                 "gnome-terminal" => Command::new(term)
-                    .args(["--", "bash", "-c", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", directory, command)])
+                    .args(["--", "bash", "-c", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, escaped_command)])
                     .spawn(),
                 "konsole" => Command::new(term)
-                    .args(["-e", "bash", "-c", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", directory, command)])
+                    .args(["-e", "bash", "-c", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, escaped_command)])
                     .spawn(),
                 _ => Command::new(term)
-                    .args(["-e", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", directory, command)])
+                    .args(["-e", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, escaped_command)])
                     .spawn(),
             };
 

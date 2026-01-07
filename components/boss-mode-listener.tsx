@@ -67,6 +67,7 @@ export function BossModeListener() {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (decoyVisible) {
+        e.preventDefault();
         hideDecoy();
         return;
       }
@@ -91,7 +92,7 @@ export function BossModeListener() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] bg-background overflow-auto cursor-pointer"
+      className="fixed inset-0 z-100 bg-background overflow-auto cursor-pointer"
       onClick={hideDecoy}
     >
       <div className="h-full flex flex-col">

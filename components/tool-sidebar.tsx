@@ -68,7 +68,7 @@ export function ToolSidebar({ onOpenSettings }: ToolSidebarProps) {
       name: t(`tools.${toolKey}.name`),
       shortName: t(`tools.${toolKey}.shortName`),
       description: t(`tools.${toolKey}.description`),
-      icon: toolIcons[id as keyof typeof toolIcons],
+      icon: toolIcons[id as keyof typeof toolIcons] || Wrench,
     };
   };
 

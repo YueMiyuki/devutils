@@ -85,7 +85,12 @@ function generateDate(daysAgo: number): string {
   );
 }
 
-export function BlameIntern() {
+interface BlameInternProps {
+  tabId: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
   const [bugDescription, setBugDescription] = useState("");
   const [internName, setInternName] = useState("Jordan");
   const [commits, setCommits] = useState<GitCommit[]>([]);

@@ -39,19 +39,6 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
   );
 }
 
-function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
-  return (
-    <tfoot
-      data-slot="table-footer"
-      className={cn(
-        "bg-muted/50 border-t font-medium [&>tr]:last:border-b-0",
-        className,
-      )}
-      {...props}
-    />
-  );
-}
-
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
@@ -86,19 +73,6 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
         "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-[2px]",
         className,
       )}
-      {...props}
-    />
-  );
-}
-
-function TableCaption({
-  className,
-  ...props
-}: React.ComponentProps<"caption">) {
-  return (
-    <caption
-      data-slot="table-caption"
-      className={cn("text-muted-foreground mt-4 text-sm", className)}
       {...props}
     />
   );

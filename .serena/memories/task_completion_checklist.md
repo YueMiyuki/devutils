@@ -5,12 +5,10 @@ When completing a development task, follow these steps:
 ## Code Quality Checks
 
 1. **ESLint**: Run `pnpm lint` to check for linting errors
-
    - Fix any errors or warnings
    - Ensure code follows project conventions
 
 2. **Type Safety**: Verify TypeScript compilation
-
    - Run `pnpm check-types` to check types
    - Resolve any type errors (though build ignores them)
 
@@ -22,7 +20,6 @@ When completing a development task, follow these steps:
 ## Testing
 
 1. **Development Testing**:
-
    - Test in Next.js dev mode: `pnpm dev`
    - Test in Tauri dev mode: `pnpm tauri dev`
    - Verify functionality in both web and desktop contexts
@@ -35,7 +32,6 @@ When completing a development task, follow these steps:
 ## Integration Checks
 
 1. **Tauri Integration**:
-
    - Verify assets load correctly (check assetPrefix config)
    - Test Tauri-specific features (if any)
    - Ensure desktop window behavior is correct

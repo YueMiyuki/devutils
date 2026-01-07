@@ -46,7 +46,8 @@ interface CurlConverterProps {
   tabId: string;
 }
 
-export function CurlConverter({}: CurlConverterProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
   const [curlInput, setCurlInput] = useState("");
   const [method, setMethod] = useState("GET");
   const [url, setUrl] = useState("");
@@ -153,9 +154,7 @@ export function CurlConverter({}: CurlConverterProps) {
             enabled: true,
           })),
         );
-        if (parsed.body) {
-          setBody(parsed.body);
-        }
+        setBody(parsed.body || "");
       }
     } catch {
       // Error already handled by pasteWithAnimation
@@ -175,9 +174,7 @@ export function CurlConverter({}: CurlConverterProps) {
           enabled: true,
         })),
       );
-      if (parsed.body) {
-        setBody(parsed.body);
-      }
+      setBody(parsed.body || "");
     }
   };
 
@@ -255,15 +252,20 @@ export function CurlConverter({}: CurlConverterProps) {
     }
   };
 
+  // Escape single quotes for shell safety
+  const escapeShellArg = (str: string): string => {
+    return str.replace(/'/g, "'\\''");
+  };
+
   const copyAsCurl = () => {
     const headerFlags = headers
       .filter((h) => h.enabled && h.key)
-      .map((h) => `-H '${h.key}: ${h.value}'`)
+      .map((h) => `-H '${escapeShellArg(h.key)}: ${escapeShellArg(h.value)}'`)
       .join(" ");
 
-    const bodyFlag = body ? `-d '${body}'` : "";
+    const bodyFlag = body ? `-d '${escapeShellArg(body)}'` : "";
     const curlCommand =
-      `curl -X ${method} ${headerFlags} ${bodyFlag} '${url}'`.trim();
+      `curl -X ${method} ${headerFlags} ${bodyFlag} '${escapeShellArg(url)}'`.trim();
 
     copyWithAnimation(curlCommand);
   };

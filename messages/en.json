@@ -99,7 +99,8 @@
     "language": "Language",
     "languageDescription": "Choose your preferred language",
     "english": "English",
-    "chinese": "中文"
+    "simplifiedChinese": "简体中文",
+    "traditionalChinese": "繁體中文"
   },
   "common": {
     "close": "Close",

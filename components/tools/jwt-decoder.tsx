@@ -38,7 +38,8 @@ interface JwtDecoderProps {
   tabId: string;
 }
 
-export function JwtDecoder({}: JwtDecoderProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
   const { t } = useTranslation();
   const [token, setToken] = useState("");
   const [decoded, setDecoded] = useState<DecodedJwt | null>(null);
@@ -71,8 +72,15 @@ export function JwtDecoder({}: JwtDecoderProps) {
   const base64UrlDecode = (str: string): string => {
     const base64 = str.replace(/-/g, "+").replace(/_/g, "/");
     const padding = "=".repeat((4 - (base64.length % 4)) % 4);
-    const decoded = atob(base64 + padding);
-    return decoded;
+
+    // atob() returns binary string, decode as UTF-8 for proper character handling
+    const binaryString = atob(base64 + padding);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    return new TextDecoder().decode(bytes);
   };
 
   const decodeJwt = (jwt: string): DecodedJwt | null => {

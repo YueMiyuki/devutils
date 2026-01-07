@@ -1,4 +1,4 @@
-This is a App built with [Tauri](https://tauri.app/) and [Next.js](https://nextjs.org)
+This is an App built with [Tauri](https://tauri.app/) and [Next.js](https://nextjs.org)
 
 ## Getting Started
 

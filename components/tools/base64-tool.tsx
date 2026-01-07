@@ -39,7 +39,8 @@ interface Base64ToolProps {
   tabId: string;
 }
 
-export function Base64Tool({}: Base64ToolProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
   const [mode, setMode] = useState<"encode" | "decode">("encode");
@@ -352,19 +353,6 @@ export function Base64Tool({}: Base64ToolProps) {
   const handleFormatChange = (newFormat: BaseFormat) => {
     setBaseFormat(newFormat);
     setError(null);
-
-    if (!inputText.trim()) return;
-
-    try {
-      if (mode === "encode") {
-        setOutputText(encode(inputText));
-      } else {
-        setOutputText(decode(inputText));
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Processing failed");
-      setOutputText("");
-    }
   };
 
   const swapInputOutput = () => {
@@ -423,7 +411,7 @@ export function Base64Tool({}: Base64ToolProps) {
 
     try {
       // For large files, process in chunks
-      const CHUNK_SIZE = 1024 * 1024; // 1MB chunks
+      const CHUNK_SIZE = Math.floor((1024 * 1024) / 3) * 3; // 1,048,575 bytes (~1MB, aligned to 3 bytes)
 
       if (file.size > CHUNK_SIZE * 10) {
         // Stream large files

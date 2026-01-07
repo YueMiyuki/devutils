@@ -36,7 +36,7 @@ export const useDeployStatsStore = create<DeployStatsStore>(
       addResult: (result: "deploy" | "rickroll") => {
         const newResult: SpinResult = {
           id: Date.now().toString(),
-          timestamp: new Date().toLocaleTimeString(),
+          timestamp: new Date().toISOString(),
           result,
           survived: result === "deploy",
         };

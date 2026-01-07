@@ -22,14 +22,7 @@ const nextConfig: NextConfig = {
     cssChunking: "strict",
     optimizeCss: true,
     inlineCss: true,
-    optimizePackageImports: [
-      "lucide-react",
-      "@radix-ui/react-dialog",
-      "motion/react",
-      "dotted-map",
-      "three",
-      "@react-three/fiber",
-    ],
+    optimizePackageImports: ["lucide-react", "@radix-ui/react-dialog"],
   },
 };
 

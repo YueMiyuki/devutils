@@ -65,15 +65,22 @@ export function TabBar() {
     }
   }, [activeTabId]);
 
+  // Attach non-passive wheel listener for horizontal scrolling
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      scrollContainer.scrollLeft += e.deltaY;
+    };
+
+    scrollContainer.addEventListener("wheel", handleWheel, { passive: false });
+    return () => scrollContainer.removeEventListener("wheel", handleWheel);
+  }, []);
+
   const handleAddTab = (toolId: string, name: string) => {
     addTab(toolId, name);
-  };
-
-  const handleWheel = (e: React.WheelEvent) => {
-    if (scrollContainerRef.current) {
-      e.preventDefault();
-      scrollContainerRef.current.scrollLeft += e.deltaY;
-    }
   };
 
   return (
@@ -81,7 +88,6 @@ export function TabBar() {
       <div
         ref={scrollContainerRef}
         className="flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
-        onWheel={handleWheel}
         style={{ scrollbarWidth: "thin" }}
       >
         <div className="flex items-center h-10 min-w-max">

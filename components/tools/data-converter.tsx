@@ -31,7 +31,8 @@ interface DataConverterProps {
   tabId: string;
 }
 
-export function DataConverter({}: DataConverterProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function DataConverter({ tabId: _tabId }: DataConverterProps) {
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
   const [sourceFormat, setSourceFormat] = useState<DataFormat>("json");
@@ -268,6 +269,15 @@ export function DataConverter({}: DataConverterProps) {
   };
 
   const toXml = (data: unknown, rootName = "root"): string => {
+    const escapeXml = (str: string): string => {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+    };
+
     const buildXml = (obj: unknown, name: string, indent = ""): string => {
       if (obj === null || obj === undefined) {
         return `${indent}<${name}/>\n`;
@@ -281,7 +291,7 @@ export function DataConverter({}: DataConverterProps) {
         const entries = Object.entries(obj as Record<string, unknown>);
         const attrs = entries
           .filter(([k]) => k.startsWith("@"))
-          .map(([k, v]) => ` ${k.slice(1)}="${v}"`)
+          .map(([k, v]) => ` ${k.slice(1)}="${escapeXml(String(v))}"`)
           .join("");
         const children = entries
           .filter(([k]) => !k.startsWith("@"))
@@ -294,7 +304,7 @@ export function DataConverter({}: DataConverterProps) {
         return `${indent}<${name}${attrs}/>\n`;
       }
 
-      return `${indent}<${name}>${obj}</${name}>\n`;
+      return `${indent}<${name}>${escapeXml(String(obj))}</${name}>\n`;
     };
 
     return `<?xml version="1.0" encoding="UTF-8"?>\n${buildXml(data, rootName)}`;

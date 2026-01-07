@@ -71,7 +71,12 @@ const monthlyData = [
   { month: "June", sales: 67123, units: 1890, avg: "$35.51" },
 ];
 
-export function BossMode() {
+interface BossModeProps {
+  tabId: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function BossMode({ tabId: _tabId }: BossModeProps) {
   const { t } = useTranslation();
   const { bossMode, setBossModeActive, setBossModePanicKey } =
     useSettingsStore();
@@ -288,7 +293,7 @@ export function BossMode() {
 
         {/* Warning */}
         <Card className="border-yellow-500/50 bg-yellow-500/5">
-          <CardContent className="pt-6">
+          <CardContent>
             <div className="flex gap-3">
               <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0" />
               <div className="space-y-1">

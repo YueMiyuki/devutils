@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -32,8 +32,13 @@ import {
 import { toast } from "sonner";
 import { useDeployStatsStore } from "@/lib/deploy-stats-store";
 
+interface DeployRouletteProps {
+  tabId: string;
+}
+
 // I have no fucking idea why we have this
-export function DeployRoulette() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
   const [isSpinning, setIsSpinning] = useState(false);
   const [spinProgress, setSpinProgress] = useState(0);
   const [lastResult, setLastResult] = useState<"deploy" | "rickroll" | null>(
@@ -51,6 +56,18 @@ export function DeployRoulette() {
     setDirectory,
     setDeployCommand,
   } = useDeployStatsStore();
+
+  // Store timer references for cleanup
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleBrowseDirectory = async () => {
     // Check Tauri availability at runtime
@@ -125,15 +142,22 @@ export function DeployRoulette() {
   };
 
   const spin = () => {
+    // Clear any existing timers
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
     setIsSpinning(true);
     setSpinProgress(0);
     setLastResult(null);
 
     // Animate progress
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       setSpinProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(interval);
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
           return 100;
         }
         return prev + Math.random() * 15;
@@ -141,8 +165,11 @@ export function DeployRoulette() {
     }, 100);
 
     // Determine result after suspenseful delay
-    setTimeout(() => {
-      clearInterval(interval);
+    timeoutRef.current = setTimeout(() => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
       setSpinProgress(100);
 
       // 60/40 odds: deploy vs rickroll
@@ -166,6 +193,8 @@ export function DeployRoulette() {
         });
         setRickrollDialogOpen(true);
       }
+
+      timeoutRef.current = null;
     }, 2000);
   };
 
@@ -368,7 +397,7 @@ export function DeployRoulette() {
                       className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
                     >
                       <span className="text-xs text-muted-foreground">
-                        {item.timestamp}
+                        {new Date(item.timestamp).toLocaleTimeString()}
                       </span>
                       <Badge
                         variant={item.survived ? "default" : "destructive"}
