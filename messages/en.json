@@ -1,0 +1,123 @@
+{
+  "app": {
+    "title": "The Swiss DevUtils",
+    "description": "Multi-tab developer tool suite"
+  },
+  "sidebar": {
+    "title": "Swiss DevUtils",
+    "utilityTools": "Utility Tools",
+    "funTools": "Fun Tools",
+    "settings": "Settings",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
+  },
+  "tools": {
+    "curlConverter": {
+      "name": "cURL Converter",
+      "shortName": "cURL",
+      "description": "Convert cURL commands to API requests"
+    },
+    "jwtDecoder": {
+      "name": "JWT Can Opener",
+      "shortName": "JWT",
+      "description": "Decode and debug JWT tokens",
+      "decodeTab": "Decode Token",
+      "generateTab": "Generate Token",
+      "tokenInput": "JWT Token",
+      "paste": "Paste",
+      "clear": "Clear",
+      "header": "Header",
+      "payload": "Payload",
+      "signature": "Signature",
+      "expires": "Expires",
+      "expired": "Expired",
+      "valid": "Valid",
+      "invalid": "Invalid",
+      "invalidToken": "Invalid JWT token",
+      "customHeader": "Custom Header (JSON)",
+      "customPayload": "Custom Payload (JSON)",
+      "secretKey": "Secret Key",
+      "secretKeyDescription": "Enter your secret key to generate a cryptographically valid JWT token using HMAC-SHA256.",
+      "generateToken": "Generate Token",
+      "generatedToken": "Generated Token",
+      "copy": "Copy"
+    },
+    "base64": {
+      "name": "Base Screwdriver",
+      "shortName": "Base",
+      "description": "Encode/decode Base16/32/64/URL/85 with file support"
+    },
+    "jsonCsv": {
+      "name": "JSON/CSV Swivel Knife",
+      "shortName": "Convert",
+      "description": "Convert between data formats"
+    },
+    "blameIntern": {
+      "name": "Blame The Intern Stapler",
+      "shortName": "Blame",
+      "description": "Generate fake git history blaming Jordan"
+    },
+    "deployRoulette": {
+      "name": "Deploy Roulette Spinner",
+      "shortName": "Deploy",
+      "description": "60/40 odds: deploy or rickroll"
+    },
+    "bossMode": {
+      "name": "Boss Mode Decoy",
+      "shortName": "Boss",
+      "description": "Panic button for fake spreadsheet",
+      "title": "Boss Mode Decoy",
+      "subtitle": "Instantly overlay a fake Excel spreadsheet when the boss walks by",
+      "settings": "Settings",
+      "settingsDescription": "Configure your panic button",
+      "enable": "Enable Boss Mode",
+      "enableDescription": "Listen for panic key globally",
+      "panicKey": "Panic Key",
+      "change": "Change",
+      "cancel": "Cancel",
+      "pressAnyKey": "Press any key...",
+      "testDecoy": "Test Decoy Screen",
+      "active": "Boss Mode Active",
+      "inactive": "Boss Mode Inactive",
+      "pressToActivate": "Press {key} to activate decoy",
+      "panicKeySet": "Panic key set to: {key}",
+      "decoyPreview": "Decoy Preview",
+      "decoyPreviewDescription": "What the boss will see",
+      "disclaimer": "Disclaimer",
+      "disclaimerText": "This tool is for entertainment purposes only. We are not responsible for any career-related consequences arising from its use. Use responsibly and at your own risk.",
+      "activated": "Boss Mode Activated!",
+      "activatedDescription": "Press any key or click to dismiss"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "themeDescription": "Switch between light and dark mode",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "language": "Language",
+    "languageDescription": "Choose your preferred language",
+    "english": "English",
+    "simplifiedChinese": "简体中文",
+    "traditionalChinese": "繁體中文"
+  },
+  "common": {
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Info"
+  }
+}
