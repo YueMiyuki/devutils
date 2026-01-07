@@ -96,7 +96,8 @@ export function BossMode({ tabId: _tabId }: BossModeProps) {
 
   // Listen for panic key
   useEffect(() => {
-    if (!bossMode.isActive) return;
+    // Skip panic key handling while recording a new key to avoid race condition
+    if (!bossMode.isActive || isRecordingKey) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (decoyVisible) {
@@ -118,6 +119,7 @@ export function BossMode({ tabId: _tabId }: BossModeProps) {
     decoyVisible,
     showDecoy,
     hideDecoy,
+    isRecordingKey,
   ]);
 
   // Record new panic key
