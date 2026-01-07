@@ -123,9 +123,11 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
       }
 
       // Extract body/data
-      const dataMatch = trimmed.match(
-        /(?:-d|--data|--data-raw)\s+['"](.+?)['"]/,
-      );
+      // Try single-quoted data first, then double-quoted to handle embedded quotes
+      let dataMatch = trimmed.match(/(?:-d|--data|--data-raw)\s+'([^']+)'/);
+      if (!dataMatch) {
+        dataMatch = trimmed.match(/(?:-d|--data|--data-raw)\s+"([^"]+)"/);
+      }
       if (dataMatch) {
         result.body = dataMatch[1];
         if (result.method === "GET") {
