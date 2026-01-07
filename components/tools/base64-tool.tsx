@@ -73,6 +73,7 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
   const decodeBase16 = (text: string): string => {
     const hex = text.trim().replace(/\s/g, "");
     if (!/^[0-9A-Fa-f]*$/.test(hex)) throw new Error("Invalid hex string");
+    if (hex.length % 2 !== 0) throw new Error("Invalid hex string: odd number of characters");
     const bytes = new Uint8Array(hex.length / 2);
     for (let i = 0; i < hex.length; i += 2) {
       bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
