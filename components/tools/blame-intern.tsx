@@ -149,7 +149,7 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
     const gitLog = commits
       .map(
         (c) =>
-          `commit ${c.hash}\nAuthor: ${c.author}\nDate: ${c.date}\n\n    ${c.message}\n`,
+          `commit ${c.hash}\nAuthor: ${c.author}\nDate: ${c.date}\n\n    ${c.message}\n\nFiles: ${c.filesChanged.join(", ")}\n`,
       )
       .join("\n");
 
