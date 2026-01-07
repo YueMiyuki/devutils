@@ -73,12 +73,6 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
     // Check Tauri availability at runtime
     const tauriAvailable =
       typeof window !== "undefined" && "__TAURI__" in window;
-    console.log(
-      "Tauri available:",
-      tauriAvailable,
-      "window.__TAURI__:",
-      (window as unknown as Record<string, unknown>).__TAURI__,
-    );
 
     if (!tauriAvailable) {
       toast.error("Directory picker requires Tauri desktop app");
@@ -86,17 +80,13 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
     }
 
     try {
-      console.log("Opening directory picker...");
       const { open } = await import("@tauri-apps/plugin-dialog");
-      console.log("Dialog module loaded, calling open()...");
 
       const selected = await open({
         directory: true,
         multiple: false,
         title: "Select Directory",
       });
-
-      console.log("Dialog result:", selected);
 
       if (selected && typeof selected === "string") {
         setDirectory(selected);
