@@ -2,7 +2,6 @@
 
 import type React from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { BossModeListener } from "@/components/boss-mode-listener";
@@ -31,7 +30,6 @@ export default function RootLayout({
           {children}
           <BossModeListener />
         </ThemeProvider>
-        <Analytics />
       </body>
     </html>
   );
