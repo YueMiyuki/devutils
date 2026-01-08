@@ -165,7 +165,7 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
         );
       }
     } catch (err) {
-      console.log(err);
+      console.error("Error scanning ports:", err);
       setError(
         err instanceof Error
           ? err.message
