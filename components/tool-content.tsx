@@ -10,6 +10,10 @@ import { DataConverter } from "@/components/tools/data-converter";
 import { BlameIntern } from "@/components/tools/blame-intern";
 import { DeployRoulette } from "@/components/tools/deploy-roulette";
 import { BossMode } from "@/components/tools/boss-mode";
+import { RegexTester } from "@/components/tools/regex-tester";
+import { ColorPicker } from "@/components/tools/color-picker";
+import { TimestampConverter } from "@/components/tools/timestamp-converter";
+import { CronGenerator } from "@/components/tools/cron-generator";
 import { Wrench } from "lucide-react";
 
 const toolComponents: Record<string, React.ComponentType<{ tabId: string }>> = {
@@ -20,6 +24,10 @@ const toolComponents: Record<string, React.ComponentType<{ tabId: string }>> = {
   "blame-intern": BlameIntern,
   "deploy-roulette": DeployRoulette,
   "boss-mode": BossMode,
+  "regex-tester": RegexTester,
+  "color-picker": ColorPicker,
+  "timestamp-converter": TimestampConverter,
+  "cron-generator": CronGenerator,
 };
 
 export function ToolContent() {

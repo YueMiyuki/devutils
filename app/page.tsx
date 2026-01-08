@@ -13,17 +13,21 @@ export default function Home() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const isTauri = typeof window !== "undefined" && "__TAURI__" in window;
       // Check for Ctrl+W (Windows/Linux) or Cmd+W (Mac)
       if ((e.ctrlKey || e.metaKey) && e.key === "w") {
-        e.preventDefault();
-        if (activeTabId) {
-          removeTab(activeTabId);
+        if (isTauri) {
+          e.preventDefault();
+          if (activeTabId) {
+            removeTab(activeTabId);
+          }
         }
       }
     };
 
     // Close handler
     let unlisten: (() => void) | undefined;
+    let isCleanedUp = false;
 
     const setupTauriCloseHandler = async () => {
       const tauriAvailable =
@@ -37,7 +41,7 @@ export default function Home() {
 
         const appWindow = getCurrentWindow();
 
-        unlisten = await appWindow.onCloseRequested(async (event) => {
+        const listener = await appWindow.onCloseRequested(async (event) => {
           event.preventDefault();
           const confirmed = await ask("Are you sure you want to quit?", {
             title: "Confirm Exit",
@@ -48,6 +52,13 @@ export default function Home() {
             appWindow.close();
           }
         });
+
+        // Only set unlisten if component not cleaned up
+        if (!isCleanedUp) {
+          unlisten = listener;
+        } else {
+          listener();
+        }
       } catch (error) {
         console.error("Failed to setup Tauri close handler:", error);
       }
@@ -58,6 +69,7 @@ export default function Home() {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
+      isCleanedUp = true;
       window.removeEventListener("keydown", handleKeyDown);
       if (unlisten) {
         unlisten();
