@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCopyAnimation } from "@/hooks/use-copy-animation";
+import { useTranslation } from "react-i18next";
 
 interface ParsedRequest {
   method: string;
@@ -49,6 +50,7 @@ interface CurlConverterProps {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
+  const { t } = useTranslation();
   const [curlInput, setCurlInput] = useState("");
   const [method, setMethod] = useState("GET");
   const [url, setUrl] = useState("");
@@ -249,7 +251,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
 
   const executeRequest = async () => {
     if (!url) {
-      setError("Please enter a URL");
+      setError(t("tools.curlConverter.errors.noUrl"));
       return;
     }
 
@@ -291,7 +293,11 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
       setResponseTime(data.responseTime);
       setResponse(data.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Request failed");
+      setError(
+        err instanceof Error
+          ? err.message
+          : t("tools.curlConverter.errors.requestFailed"),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -340,7 +346,9 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base">cURL Input</CardTitle>
+            <CardTitle className="text-base">
+              {t("tools.curlConverter.input")}
+            </CardTitle>
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -349,18 +357,18 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                 className={copyAnimationClass}
               >
                 <ClipboardPaste className="w-4 h-4 mr-2" />
-                Paste from Clipboard
+                {t("tools.curlConverter.pasteFromClipboard")}
               </Button>
               <Button variant="outline" size="sm" onClick={clearAll}>
                 <Trash2 className="w-4 h-4 mr-2" />
-                Clear
+                {t("tools.curlConverter.clear")}
               </Button>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <Textarea
-            placeholder="Paste your cURL command here..."
+            placeholder={t("tools.curlConverter.inputPlaceholder")}
             value={curlInput}
             onChange={(e) => handleCurlChange(e.target.value)}
             className="font-mono text-sm min-h-24"
@@ -372,7 +380,9 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
       <Card className="flex-1">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base">Request Builder</CardTitle>
+            <CardTitle className="text-base">
+              {t("tools.curlConverter.requestBuilder")}
+            </CardTitle>
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -381,7 +391,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                 className={copyAnimationClass}
               >
                 <Copy className="w-4 h-4 mr-2" />
-                Copy as cURL
+                {t("tools.curlConverter.copyAsCurl")}
               </Button>
               <Button size="sm" onClick={executeRequest} disabled={isLoading}>
                 {isLoading ? (
@@ -389,7 +399,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                 ) : (
                   <Play className="w-4 h-4 mr-2" />
                 )}
-                Send
+                {t("tools.curlConverter.send")}
               </Button>
             </div>
           </div>
@@ -418,7 +428,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
               </SelectContent>
             </Select>
             <Input
-              placeholder="https://api.example.com/endpoint"
+              placeholder={t("tools.curlConverter.urlPlaceholder")}
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className="flex-1 font-mono text-sm"
@@ -429,12 +439,14 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
           <Tabs defaultValue="headers" className="flex-1">
             <TabsList>
               <TabsTrigger value="headers">
-                Headers
+                {t("tools.curlConverter.headers")}
                 <Badge variant="secondary" className="ml-2">
                   {headers.filter((h) => h.enabled).length}
                 </Badge>
               </TabsTrigger>
-              <TabsTrigger value="body">Body</TabsTrigger>
+              <TabsTrigger value="body">
+                {t("tools.curlConverter.body")}
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="headers" className="space-y-2 mt-2">
@@ -447,13 +459,13 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                     className="w-4 h-4"
                   />
                   <Input
-                    placeholder="Header name"
+                    placeholder={t("tools.curlConverter.headerNamePlaceholder")}
                     value={header.key}
                     onChange={(e) => updateHeader(index, "key", e.target.value)}
                     className="flex-1 font-mono text-sm"
                   />
                   <Input
-                    placeholder="Value"
+                    placeholder={t("tools.curlConverter.valuePlaceholder")}
                     value={header.value}
                     onChange={(e) =>
                       updateHeader(index, "value", e.target.value)
@@ -472,13 +484,13 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
               ))}
               <Button variant="outline" size="sm" onClick={addHeader}>
                 <Plus className="w-4 h-4 mr-2" />
-                Add Header
+                {t("tools.curlConverter.addHeader")}
               </Button>
             </TabsContent>
 
             <TabsContent value="body" className="mt-2">
               <Textarea
-                placeholder='{"key": "value"}'
+                placeholder={t("tools.curlConverter.bodyPlaceholder")}
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 className="font-mono text-sm min-h-32"
@@ -493,7 +505,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base flex items-center gap-2">
-              Response
+              {t("tools.curlConverter.response")}
               {responseStatus !== null && (
                 <>
                   <Badge
@@ -531,7 +543,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                 className={copyAnimationClass}
               >
                 <Copy className="w-4 h-4 mr-2" />
-                Copy
+                {t("tools.curlConverter.copy")}
               </Button>
             )}
           </div>
@@ -548,7 +560,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
               </pre>
             ) : (
               <div className="p-4 text-muted-foreground text-sm">
-                Response will appear here after sending a request
+                {t("tools.curlConverter.responsePlaceholder")}
               </div>
             )}
           </ScrollArea>

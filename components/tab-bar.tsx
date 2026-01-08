@@ -23,7 +23,12 @@ import {
   GitBranch,
   Rocket,
   TableProperties,
+  Scissors,
+  Pipette,
+  Clock,
+  Calendar,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const toolIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "curl-converter": Terminal,
@@ -33,22 +38,41 @@ const toolIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "blame-intern": GitBranch,
   "deploy-roulette": Rocket,
   "boss-mode": TableProperties,
+  "regex-tester": Scissors,
+  "color-picker": Pipette,
+  "timestamp-converter": Clock,
+  "cron-generator": Calendar,
 };
 
-const utilityTools = [
-  { id: "curl-converter", name: "cURL Converter" },
-  { id: "jwt-decoder", name: "JWT Can Opener" },
-  { id: "base64", name: "Base64 Screwdriver" },
-  { id: "json-csv", name: "JSON/CSV Swivel Knife" },
-];
+// Tool ID to translation key mapping
+const toolTranslationKeys: Record<string, string> = {
+  "curl-converter": "tools.curlConverter.name",
+  "jwt-decoder": "tools.jwtDecoder.name",
+  base64: "tools.base64.name",
+  "json-csv": "tools.jsonCsv.name",
+  "blame-intern": "tools.blameIntern.name",
+  "deploy-roulette": "tools.deployRoulette.name",
+  "boss-mode": "tools.bossMode.name",
+  "regex-tester": "tools.regexTester.name",
+  "color-picker": "tools.colorPicker.name",
+  "timestamp-converter": "tools.timestampConverter.name",
+  "cron-generator": "tools.cronGenerator.name",
+};
 
-const funTools = [
-  { id: "blame-intern", name: "Blame The Intern" },
-  { id: "deploy-roulette", name: "Deploy Roulette" },
-  { id: "boss-mode", name: "Boss Mode Decoy" },
+const utilityToolIds = [
+  "curl-converter",
+  "jwt-decoder",
+  "base64",
+  "json-csv",
+  "regex-tester",
+  "color-picker",
+  "timestamp-converter",
+  "cron-generator",
 ];
+const funToolIds = ["blame-intern", "deploy-roulette", "boss-mode"];
 
 export function TabBar() {
+  const { t } = useTranslation();
   const { tabs, activeTabId, addTab, removeTab, setActiveTab } = useTabStore();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -81,7 +105,8 @@ export function TabBar() {
     return () => scrollContainer.removeEventListener("wheel", handleWheel);
   }, []);
 
-  const handleAddTab = (toolId: string, name: string) => {
+  const handleAddTab = (toolId: string) => {
+    const name = t(toolTranslationKeys[toolId]);
     addTab(toolId, name);
   };
 
@@ -96,6 +121,8 @@ export function TabBar() {
           {tabs.map((tab) => {
             const Icon = toolIcons[tab.toolId] || Terminal;
             const isActive = tab.id === activeTabId;
+            const translatedTitle =
+              t(toolTranslationKeys[tab.toolId]) || tab.title;
             return (
               <div
                 key={tab.id}
@@ -109,7 +136,9 @@ export function TabBar() {
                 onClick={() => setActiveTab(tab.id)}
               >
                 <Icon className="w-3.5 h-3.5 shrink-0" />
-                <span className="text-sm truncate max-w-32">{tab.title}</span>
+                <span className="text-sm truncate max-w-32">
+                  {translatedTitle}
+                </span>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -142,30 +171,32 @@ export function TabBar() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuLabel>Utilities</DropdownMenuLabel>
-          {utilityTools.map((tool) => {
-            const Icon = toolIcons[tool.id] || Terminal;
+          <DropdownMenuLabel>{t("tabBar.utilities")}</DropdownMenuLabel>
+          {utilityToolIds.map((toolId) => {
+            const Icon = toolIcons[toolId] || Terminal;
+            const toolName = t(toolTranslationKeys[toolId]);
             return (
               <DropdownMenuItem
-                key={tool.id}
-                onClick={() => handleAddTab(tool.id, tool.name)}
+                key={toolId}
+                onClick={() => handleAddTab(toolId)}
               >
                 <Icon className="w-4 h-4 mr-2" />
-                {tool.name}
+                {toolName}
               </DropdownMenuItem>
             );
           })}
           <DropdownMenuSeparator />
-          <DropdownMenuLabel>Fun Stuff</DropdownMenuLabel>
-          {funTools.map((tool) => {
-            const Icon = toolIcons[tool.id] || Terminal;
+          <DropdownMenuLabel>{t("tabBar.funStuff")}</DropdownMenuLabel>
+          {funToolIds.map((toolId) => {
+            const Icon = toolIcons[toolId] || Terminal;
+            const toolName = t(toolTranslationKeys[toolId]);
             return (
               <DropdownMenuItem
-                key={tool.id}
-                onClick={() => handleAddTab(tool.id, tool.name)}
+                key={toolId}
+                onClick={() => handleAddTab(toolId)}
               >
                 <Icon className="w-4 h-4 mr-2" />
-                {tool.name}
+                {toolName}
               </DropdownMenuItem>
             );
           })}
