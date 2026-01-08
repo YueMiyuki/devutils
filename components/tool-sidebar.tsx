@@ -26,9 +26,22 @@ import {
   GitBranch,
   Rocket,
   TableProperties,
+  Scissors,
+  Pipette,
+  Clock,
+  CalendarClock,
 } from "lucide-react";
 
-const utilityToolIds = ["curl-converter", "jwt-decoder", "base64", "json-csv"];
+const utilityToolIds = [
+  "curl-converter",
+  "jwt-decoder",
+  "base64",
+  "json-csv",
+  "regex-tester",
+  "color-picker",
+  "timestamp-converter",
+  "cron-generator",
+];
 const funToolIds = ["blame-intern", "deploy-roulette", "boss-mode"];
 
 // Map tool IDs to translation keys
@@ -37,6 +50,10 @@ const toolKeyMap: Record<string, string> = {
   "jwt-decoder": "jwtDecoder",
   base64: "base64",
   "json-csv": "jsonCsv",
+  "regex-tester": "regexTester",
+  "color-picker": "colorPicker",
+  "timestamp-converter": "timestampConverter",
+  "cron-generator": "cronGenerator",
   "blame-intern": "blameIntern",
   "deploy-roulette": "deployRoulette",
   "boss-mode": "bossMode",
@@ -47,6 +64,10 @@ const toolIcons = {
   "jwt-decoder": Key,
   base64: Binary,
   "json-csv": FileJson,
+  "regex-tester": Scissors,
+  "color-picker": Pipette,
+  "timestamp-converter": Clock,
+  "cron-generator": CalendarClock,
   "blame-intern": GitBranch,
   "deploy-roulette": Rocket,
   "boss-mode": TableProperties,
@@ -122,7 +143,7 @@ export function ToolSidebar({ onOpenSettings }: ToolSidebarProps) {
             <Wrench className="w-4 h-4" />
           </div>
           {!sidebarCollapsed && (
-            <div className="flex flex-col">
+            <div className="flex flex-col" suppressHydrationWarning>
               <span className="text-sm font-semibold text-sidebar-foreground">
                 {t("sidebar.title")}
               </span>

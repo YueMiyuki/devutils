@@ -24,13 +24,16 @@ export async function POST(request: NextRequest) {
   try {
     const { InputUrl, method, headers, body } = await request.json();
 
-    console.log(InputUrl);
-
     if (!InputUrl) {
       return Response.json({ error: "URL is required" }, { status: 400 });
     }
 
-    const url = normalizeUrl(InputUrl);
+    let url: string;
+    try {
+      url = normalizeUrl(InputUrl);
+    } catch {
+      return Response.json({ error: "Invalid URL format" }, { status: 400 });
+    }
 
     const startTime = Date.now();
 

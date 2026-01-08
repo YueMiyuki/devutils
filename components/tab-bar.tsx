@@ -71,8 +71,10 @@ export function TabBar() {
     if (!scrollContainer) return;
 
     const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      scrollContainer.scrollLeft += e.deltaY;
+      if (Math.abs(e.deltaY) > 0) {
+        e.preventDefault();
+        scrollContainer.scrollLeft += e.deltaY;
+      }
     };
 
     scrollContainer.addEventListener("wheel", handleWheel, { passive: false });

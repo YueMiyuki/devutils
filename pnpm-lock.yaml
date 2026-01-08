@@ -52,6 +52,12 @@ importers:
       "@tauri-apps/plugin-dialog":
         specifier: ~2.4.2
         version: 2.4.2
+      "@tauri-apps/plugin-fs":
+        specifier: ^2.4.4
+        version: 2.4.4
+      "@uiw/react-color-sketch":
+        specifier: ^2.9.2
+        version: 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -59,8 +65,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       i18next:
-        specifier: ^25.7.3
-        version: 25.7.3(typescript@5.9.3)
+        specifier: ^25.7.4
+        version: 25.7.4(typescript@5.9.3)
       i18next-browser-languagedetector:
         specifier: ^8.2.0
         version: 8.2.0
@@ -87,7 +93,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       react-i18next:
         specifier: ^16.5.1
-        version: 16.5.1(i18next@25.7.3(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
+        version: 16.5.1(i18next@25.7.4(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -2126,6 +2132,12 @@ packages:
         integrity: sha512-lNIn5CZuw8WZOn8zHzmFmDSzg5zfohWoa3mdULP0YFh/VogVdMVWZPcWSHlydsiJhRQYaTNSYKN7RmZKE2lCYQ==,
       }
 
+  "@tauri-apps/plugin-fs@2.4.4":
+    resolution:
+      {
+        integrity: sha512-MTorXxIRmOnOPT1jZ3w96vjSuScER38ryXY88vl5F0uiKdnvTKKTtaEjTEo8uPbl4e3gnUtfsDVwC7h77GQLvQ==,
+      }
+
   "@tokenizer/inflate@0.2.7":
     resolution:
       {
@@ -2340,6 +2352,94 @@ packages:
         integrity: sha512-GkMZ4alU9Pr/5pUjZRzA9NMQ2wadrCPN+YHhjOlr8VM2gCFoSg5+ewLVMu4ZcdjdJDs8DUcCyuHQiW6Zr5iBvQ==,
       }
     hasBin: true
+
+  "@uiw/color-convert@2.9.2":
+    resolution:
+      {
+        integrity: sha512-ibw9OS29S7GlL+vDwU3p5XG3vhR7XdzUecydpZbakUeg2Td6nfsnrCAX9sbLwQ73p0abO42v+V4qRaWq+7/BjQ==,
+      }
+    peerDependencies:
+      "@babel/runtime": ">=7.19.0"
+
+  "@uiw/react-color-alpha@2.9.2":
+    resolution:
+      {
+        integrity: sha512-a2ACkE2vZIS4xnN9DaRfkQtAX/t8oK5NRSbX2QeOL23WIMHP1VNs7Yq5gXB68RHYenFgvs2JHuMOxZ2mK1W5Mw==,
+      }
+    peerDependencies:
+      "@babel/runtime": ">=7.19.0"
+      react: ">=16.9.0"
+      react-dom: ">=16.9.0"
+
+  "@uiw/react-color-editable-input-rgba@2.9.2":
+    resolution:
+      {
+        integrity: sha512-sQW3tSao754954aQuVK4qvn1i+KC2piE4UftaBubD3QxC02gg5VfgZRoI6AV+nLr73Ifv3mCXewjN1BcP/+x4A==,
+      }
+    peerDependencies:
+      "@babel/runtime": ">=7.19.0"
+      react: ">=16.9.0"
+      react-dom: ">=16.9.0"
+
+  "@uiw/react-color-editable-input@2.9.2":
+    resolution:
+      {
+        integrity: sha512-DY7pu12+LDRn6cxDMvsy1/quaPTxicAPz/kfODV7KBf8+Hq4rFWeJ4KS6m22IKIbQxrBQgmQG0WFJLaPeY7cPw==,
+      }
+    peerDependencies:
+      "@babel/runtime": ">=7.19.0"
+      react: ">=16.9.0"
+      react-dom: ">=16.9.0"
+
+  "@uiw/react-color-hue@2.9.2":
+    resolution:
+      {
+        integrity: sha512-vDGN5YCzw09BfxkQeDvAeQ7zAy141uJ3HkFk1lsXL7ha8xZ35AItE1s/C6d60vFjGdoloKShh0yA7df3pnjmxA==,
+      }
+    peerDependencies:
+      "@babel/runtime": ">=7.19.0"
+      react: ">=16.9.0"
+      react-dom: ">=16.9.0"
+
+  "@uiw/react-color-saturation@2.9.2":
+    resolution:
+      {
+        integrity: sha512-w1aUU+g6Axwbr1nLvF8k/zg5v7UW8z80eH6C7w+tdiOFOQKkKQlXqeOG0IIUUIj3v/ji+yM90IuOH+Ku7zsJrg==,
+      }
+    peerDependencies:
+      "@babel/runtime": ">=7.19.0"
+      react: ">=16.9.0"
+      react-dom: ">=16.9.0"
+
+  "@uiw/react-color-sketch@2.9.2":
+    resolution:
+      {
+        integrity: sha512-PEvwaqDVDdBI/+fWASBWQOvx3ows7dIcv6Z06VHgEXk2chi95Fkrbd0YUUXMcp7ESsmUK1j5ozGMLAf9Nvx6Nw==,
+      }
+    peerDependencies:
+      "@babel/runtime": ">=7.19.0"
+      react: ">=16.9.0"
+      react-dom: ">=16.9.0"
+
+  "@uiw/react-color-swatch@2.9.2":
+    resolution:
+      {
+        integrity: sha512-6zBy+E9NzZR672M2wPsbbNRqKy9Wi9jOuuxxyzov1CEZp+pPX7UwMlCX6RUhKdO0PzTSPCVQmbz5bplu5vsW0w==,
+      }
+    peerDependencies:
+      "@babel/runtime": ">=7.19.0"
+      react: ">=16.9.0"
+      react-dom: ">=16.9.0"
+
+  "@uiw/react-drag-event-interactive@2.9.2":
+    resolution:
+      {
+        integrity: sha512-6gxQz+Ij7JkXlEOpfZhOu+Gdp/sI9VnMeDl8AJeYl3+0YXP31lXGmyb0NkNYnoUmJO+RrAf68c1raMpaDWs+Ow==,
+      }
+    peerDependencies:
+      "@babel/runtime": ">=7.19.0"
+      react: ">=16.9.0"
+      react-dom: ">=16.9.0"
 
   "@unrs/resolver-binding-android-arm-eabi@1.11.1":
     resolution:
@@ -2749,10 +2849,10 @@ packages:
         integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==,
       }
 
-  baseline-browser-mapping@2.9.11:
+  baseline-browser-mapping@2.9.12:
     resolution:
       {
-        integrity: sha512-Sg0xJUNDU1sJNGdfGWhVHX0kkZ+HWcvmVymJbj6NSgZZmW/8S9Y2HQ5euytnIgakgxN6papOAWiwDo1ctFDcoQ==,
+        integrity: sha512-Mij6Lij93pTAIsSYy5cyBQ975Qh9uLEc5rwGTpomiZeXZL9yIS6uORJakb3ScHgfs0serMMfIbXzokPMuEiRyw==,
       }
     hasBin: true
 
@@ -3752,10 +3852,10 @@ packages:
         integrity: sha512-P+3zEKLnOF0qmiesW383vsLdtQVyKtCNA9cjSoKCppTKPQVfKd2W8hbVo5ZhNJKDqeM7BOcvNoKJOjpHh4Js9g==,
       }
 
-  i18next@25.7.3:
+  i18next@25.7.4:
     resolution:
       {
-        integrity: sha512-2XaT+HpYGuc2uTExq9TVRhLsso+Dxym6PWaKpn36wfBmTI779OQ7iP/XaZHzrnGyzU4SHpFrTYLKfVyBfAhVNA==,
+        integrity: sha512-hRkpEblXXcXSNbw8mBNq9042OEetgyB/ahc/X17uV/khPwzV+uB8RHceHh3qavyrkPJvmXFKXME2Sy1E0KjAfw==,
       }
     peerDependencies:
       typescript: ^5
@@ -6736,6 +6836,10 @@ snapshots:
     dependencies:
       "@tauri-apps/api": 2.9.1
 
+  "@tauri-apps/plugin-fs@2.4.4":
+    dependencies:
+      "@tauri-apps/api": 2.9.1
+
   "@tokenizer/inflate@0.2.7":
     dependencies:
       debug: 4.4.3
@@ -6892,6 +6996,74 @@ snapshots:
       "@typescript/native-preview-linux-x64": 7.0.0-dev.20260107.1
       "@typescript/native-preview-win32-arm64": 7.0.0-dev.20260107.1
       "@typescript/native-preview-win32-x64": 7.0.0-dev.20260107.1
+
+  "@uiw/color-convert@2.9.2(@babel/runtime@7.28.4)":
+    dependencies:
+      "@babel/runtime": 7.28.4
+
+  "@uiw/react-color-alpha@2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+    dependencies:
+      "@babel/runtime": 7.28.4
+      "@uiw/color-convert": 2.9.2(@babel/runtime@7.28.4)
+      "@uiw/react-drag-event-interactive": 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
+  "@uiw/react-color-editable-input-rgba@2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+    dependencies:
+      "@babel/runtime": 7.28.4
+      "@uiw/color-convert": 2.9.2(@babel/runtime@7.28.4)
+      "@uiw/react-color-editable-input": 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
+  "@uiw/react-color-editable-input@2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+    dependencies:
+      "@babel/runtime": 7.28.4
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
+  "@uiw/react-color-hue@2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+    dependencies:
+      "@babel/runtime": 7.28.4
+      "@uiw/color-convert": 2.9.2(@babel/runtime@7.28.4)
+      "@uiw/react-color-alpha": 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
+  "@uiw/react-color-saturation@2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+    dependencies:
+      "@babel/runtime": 7.28.4
+      "@uiw/color-convert": 2.9.2(@babel/runtime@7.28.4)
+      "@uiw/react-drag-event-interactive": 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
+  "@uiw/react-color-sketch@2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+    dependencies:
+      "@babel/runtime": 7.28.4
+      "@uiw/color-convert": 2.9.2(@babel/runtime@7.28.4)
+      "@uiw/react-color-alpha": 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      "@uiw/react-color-editable-input": 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      "@uiw/react-color-editable-input-rgba": 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      "@uiw/react-color-hue": 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      "@uiw/react-color-saturation": 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      "@uiw/react-color-swatch": 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
+  "@uiw/react-color-swatch@2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+    dependencies:
+      "@babel/runtime": 7.28.4
+      "@uiw/color-convert": 2.9.2(@babel/runtime@7.28.4)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
+  "@uiw/react-drag-event-interactive@2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+    dependencies:
+      "@babel/runtime": 7.28.4
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
 
   "@unrs/resolver-binding-android-arm-eabi@1.11.1":
     optional: true
@@ -7163,7 +7335,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.9.11: {}
+  baseline-browser-mapping@2.9.12: {}
 
   bin-version-check@5.1.0:
     dependencies:
@@ -7191,7 +7363,7 @@ snapshots:
 
   browserslist@4.28.1:
     dependencies:
-      baseline-browser-mapping: 2.9.11
+      baseline-browser-mapping: 2.9.12
       caniuse-lite: 1.0.30001762
       electron-to-chromium: 1.5.267
       node-releases: 2.0.27
@@ -7921,7 +8093,7 @@ snapshots:
     dependencies:
       "@babel/runtime": 7.28.4
 
-  i18next@25.7.3(typescript@5.9.3):
+  i18next@25.7.4(typescript@5.9.3):
     dependencies:
       "@babel/runtime": 7.28.4
     optionalDependencies:
@@ -8265,7 +8437,7 @@ snapshots:
     dependencies:
       "@next/env": 16.1.1
       "@swc/helpers": 0.5.15
-      baseline-browser-mapping: 2.9.11
+      baseline-browser-mapping: 2.9.12
       caniuse-lite: 1.0.30001762
       postcss: 8.4.31
       react: 19.2.3
@@ -8444,11 +8616,11 @@ snapshots:
       react: 19.2.3
       scheduler: 0.27.0
 
-  react-i18next@16.5.1(i18next@25.7.3(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3):
+  react-i18next@16.5.1(i18next@25.7.4(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3):
     dependencies:
       "@babel/runtime": 7.28.4
       html-parse-stringify: 3.0.1
-      i18next: 25.7.3(typescript@5.9.3)
+      i18next: 25.7.4(typescript@5.9.3)
       react: 19.2.3
       use-sync-external-store: 1.6.0(react@19.2.3)
     optionalDependencies:
