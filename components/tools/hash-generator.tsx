@@ -684,7 +684,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                   min={4}
                   max={31}
                   value={bcryptRounds}
-                  onChange={(e) => setBcryptRounds(Number(e.target.value))}
+                  onChange={(e) => setBcryptRounds(parseInt(e.target.value, 10))}
                   className="w-20"
                 />
               </div>
