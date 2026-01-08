@@ -83,6 +83,16 @@ export function QRCodeTool({ tabId: _tabId }: QRCodeToolProps) {
       .replace(/"/g, '\\"');
   };
 
+  const escapeVCardField = (str: string): string => {
+    // vCard format requires escaping of special characters
+    // See: https://datatracker.ietf.org/doc/html/rfc6350
+    return str
+      .replace(/\\/g, "\\\\") // backslash first
+      .replace(/\n/g, "\\n") // newline
+      .replace(/,/g, "\\,")
+      .replace(/;/g, "\\;");
+  };
+
   const handleJsonChange = (value: string) => {
     setJsonData(value);
     if (value.trim()) {
@@ -130,11 +140,11 @@ export function QRCodeTool({ tabId: _tabId }: QRCodeToolProps) {
       case "vcard":
         return `BEGIN:VCARD
 VERSION:3.0
-FN:${vcardName}
-TEL:${vcardPhone}
-EMAIL:${vcardEmail}
-ORG:${vcardOrg}
-URL:${vcardUrl}
+FN:${escapeVCardField(vcardName)}
+TEL:${escapeVCardField(vcardPhone)}
+EMAIL:${escapeVCardField(vcardEmail)}
+ORG:${escapeVCardField(vcardOrg)}
+URL:${escapeVCardField(vcardUrl)}
 END:VCARD`;
       default:
         return "";

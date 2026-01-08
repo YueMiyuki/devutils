@@ -305,7 +305,7 @@ async fn check_port(port: u16) -> Result<PortInfo, String> {
 fn check_port_blocking(port: u16) -> Result<PortInfo, String> {
     let output = Command::new("sh")
         .arg("-c")
-        .arg(format!("netstat -anv | grep '\\.{} .*LISTEN'", port))
+        .arg(format!("netstat -anv | grep '\\.{}\\b.*LISTEN'", port))
         .output()
         .map_err(|e| format!("Failed to run netstat: {}", e))?;
 
@@ -441,7 +441,7 @@ fn check_port_blocking(port: u16) -> Result<PortInfo, String> {
     // netstat -antp
     let output = Command::new("sh")
         .arg("-c")
-        .arg(format!("netstat -antp 2>/dev/null | grep ':{} .*LISTEN'", port))
+        .arg(format!("netstat -antp 2>/dev/null | grep ':{}\\b.*LISTEN'", port))
         .output()
         .map_err(|e| format!("Failed to run netstat: {}", e))?;
 

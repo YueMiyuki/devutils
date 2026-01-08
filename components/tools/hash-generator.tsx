@@ -91,6 +91,36 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
 
   const { copyWithAnimation, copyAnimationClass } = useCopyAnimation();
 
+  // Uint8Array to binary string
+  const uint8ArrayToBinaryString = useCallback(
+    (uint8Array: Uint8Array): string => {
+      const CHUNK_SIZE = 8192; // 8KB chunks
+      let binaryString = "";
+      for (let i = 0; i < uint8Array.length; i += CHUNK_SIZE) {
+        const chunk = uint8Array.subarray(i, i + CHUNK_SIZE);
+        binaryString += String.fromCharCode(...chunk);
+      }
+      return binaryString;
+    },
+    [],
+  );
+
+  // I hope this wont break
+  const validateArgon2Params = useCallback((): void => {
+    if (argon2Iterations < 1 || argon2Iterations > 10000) {
+      throw new Error(t("tools.hashGenerator.errors.invalidArgon2Iterations"));
+    }
+    if (argon2Memory < 8 || argon2Memory > 1048576) {
+      throw new Error(t("tools.hashGenerator.errors.invalidArgon2Memory"));
+    }
+    if (argon2Parallelism < 1 || argon2Parallelism > 16) {
+      throw new Error(t("tools.hashGenerator.errors.invalidArgon2Parallelism"));
+    }
+    if (argon2HashLength < 8 || argon2HashLength > 1024) {
+      throw new Error(t("tools.hashGenerator.errors.invalidArgon2HashLength"));
+    }
+  }, [argon2Iterations, argon2Memory, argon2Parallelism, argon2HashLength, t]);
+
   const hashFileStream = useCallback(
     async (
       file: File,
@@ -143,7 +173,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
             const arrayBuffer = await file.arrayBuffer();
             const uint8Array = new Uint8Array(arrayBuffer);
             // Convert binary data to base64 for safe hashing
-            const binaryString = String.fromCharCode(...uint8Array);
+            const binaryString = uint8ArrayToBinaryString(uint8Array);
             const base64Data = btoa(binaryString);
             onProgress(50);
             const hash = await bcrypt.hash(base64Data, bcryptRounds);
@@ -151,6 +181,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
             return hash;
           }
           case "argon2": {
+            validateArgon2Params();
             // Argon2 doesn't support streaming, read whole file
             if (fileSize > 10 * 1024 * 1024) {
               throw new Error(
@@ -160,7 +191,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
             const arrayBuffer = await file.arrayBuffer();
             const uint8Array = new Uint8Array(arrayBuffer);
             // Convert binary data to base64 for safe hashing
-            const binaryString = String.fromCharCode(...uint8Array);
+            const binaryString = uint8ArrayToBinaryString(uint8Array);
             const base64Data = btoa(binaryString);
             onProgress(50);
             const salt =
@@ -220,6 +251,8 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
       argon2Parallelism,
       argon2HashLength,
       t,
+      validateArgon2Params,
+      uint8ArrayToBinaryString,
     ],
   );
 
@@ -250,6 +283,8 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
           case "bcrypt":
             return await bcrypt.hash(text, bcryptRounds);
           case "argon2": {
+            // Validate parameters before processing
+            validateArgon2Params();
             const salt =
               argon2Salt || CryptoJS.lib.WordArray.random(16).toString();
             const hash = await argon2id({
@@ -285,6 +320,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
       argon2Parallelism,
       argon2HashLength,
       t,
+      validateArgon2Params,
     ],
   );
 
@@ -354,7 +390,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
         !file.type.startsWith("text/")
       ) {
         toast.warning(
-          "BCrypt and Argon2 are designed for password hashing. File will be base64-encoded before hashing.",
+          t("tools.hashGenerator.warnings.passwordHashingAlgorithm"),
         );
       }
 
@@ -518,10 +554,12 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                   <Input
                     type="number"
                     min={1}
+                    max={10000}
                     value={argon2Iterations}
-                    onChange={(e) =>
-                      setArgon2Iterations(parseInt(e.target.value))
-                    }
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value) || 1;
+                      setArgon2Iterations(Math.max(1, Math.min(10000, value)));
+                    }}
                   />
                 </div>
                 <div className="space-y-2">
@@ -531,8 +569,12 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                   <Input
                     type="number"
                     min={8}
+                    max={1048576}
                     value={argon2Memory}
-                    onChange={(e) => setArgon2Memory(parseInt(e.target.value))}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value) || 8;
+                      setArgon2Memory(Math.max(8, Math.min(1048576, value)));
+                    }}
                   />
                 </div>
                 <div className="space-y-2">
@@ -542,10 +584,12 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                   <Input
                     type="number"
                     min={1}
+                    max={16}
                     value={argon2Parallelism}
-                    onChange={(e) =>
-                      setArgon2Parallelism(parseInt(e.target.value))
-                    }
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value) || 1;
+                      setArgon2Parallelism(Math.max(1, Math.min(16, value)));
+                    }}
                   />
                 </div>
                 <div className="space-y-2">
@@ -554,11 +598,13 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                   </label>
                   <Input
                     type="number"
-                    min={4}
+                    min={8}
+                    max={1024}
                     value={argon2HashLength}
-                    onChange={(e) =>
-                      setArgon2HashLength(parseInt(e.target.value))
-                    }
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value) || 8;
+                      setArgon2HashLength(Math.max(8, Math.min(1024, value)));
+                    }}
                   />
                 </div>
                 <div className="space-y-2 col-span-2">

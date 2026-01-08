@@ -53,16 +53,21 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   const [scanProgress, setScanProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  const checkPort = useCallback(async (port: number) => {
-    try {
-      const result = await invoke<PortInfo>("check_port", { port });
-      return result;
-    } catch (err) {
-      throw new Error(
-        err instanceof Error ? err.message : "Failed to check port",
-      );
-    }
-  }, []);
+  const checkPort = useCallback(
+    async (port: number) => {
+      try {
+        const result = await invoke<PortInfo>("check_port", { port });
+        return result;
+      } catch (err) {
+        throw new Error(
+          err instanceof Error
+            ? err.message
+            : t("tools.portDetective.errors.checkFailed"),
+        );
+      }
+    },
+    [t],
+  );
 
   const handleCheckSinglePort = async () => {
     const port = parseInt(singlePort);
