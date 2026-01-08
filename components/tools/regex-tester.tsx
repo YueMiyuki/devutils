@@ -234,7 +234,7 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
             continue;
           }
           break;
-        case "[":
+        case "[": {
           let closeBracket = i + 1;
           while (closeBracket < tokens.length && tokens[closeBracket] !== "]") {
             closeBracket++;
@@ -251,7 +251,8 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
             continue;
           }
           break;
-        case "(":
+        }
+        case "(": {
           let closeParen = i + 1;
           let depth = 1;
           while (closeParen < tokens.length && depth > 0) {
@@ -269,7 +270,8 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
             continue;
           }
           break;
-        case "{":
+        }
+        case "{": {
           let closeBrace = i + 1;
           while (closeBrace < tokens.length && tokens[closeBrace] !== "}") {
             closeBrace++;
@@ -286,6 +288,7 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
             continue;
           }
           break;
+        }
         case "|":
           explanations.push({
             token: "|",

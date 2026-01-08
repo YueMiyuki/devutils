@@ -26,4 +26,4 @@ tauri-plugin-log = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 image = "0.25"
-tokio = "1.49.0"
+tokio = { version = "1.49.0", features = ["rt"] }

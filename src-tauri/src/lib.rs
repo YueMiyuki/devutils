@@ -20,8 +20,8 @@ fn extract_palette_from_image_blocking(file_path: String, num_colors: usize) -> 
     let max_dimension = 200;
     let (width, height) = img.dimensions();
     let scale = (max_dimension as f32 / width.max(height) as f32).min(1.0);
-    let new_width = (width as f32 * scale) as u32;
-    let new_height = (height as f32 * scale) as u32;
+    let new_width = ((width as f32 * scale).round() as u32).max(1);
+    let new_height = ((height as f32 * scale).round() as u32).max(1);
 
     let img = img.resize_exact(
         new_width,
@@ -109,12 +109,10 @@ fn kmeans_clustering(pixels: &[[u8; 3]], k: usize) -> Result<KmeansResult, Strin
         for (idx, &pixel) in pixels.iter().enumerate() {
             let mut min_dist = f32::MAX;
             let mut cluster_index = 0;
+            let pixel_f32 = [pixel[0] as f32, pixel[1] as f32, pixel[2] as f32];
 
             for (i, centroid) in centroids.iter().enumerate() {
-                let dist = color_distance_squared(
-                    [pixel[0] as f32, pixel[1] as f32, pixel[2] as f32],
-                    *centroid,
-                );
+                let dist = color_distance_squared(pixel_f32, *centroid);
                 if dist < min_dist {
                     min_dist = dist;
                     cluster_index = i;

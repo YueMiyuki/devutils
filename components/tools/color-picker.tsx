@@ -21,6 +21,7 @@ import Sketch from "@uiw/react-color-sketch";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { invoke } from "@tauri-apps/api/core";
 import { writeFile, remove } from "@tauri-apps/plugin-fs";
+import { tempDir } from "@tauri-apps/api/path";
 
 interface ColorPickerProps {
   tabId: string;
@@ -38,12 +39,59 @@ interface HslColor {
   l: number;
 }
 
+const hexToRgb = (hex: string): RgbColor | null => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
+};
+
+const rgbToHsl = (rgb: RgbColor): HslColor => {
+  const r = rgb.r / 255;
+  const g = rgb.g / 255;
+  const b = rgb.b / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+    switch (max) {
+      case r:
+        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        break;
+      case g:
+        h = ((b - r) / d + 2) / 6;
+        break;
+      case b:
+        h = ((r - g) / d + 4) / 6;
+        break;
+    }
+  }
+
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100),
+  };
+};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
   const { t } = useTranslation();
   const { resolvedTheme } = useTheme();
   const [color, setColor] = useState<string>("#3b82f6");
   const [palette, setPalette] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState<string>("picker");
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,7 +99,7 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
 
   const isDark = resolvedTheme === "dark";
 
-  const handleTauriFileDrop = async (filePath: string) => {
+  const handleTauriFileDrop = useCallback(async (filePath: string) => {
     setIsProcessing(true);
 
     try {
@@ -70,7 +118,7 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, []);
 
   // Tauri listener
   useEffect(() => {
@@ -106,54 +154,7 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
       // console.log("Cleaning up Tauri drag-drop listener");
       if (unlisten) unlisten();
     };
-  }, []);
-
-  // Color utils
-  const hexToRgb = (hex: string): RgbColor | null => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-      ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16),
-        }
-      : null;
-  };
-
-  const rgbToHsl = (rgb: RgbColor): HslColor => {
-    const r = rgb.r / 255;
-    const g = rgb.g / 255;
-    const b = rgb.b / 255;
-
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h = 0;
-    let s = 0;
-    const l = (max + min) / 2;
-
-    if (max !== min) {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-      switch (max) {
-        case r:
-          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-          break;
-        case g:
-          h = ((b - r) / d + 2) / 6;
-          break;
-        case b:
-          h = ((r - g) / d + 4) / 6;
-          break;
-      }
-    }
-
-    return {
-      h: Math.round(h * 360),
-      s: Math.round(s * 100),
-      l: Math.round(l * 100),
-    };
-  };
+  }, [handleTauriFileDrop]);
 
   const getColorFormats = useCallback(() => {
     const rgb = hexToRgb(color);
@@ -190,7 +191,8 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
       // Write to temp location
       const arrayBuffer = await file.arrayBuffer();
       const uint8Array = new Uint8Array(arrayBuffer);
-      const tempPath = `/tmp/color_picker_${Date.now()}_${file.name}`;
+      const tempDirectory = await tempDir();
+      const tempPath = `${tempDirectory}/color_picker_${Date.now()}_${file.name}`;
       await writeFile(tempPath, uint8Array);
 
       const colors = await invoke<string[]>("extract_palette_from_image", {
@@ -321,7 +323,11 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
 
   return (
     <div className="flex flex-col h-full p-4 gap-4 overflow-y-auto">
-      <Tabs defaultValue="picker" className="flex-1 flex flex-col">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="flex-1 flex flex-col"
+      >
         <TabsList className="w-fit">
           <TabsTrigger value="picker">
             {t("tools.colorPicker.pickerTab")}
@@ -582,10 +588,7 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
                       style={{ backgroundColor: c }}
                       onClick={() => {
                         handleColorChange(c);
-                        const pickerTab = document.querySelector(
-                          '[value="picker"]',
-                        ) as HTMLElement;
-                        pickerTab?.click();
+                        setActiveTab("picker");
                       }}
                     >
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />

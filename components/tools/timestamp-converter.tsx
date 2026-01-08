@@ -59,8 +59,17 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
     return Math.floor(now.getTime() / 1000).toString();
   });
   const [parsedDate, setParsedDate] = useState<Date | null>(() => new Date());
+  const [copiedFormat, setCopiedFormat] = useState<string | null>(null);
 
-  const { copyWithAnimation, copyAnimationClass } = useCopyAnimation();
+  const { copyWithAnimation } = useCopyAnimation();
+
+  const handleCopyFormat = useCallback(
+    (formatKey: string, value: string) => {
+      setCopiedFormat(formatKey);
+      copyWithAnimation(value);
+    },
+    [copyWithAnimation],
+  );
 
   const parseTimestamp = useCallback((value: string) => {
     if (!value || value.trim() === "") {
@@ -97,6 +106,14 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
     }
   }, []);
 
+  // Clear copied format after animation
+  useEffect(() => {
+    if (copiedFormat) {
+      const timer = setTimeout(() => setCopiedFormat(null), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [copiedFormat]);
+
   // Synchronize parsedDate state with timestamp input changes.
   // Alternative would be useMemo, but this approach is clearer for state synchronization.
   /* eslint-disable react-hooks/set-state-in-effect */
@@ -121,34 +138,65 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
     const getTimeAgo = (date: Date): string => {
       const now = new Date();
       const diffMs = now.getTime() - date.getTime();
-      const diffSec = Math.floor(diffMs / 1000);
-      const diffMin = Math.floor(diffSec / 60);
-      const diffHour = Math.floor(diffMin / 60);
-      const diffDay = Math.floor(diffHour / 24);
-      const diffWeek = Math.floor(diffDay / 7);
-      const diffMonth = Math.floor(diffDay / 30);
-      const diffYear = Math.floor(diffDay / 365);
+      const isFuture = diffMs < 0;
+      const absDiffMs = Math.abs(diffMs);
+      const absDiffSec = Math.floor(absDiffMs / 1000);
+      const absDiffMin = Math.floor(absDiffSec / 60);
+      const absDiffHour = Math.floor(absDiffMin / 60);
+      const absDiffDay = Math.floor(absDiffHour / 24);
+      const absDiffWeek = Math.floor(absDiffDay / 7);
+      const absDiffMonth = Math.floor(absDiffDay / 30);
+      const absDiffYear = Math.floor(absDiffDay / 365);
 
-      if (diffSec < 60) {
-        return t("tools.timestampConverter.timeAgo.seconds", {
-          count: diffSec,
-        });
-      } else if (diffMin < 60) {
-        return t("tools.timestampConverter.timeAgo.minutes", {
-          count: diffMin,
-        });
-      } else if (diffHour < 24) {
-        return t("tools.timestampConverter.timeAgo.hours", { count: diffHour });
-      } else if (diffDay < 7) {
-        return t("tools.timestampConverter.timeAgo.days", { count: diffDay });
-      } else if (diffWeek < 4) {
-        return t("tools.timestampConverter.timeAgo.weeks", { count: diffWeek });
-      } else if (diffMonth < 12) {
-        return t("tools.timestampConverter.timeAgo.months", {
-          count: diffMonth,
-        });
+      if (absDiffSec < 60) {
+        return t(
+          isFuture
+            ? "tools.timestampConverter.timeIn.seconds"
+            : "tools.timestampConverter.timeAgo.seconds",
+          { count: absDiffSec },
+        );
+      } else if (absDiffMin < 60) {
+        return t(
+          isFuture
+            ? "tools.timestampConverter.timeIn.minutes"
+            : "tools.timestampConverter.timeAgo.minutes",
+          { count: absDiffMin },
+        );
+      } else if (absDiffHour < 24) {
+        return t(
+          isFuture
+            ? "tools.timestampConverter.timeIn.hours"
+            : "tools.timestampConverter.timeAgo.hours",
+          { count: absDiffHour },
+        );
+      } else if (absDiffDay < 7) {
+        return t(
+          isFuture
+            ? "tools.timestampConverter.timeIn.days"
+            : "tools.timestampConverter.timeAgo.days",
+          { count: absDiffDay },
+        );
+      } else if (absDiffWeek < 4) {
+        return t(
+          isFuture
+            ? "tools.timestampConverter.timeIn.weeks"
+            : "tools.timestampConverter.timeAgo.weeks",
+          { count: absDiffWeek },
+        );
+      } else if (absDiffMonth < 12) {
+        return t(
+          isFuture
+            ? "tools.timestampConverter.timeIn.months"
+            : "tools.timestampConverter.timeAgo.months",
+          { count: absDiffMonth },
+        );
       } else {
-        return t("tools.timestampConverter.timeAgo.years", { count: diffYear });
+        return t(
+          isFuture
+            ? "tools.timestampConverter.timeIn.years"
+            : "tools.timestampConverter.timeAgo.years",
+          { count: absDiffYear },
+        );
       }
     };
 
@@ -304,8 +352,11 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => copyWithAnimation(value)}
-                    className={cn("shrink-0 ml-2", copyAnimationClass)}
+                    onClick={() => handleCopyFormat(name, value)}
+                    className={cn(
+                      "shrink-0 ml-2",
+                      copiedFormat === name && "copy-success",
+                    )}
                   >
                     <Copy className="w-4 h-4" />
                   </Button>

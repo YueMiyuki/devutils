@@ -167,7 +167,8 @@ export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
       desc.push("every day");
     }
 
-    return desc.join(", ").charAt(0).toUpperCase() + desc.join(", ").slice(1);
+    const result = desc.join(", ");
+    return result.charAt(0).toUpperCase() + result.slice(1);
   }, []);
 
   const calculateNextRuns = useCallback((cron: string, freq: string) => {
@@ -204,12 +205,41 @@ export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
           break;
         }
 
-        case "daily":
+        case "daily": {
+          const targetHr = parseInt(hrPart);
+          const targetMin = parseInt(minPart);
+          next.setDate(now.getDate() + (i + 1));
+          next.setHours(targetHr);
+          next.setMinutes(targetMin);
+          next.setSeconds(0);
+          break;
+        }
+
         case "weekdays":
         case "weekends": {
           const targetHr = parseInt(hrPart);
           const targetMin = parseInt(minPart);
-          next.setDate(now.getDate() + (i + 1));
+          const isWeekdays = freq === "weekdays";
+
+          let daysAdded = 0;
+          let matchingDaysFound = 0;
+
+          while (matchingDaysFound < i + 1) {
+            daysAdded++;
+            const candidate = new Date(now);
+            candidate.setDate(candidate.getDate() + daysAdded);
+            const dayOfWeek = candidate.getDay();
+
+            const isMatch = isWeekdays
+              ? dayOfWeek >= 1 && dayOfWeek <= 5 // Mon-Fri
+              : dayOfWeek === 0 || dayOfWeek === 6; // Sat-Sun
+
+            if (isMatch) {
+              matchingDaysFound++;
+            }
+          }
+
+          next.setDate(now.getDate() + daysAdded);
           next.setHours(targetHr);
           next.setMinutes(targetMin);
           next.setSeconds(0);
@@ -220,14 +250,24 @@ export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
           const targetHr = parseInt(hrPart);
           const targetMin = parseInt(minPart);
           const targetDow = parseInt(dowPart);
-          next.setDate(now.getDate() + 7 * (i + 1));
+
+          const currentDow = now.getDay();
+          let daysToAdd = (targetDow - currentDow + 7) % 7;
+
+          if (daysToAdd === 0) {
+            const targetTime = new Date(now);
+            targetTime.setHours(targetHr, targetMin, 0, 0);
+            if (now > targetTime) {
+              daysToAdd = 7; // Next week
+            }
+          }
+
+          daysToAdd += 7 * i;
+
+          next.setDate(now.getDate() + daysToAdd);
           next.setHours(targetHr);
           next.setMinutes(targetMin);
           next.setSeconds(0);
-
-          const currentDow = next.getDay();
-          const daysToAdd = (targetDow - currentDow + 7) % 7;
-          next.setDate(next.getDate() + daysToAdd);
           break;
         }
 
