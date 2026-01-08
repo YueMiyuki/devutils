@@ -81,11 +81,11 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
       let date: Date | null = null;
 
       // Unix timestamp (seconds)
-      if (/^\d{10}$/.test(value)) {
+      if (/^-?\d{10}$/.test(value)) {
         date = new Date(parseInt(value) * 1000);
       }
       // Unix timestamp (milliseconds)
-      else if (/^\d{13}$/.test(value)) {
+      else if (/^-?\d{13}$/.test(value)) {
         date = new Date(parseInt(value));
       }
       // ISO 8601 & others
@@ -126,13 +126,13 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
     if (!parsedDate) return null;
 
     const weekdays = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
+      t("tools.timestampConverter.weekdays.sunday"),
+      t("tools.timestampConverter.weekdays.monday"),
+      t("tools.timestampConverter.weekdays.tuesday"),
+      t("tools.timestampConverter.weekdays.wednesday"),
+      t("tools.timestampConverter.weekdays.thursday"),
+      t("tools.timestampConverter.weekdays.friday"),
+      t("tools.timestampConverter.weekdays.saturday"),
     ];
 
     const getTimeAgo = (date: Date): string => {

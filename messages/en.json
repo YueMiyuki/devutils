@@ -218,6 +218,31 @@
         "months_other": "{{count}} months ago",
         "years": "{{count}} year ago",
         "years_other": "{{count}} years ago"
+      },
+      "timeIn": {
+        "seconds": "in {{count}} second",
+        "seconds_other": "in {{count}} seconds",
+        "minutes": "in {{count}} minute",
+        "minutes_other": "in {{count}} minutes",
+        "hours": "in {{count}} hour",
+        "hours_other": "in {{count}} hours",
+        "days": "in {{count}} day",
+        "days_other": "in {{count}} days",
+        "weeks": "in {{count}} week",
+        "weeks_other": "in {{count}} weeks",
+        "months": "in {{count}} month",
+        "months_other": "in {{count}} months",
+        "years": "in {{count}} year",
+        "years_other": "in {{count}} years"
+      },
+      "weekdays": {
+        "sunday": "Sunday",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday"
       }
     },
     "cronGenerator": {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -80,60 +80,65 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
 
   const regexLiteral = pattern ? `/${pattern}/${flags}` : "";
 
-  const commonPatterns: CommonPattern[] = [
-    {
-      name: t("tools.regexTester.patterns.email"),
-      pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-      description: t("tools.regexTester.patterns.emailDesc"),
-    },
-    {
-      name: t("tools.regexTester.patterns.url"),
-      pattern:
-        "^https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$",
-      description: t("tools.regexTester.patterns.urlDesc"),
-    },
-    {
-      name: t("tools.regexTester.patterns.phone"),
-      pattern: "^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$",
-      description: t("tools.regexTester.patterns.phoneDesc"),
-    },
-    {
-      name: t("tools.regexTester.patterns.ipv4"),
-      pattern:
-        "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
-      description: t("tools.regexTester.patterns.ipv4Desc"),
-    },
-    {
-      name: t("tools.regexTester.patterns.hex"),
-      pattern: "^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
-      description: t("tools.regexTester.patterns.hexDesc"),
-    },
-    {
-      name: t("tools.regexTester.patterns.date"),
-      pattern: "^\\d{4}-\\d{2}-\\d{2}$",
-      description: t("tools.regexTester.patterns.dateDesc"),
-    },
-    {
-      name: t("tools.regexTester.patterns.time"),
-      pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$",
-      description: t("tools.regexTester.patterns.timeDesc"),
-    },
-    {
-      name: t("tools.regexTester.patterns.username"),
-      pattern: "^[a-zA-Z0-9_-]{3,16}$",
-      description: t("tools.regexTester.patterns.usernameDesc"),
-    },
-    {
-      name: t("tools.regexTester.patterns.password"),
-      pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",
-      description: t("tools.regexTester.patterns.passwordDesc"),
-    },
-    {
-      name: t("tools.regexTester.patterns.uuid"),
-      pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-      description: t("tools.regexTester.patterns.uuidDesc"),
-    },
-  ];
+  const commonPatterns: CommonPattern[] = useMemo(
+    () => [
+      {
+        name: t("tools.regexTester.patterns.email"),
+        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+        description: t("tools.regexTester.patterns.emailDesc"),
+      },
+      {
+        name: t("tools.regexTester.patterns.url"),
+        pattern:
+          "^https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$",
+        description: t("tools.regexTester.patterns.urlDesc"),
+      },
+      {
+        name: t("tools.regexTester.patterns.phone"),
+        pattern:
+          "^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$",
+        description: t("tools.regexTester.patterns.phoneDesc"),
+      },
+      {
+        name: t("tools.regexTester.patterns.ipv4"),
+        pattern:
+          "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
+        description: t("tools.regexTester.patterns.ipv4Desc"),
+      },
+      {
+        name: t("tools.regexTester.patterns.hex"),
+        pattern: "^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+        description: t("tools.regexTester.patterns.hexDesc"),
+      },
+      {
+        name: t("tools.regexTester.patterns.date"),
+        pattern: "^\\d{4}-\\d{2}-\\d{2}$",
+        description: t("tools.regexTester.patterns.dateDesc"),
+      },
+      {
+        name: t("tools.regexTester.patterns.time"),
+        pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$",
+        description: t("tools.regexTester.patterns.timeDesc"),
+      },
+      {
+        name: t("tools.regexTester.patterns.username"),
+        pattern: "^[a-zA-Z0-9_-]{3,16}$",
+        description: t("tools.regexTester.patterns.usernameDesc"),
+      },
+      {
+        name: t("tools.regexTester.patterns.password"),
+        pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",
+        description: t("tools.regexTester.patterns.passwordDesc"),
+      },
+      {
+        name: t("tools.regexTester.patterns.uuid"),
+        pattern:
+          "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+        description: t("tools.regexTester.patterns.uuidDesc"),
+      },
+    ],
+    [t],
+  );
 
   const handlePatternChange = (value: string) => {
     setPattern(value);
