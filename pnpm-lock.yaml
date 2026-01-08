@@ -76,6 +76,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      normalize-url:
+        specifier: ^8.1.1
+        version: 8.1.1
       react:
         specifier: 19.2.3
         version: 19.2.3

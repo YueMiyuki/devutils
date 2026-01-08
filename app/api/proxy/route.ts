@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import normalizeUrl from "normalize-url";
 
 function sanitizeHeaders(
   headers: Record<string, string> | undefined,
@@ -21,11 +22,15 @@ function sanitizeHeaders(
 
 export async function POST(request: NextRequest) {
   try {
-    const { url, method, headers, body } = await request.json();
+    const { InputUrl, method, headers, body } = await request.json();
 
-    if (!url) {
+    console.log(InputUrl);
+
+    if (!InputUrl) {
       return Response.json({ error: "URL is required" }, { status: 400 });
     }
+
+    const url = normalizeUrl(InputUrl);
 
     const startTime = Date.now();
 
