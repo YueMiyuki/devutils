@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCopyAnimation } from "@/hooks/use-copy-animation";
+import { useTranslation } from "react-i18next";
 
 type DataFormat = "json" | "csv" | "tsv" | "xml" | "yaml";
 
@@ -33,6 +34,7 @@ interface DataConverterProps {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function DataConverter({ tabId: _tabId }: DataConverterProps) {
+  const { t } = useTranslation();
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
   const [sourceFormat, setSourceFormat] = useState<DataFormat>("json");
@@ -494,7 +496,9 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
         <CardContent className="py-4">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
-              <Label className="text-sm text-muted-foreground">From:</Label>
+              <Label className="text-sm text-muted-foreground">
+                {t("tools.jsonCsv.from")}
+              </Label>
               <Select
                 value={sourceFormat}
                 onValueChange={(v: DataFormat) => setSourceFormat(v)}
@@ -515,7 +519,9 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
             <ArrowRight className="w-4 h-4 text-muted-foreground" />
 
             <div className="flex items-center gap-2">
-              <Label className="text-sm text-muted-foreground">To:</Label>
+              <Label className="text-sm text-muted-foreground">
+                {t("tools.jsonCsv.to")}
+              </Label>
               <Select
                 value={targetFormat}
                 onValueChange={(v: DataFormat) => setTargetFormat(v)}
@@ -540,18 +546,18 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
                 onCheckedChange={setAutoFixEnabled}
               />
               <Label htmlFor="auto-fix" className="text-sm cursor-pointer">
-                Auto-fix malformed JSON
+                {t("tools.jsonCsv.autoFix")}
               </Label>
             </div>
 
             <Button variant="outline" size="sm" onClick={clearAll}>
               <Trash2 className="w-4 h-4 mr-2" />
-              Clear
+              {t("tools.jsonCsv.clear")}
             </Button>
 
             <Button size="sm" onClick={convert}>
               <Wand2 className="w-4 h-4 mr-2" />
-              Convert
+              {t("tools.jsonCsv.convert")}
             </Button>
           </div>
         </CardContent>
@@ -575,7 +581,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
           ) : (
             <>
               <CheckCircle2 className="w-4 h-4" />
-              JSON auto-fixed and converted successfully
+              {t("tools.jsonCsv.autoFixSuccess")}
             </>
           )}
         </div>
@@ -586,13 +592,15 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
         <Card className="flex flex-col">
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              Input
+              {t("tools.jsonCsv.input")}
               <Badge variant="secondary">{sourceFormat.toUpperCase()}</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex-1">
             <Textarea
-              placeholder={`Paste your ${sourceFormat.toUpperCase()} data here...`}
+              placeholder={t("tools.jsonCsv.inputPlaceholder", {
+                format: sourceFormat.toUpperCase(),
+              })}
               value={inputText}
               onChange={(e) => handleInputChange(e.target.value)}
               className="font-mono text-sm h-full min-h-64 resize-none"
@@ -604,7 +612,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base flex items-center gap-2">
-                Output
+                {t("tools.jsonCsv.output")}
                 <Badge variant="secondary">{targetFormat.toUpperCase()}</Badge>
               </CardTitle>
               {outputText && (
@@ -615,7 +623,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
                   className={copyAnimationClass}
                 >
                   <Copy className="w-4 h-4 mr-2" />
-                  Copy
+                  {t("tools.jsonCsv.copy")}
                 </Button>
               )}
             </div>
@@ -625,7 +633,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
               value={outputText}
               readOnly
               className="font-mono text-sm h-full min-h-64 resize-none"
-              placeholder="Converted result will appear here..."
+              placeholder={t("tools.jsonCsv.outputPlaceholder")}
             />
           </CardContent>
         </Card>

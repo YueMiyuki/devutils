@@ -11,11 +11,37 @@
     "collapse": "Collapse sidebar",
     "expand": "Expand sidebar"
   },
+  "tabBar": {
+    "utilities": "Utilities",
+    "funStuff": "Fun Stuff",
+    "newTab": "New tab"
+  },
   "tools": {
     "curlConverter": {
       "name": "cURL Converter",
       "shortName": "cURL",
-      "description": "Convert cURL commands to API requests"
+      "description": "Convert cURL commands to API requests",
+      "input": "cURL Input",
+      "pasteFromClipboard": "Paste from Clipboard",
+      "clear": "Clear",
+      "inputPlaceholder": "Paste your cURL command here...",
+      "requestBuilder": "Request Builder",
+      "copyAsCurl": "Copy as cURL",
+      "send": "Send",
+      "urlPlaceholder": "https://api.example.com/endpoint",
+      "headers": "Headers",
+      "body": "Body",
+      "headerNamePlaceholder": "Header name",
+      "valuePlaceholder": "Value",
+      "addHeader": "Add Header",
+      "bodyPlaceholder": "{\"key\": \"value\"}",
+      "response": "Response",
+      "copy": "Copy",
+      "responsePlaceholder": "Response will appear here after sending a request",
+      "errors": {
+        "noUrl": "Please enter a URL",
+        "requestFailed": "Request failed"
+      }
     },
     "jwtDecoder": {
       "name": "JWT Can Opener",
@@ -45,22 +71,158 @@
     "base64": {
       "name": "Base Screwdriver",
       "shortName": "Base",
-      "description": "Encode/decode Base16/32/64/URL/85 with file support"
+      "description": "Encode/decode Base16/32/64/URL/85 with file support",
+      "textTab": "Text",
+      "fileTab": "File",
+      "encode": "Encode",
+      "decode": "Decode",
+      "formats": {
+        "base16": "Base16 (Hex)",
+        "base32": "Base32",
+        "base64": "Base64",
+        "base64url": "Base64URL",
+        "ascii85": "ASCII85"
+      },
+      "swap": "Swap",
+      "clear": "Clear",
+      "input": "Input",
+      "output": "Output",
+      "copy": "Copy",
+      "inputPlaceholder": {
+        "encode": "Enter text to encode...",
+        "decode": "Enter {{format}} to decode..."
+      },
+      "outputPlaceholder": "Result will appear here...",
+      "stats": {
+        "input": "Input:",
+        "output": "Output:",
+        "expansion": "Expansion:",
+        "chars": "chars"
+      },
+      "file": {
+        "dropZone": "Drop a file here to encode",
+        "dropZoneDescription": "or click to browse - supports large files via streaming",
+        "selectFile": "Select File",
+        "processing": "Processing...",
+        "extracting": "Encoding file...",
+        "output": "{{format}} Output",
+        "outputDescription": "{{count}} characters",
+        "truncated": "... (truncated for display)",
+        "decodeTitle": "Decode {{format}} to File",
+        "decodeDescription": "Paste {{format}} encoded data",
+        "decodePlaceholder": "Paste {{format}} encoded data...",
+        "downloadDecoded": "Save Decoded File",
+        "clear": "Clear",
+        "chooseAnother": "Choose Another"
+      },
+      "errors": {
+        "processingFailed": "Processing failed",
+        "invalidFormat": "Invalid {{format}} string",
+        "failedToProcess": "Failed to process file",
+        "failedToDownload": "Failed to download decoded file",
+        "failedToEncode": "Failed to encode",
+        "invalidHex": "Invalid hex string",
+        "invalidBase32": "Invalid Base32 string",
+        "invalidAscii85": "Invalid ASCII85 character"
+      },
+      "success": {
+        "downloaded": "File saved to downloads"
+      }
     },
     "jsonCsv": {
       "name": "JSON/CSV Swivel Knife",
       "shortName": "Convert",
-      "description": "Convert between data formats"
+      "description": "Convert between data formats",
+      "from": "From:",
+      "to": "To:",
+      "autoFix": "Auto-fix malformed JSON",
+      "clear": "Clear",
+      "convert": "Convert",
+      "input": "Input",
+      "output": "Output",
+      "inputPlaceholder": "Paste your {{format}} data here...",
+      "outputPlaceholder": "Converted result will appear here...",
+      "copy": "Copy",
+      "autoFixSuccess": "JSON auto-fixed and converted successfully",
+      "conversionFailed": "Conversion failed"
     },
     "blameIntern": {
       "name": "Blame The Intern Stapler",
       "shortName": "Blame",
-      "description": "Generate fake git history blaming Jordan"
+      "description": "Generate fake git history blaming Jordan",
+      "title": "Blame The Intern Stapler",
+      "subtitle": "Generate fake git history that pins any bug on a fictional intern",
+      "bugDetails": "Bug Details",
+      "bugDetailsDescription": "Describe the bug and customize the scapegoat",
+      "internName": "Intern Name",
+      "internNamePlaceholder": "Jordan",
+      "bugDescription": "Bug Description",
+      "bugDescriptionPlaceholder": "e.g., Login button doesn't work on Safari, Database timeouts on high traffic...",
+      "generating": "Generating Blame...",
+      "generate": "Generate Blame History",
+      "output": "Git Blame Output",
+      "outputDescription": "Totally legitimate commit history",
+      "copied": "Copied!",
+      "copyLog": "Copy Log",
+      "noHistory": "No blame history generated yet",
+      "noHistoryHint": "Describe a bug and click generate",
+      "internBadge": "INTERN",
+      "copyCommitTooltip": "Click to copy commit",
+      "errors": {
+        "noBugDescription": "Please describe the bug first!"
+      },
+      "success": {
+        "generated": "Blame history generated!",
+        "generatedDescription": "{{internName}} has been successfully blamed."
+      }
     },
     "deployRoulette": {
       "name": "Deploy Roulette Spinner",
       "shortName": "Deploy",
-      "description": "60/40 odds: deploy or rickroll"
+      "description": "60/40 odds: deploy or rickroll",
+      "title": "Deploy Roulette Spinner",
+      "subtitle": "60% chance to deploy, 40% chance to get Rickrolled",
+      "config": "Deploy Configuration",
+      "workingDirectory": "Working Directory",
+      "directoryPlaceholder": "/path/to/project",
+      "browseDirectory": "Browse directory",
+      "deployCommand": "Deploy Command",
+      "commandPlaceholder": "npm run deploy",
+      "deploy": "DEPLOY?",
+      "spinning": "SPINNING...",
+      "determiningFate": "Determining your fate...",
+      "deploying": "DEPLOYING!",
+      "rickrolled": "RICKROLLED!",
+      "rickrollMessage": "Never gonna give you up...",
+      "warning": "Use at your own risk. Results may vary.",
+      "statistics": "Statistics",
+      "statisticsDescription": "Your deployment survival rate",
+      "survivalRate": "Survival Rate",
+      "deploys": "Deploys",
+      "rickrolls": "Rickrolls",
+      "history": "History",
+      "noHistory": "No spins yet. Feeling lucky?",
+      "deployed": "Deployed",
+      "rickrolledBadge": "Rickrolled",
+      "rickrollDialog": {
+        "title": "You've Been Rickrolled!",
+        "description": "Never gonna give you up, never gonna let you down...",
+        "close": "Close (if you dare)"
+      },
+      "toast": {
+        "directoryRequired": "Directory picker requires Tauri desktop app",
+        "directorySelected": "Directory selected",
+        "selectionCancelled": "Selection cancelled",
+        "failedToPick": "Failed to open directory picker",
+        "deployCommand": "Deploy command",
+        "wouldRun": "Would run: {{command}} in {{directory}}",
+        "deployStarted": "Deploy started!",
+        "deployFailed": "Deploy failed",
+        "survived": "You survived! Deploying...",
+        "running": "Running: {{command}} in {{directory}}",
+        "rickrolled": "You've been Rickrolled!",
+        "betterLuck": "Better luck next time..."
+      }
     },
     "bossMode": {
       "name": "Boss Mode Decoy",

@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useDeployStatsStore } from "@/lib/deploy-stats-store";
+import { useTranslation } from "react-i18next";
 
 interface DeployRouletteProps {
   tabId: string;
@@ -39,6 +40,7 @@ interface DeployRouletteProps {
 // I have no fucking idea why we have this
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
+  const { t } = useTranslation();
   const [isSpinning, setIsSpinning] = useState(false);
   const [spinProgress, setSpinProgress] = useState(0);
   const [lastResult, setLastResult] = useState<"deploy" | "rickroll" | null>(
@@ -75,7 +77,7 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
       typeof window !== "undefined" && "__TAURI__" in window;
 
     if (!tauriAvailable) {
-      toast.error("Directory picker requires Tauri desktop app");
+      toast.error(t("tools.deployRoulette.toast.directoryRequired"));
       return;
     }
 
@@ -90,13 +92,15 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
 
       if (selected && typeof selected === "string") {
         setDirectory(selected);
-        toast.success("Directory selected", { description: selected });
+        toast.success(t("tools.deployRoulette.toast.directorySelected"), {
+          description: selected,
+        });
       } else if (selected === null) {
-        toast.info("Selection cancelled");
+        toast.info(t("tools.deployRoulette.toast.selectionCancelled"));
       }
     } catch (error) {
       console.error("Failed to open directory picker:", error);
-      toast.error("Failed to open directory picker", {
+      toast.error(t("tools.deployRoulette.toast.failedToPick"), {
         description: error instanceof Error ? error.message : String(error),
       });
     }
@@ -107,8 +111,11 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
       typeof window !== "undefined" && "__TAURI__" in window;
 
     if (!tauriAvailable) {
-      toast.info("Deploy command", {
-        description: `Would run: ${deployCommand} in ${directory}`,
+      toast.info(t("tools.deployRoulette.toast.deployCommand"), {
+        description: t("tools.deployRoulette.toast.wouldRun", {
+          command: deployCommand,
+          directory,
+        }),
       });
       return;
     }
@@ -120,12 +127,12 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
         command: deployCommand,
       });
 
-      toast.success("Deploy started!", {
+      toast.success(t("tools.deployRoulette.toast.deployStarted"), {
         description: result,
       });
     } catch (error) {
       console.error("Deploy failed:", error);
-      toast.error("Deploy failed", {
+      toast.error(t("tools.deployRoulette.toast.deployFailed"), {
         description: error instanceof Error ? error.message : String(error),
       });
     }
@@ -173,13 +180,16 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
       addResult(result);
 
       if (result === "deploy") {
-        toast.success("You survived! Deploying...", {
-          description: `Running: ${deployCommand} in ${directory}`,
+        toast.success(t("tools.deployRoulette.toast.survived"), {
+          description: t("tools.deployRoulette.toast.running", {
+            command: deployCommand,
+            directory,
+          }),
         });
         runDeployCommand();
       } else {
-        toast.error("You've been Rickrolled!", {
-          description: "Better luck next time...",
+        toast.error(t("tools.deployRoulette.toast.rickrolled"), {
+          description: t("tools.deployRoulette.toast.betterLuck"),
         });
         setRickrollDialogOpen(true);
       }
@@ -200,9 +210,11 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
           <Rocket className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="text-xl font-semibold">Deploy Roulette Spinner</h1>
+          <h1 className="text-xl font-semibold">
+            {t("tools.deployRoulette.title")}
+          </h1>
           <p className="text-sm text-muted-foreground">
-            60% chance to deploy, 40% chance to get Rickrolled
+            {t("tools.deployRoulette.subtitle")}
           </p>
         </div>
       </div>
@@ -216,26 +228,28 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
               <div className="w-full max-w-md space-y-4 p-4 rounded-lg border bg-muted/30">
                 <h3 className="font-semibold text-sm flex items-center gap-2">
                   <Terminal className="w-4 h-4" />
-                  Deploy Configuration
+                  {t("tools.deployRoulette.config")}
                 </h3>
 
                 <div className="space-y-2">
                   <Label htmlFor="directory" className="text-xs">
-                    Working Directory
+                    {t("tools.deployRoulette.workingDirectory")}
                   </Label>
                   <div className="flex gap-2">
                     <Input
                       id="directory"
                       value={directory}
                       onChange={(e) => setDirectory(e.target.value)}
-                      placeholder="/path/to/project"
+                      placeholder={t(
+                        "tools.deployRoulette.directoryPlaceholder",
+                      )}
                       className="font-mono text-sm"
                     />
                     <Button
                       variant="outline"
                       size="icon"
                       onClick={handleBrowseDirectory}
-                      title="Browse directory"
+                      title={t("tools.deployRoulette.browseDirectory")}
                     >
                       <FolderOpen className="w-4 h-4" />
                     </Button>
@@ -244,13 +258,13 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
 
                 <div className="space-y-2">
                   <Label htmlFor="command" className="text-xs">
-                    Deploy Command
+                    {t("tools.deployRoulette.deployCommand")}
                   </Label>
                   <Input
                     id="command"
                     value={deployCommand}
                     onChange={(e) => setDeployCommand(e.target.value)}
-                    placeholder="npm run deploy"
+                    placeholder={t("tools.deployRoulette.commandPlaceholder")}
                     className="font-mono text-sm"
                   />
                 </div>
@@ -273,12 +287,16 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
                   {isSpinning ? (
                     <div className="flex flex-col items-center">
                       <Skull className="w-8 h-8 animate-bounce" />
-                      <span className="text-sm mt-2">SPINNING...</span>
+                      <span className="text-sm mt-2">
+                        {t("tools.deployRoulette.spinning")}
+                      </span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
                       <Rocket className="w-8 h-8" />
-                      <span className="text-sm mt-2">DEPLOY?</span>
+                      <span className="text-sm mt-2">
+                        {t("tools.deployRoulette.deploy")}
+                      </span>
                     </div>
                   )}
                 </Button>
@@ -289,7 +307,7 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
                 <div className="w-full max-w-xs space-y-2">
                   <Progress value={spinProgress} className="h-3" />
                   <p className="text-sm text-center text-muted-foreground">
-                    Determining your fate...
+                    {t("tools.deployRoulette.determiningFate")}
                   </p>
                 </div>
               )}
@@ -307,7 +325,7 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
                     <>
                       <Rocket className="w-12 h-12 text-green-500 mb-2" />
                       <span className="text-xl font-bold text-green-500">
-                        DEPLOYING!
+                        {t("tools.deployRoulette.deploying")}
                       </span>
                       <code className="mt-2 text-sm text-muted-foreground font-mono">
                         {deployCommand}
@@ -317,10 +335,10 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
                     <>
                       <Music className="w-12 h-12 text-red-500 mb-2" />
                       <span className="text-xl font-bold text-red-500">
-                        RICKROLLED!
+                        {t("tools.deployRoulette.rickrolled")}
                       </span>
                       <span className="mt-2 text-sm text-muted-foreground">
-                        Never gonna give you up...
+                        {t("tools.deployRoulette.rickrollMessage")}
                       </span>
                     </>
                   )}
@@ -330,7 +348,7 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
               {/* Warning */}
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <AlertTriangle className="w-4 h-4" />
-                <span>Use at your own risk. Results may vary.</span>
+                <span>{t("tools.deployRoulette.warning")}</span>
               </div>
             </div>
           </CardContent>
@@ -341,26 +359,36 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
           {/* Stats Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Statistics</CardTitle>
-              <CardDescription>Your deployment survival rate</CardDescription>
+              <CardTitle className="text-base">
+                {t("tools.deployRoulette.statistics")}
+              </CardTitle>
+              <CardDescription>
+                {t("tools.deployRoulette.statisticsDescription")}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-center">
                 <span className="text-4xl font-bold">{survivalRate}%</span>
-                <p className="text-sm text-muted-foreground">Survival Rate</p>
+                <p className="text-sm text-muted-foreground">
+                  {t("tools.deployRoulette.survivalRate")}
+                </p>
               </div>
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
                   <span className="text-2xl font-bold text-green-500">
                     {stats.deploys}
                   </span>
-                  <p className="text-xs text-muted-foreground">Deploys</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t("tools.deployRoulette.deploys")}
+                  </p>
                 </div>
                 <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
                   <span className="text-2xl font-bold text-red-500">
                     {stats.rickrolls}
                   </span>
-                  <p className="text-xs text-muted-foreground">Rickrolls</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t("tools.deployRoulette.rickrolls")}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -371,13 +399,13 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
                 <History className="w-4 h-4" />
-                History
+                {t("tools.deployRoulette.history")}
               </CardTitle>
             </CardHeader>
             <CardContent>
               {history.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-4">
-                  No spins yet. Feeling lucky?
+                  {t("tools.deployRoulette.noHistory")}
                 </p>
               ) : (
                 <div className="space-y-2">
@@ -392,7 +420,9 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
                       <Badge
                         variant={item.survived ? "default" : "destructive"}
                       >
-                        {item.result === "deploy" ? "Deployed" : "Rickrolled"}
+                        {item.result === "deploy"
+                          ? t("tools.deployRoulette.deployed")
+                          : t("tools.deployRoulette.rickrolledBadge")}
                       </Badge>
                     </div>
                   ))}
@@ -409,10 +439,10 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Music className="w-5 h-5 text-red-500" />
-              You&apos;ve Been Rickrolled!
+              {t("tools.deployRoulette.rickrollDialog.title")}
             </DialogTitle>
             <DialogDescription>
-              Never gonna give you up, never gonna let you down...
+              {t("tools.deployRoulette.rickrollDialog.description")}
             </DialogDescription>
           </DialogHeader>
 
@@ -433,7 +463,7 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
               onClick={() => setRickrollDialogOpen(false)}
               variant="outline"
             >
-              Close (if you dare)
+              {t("tools.deployRoulette.rickrollDialog.close")}
             </Button>
           </div>
         </DialogContent>

@@ -11,11 +11,37 @@
     "collapse": "收起侧边栏",
     "expand": "展开侧边栏"
   },
+  "tabBar": {
+    "utilities": "实用工具",
+    "funStuff": "趣味工具",
+    "newTab": "新建标签"
+  },
   "tools": {
     "curlConverter": {
       "name": "cURL 转换器",
       "shortName": "cURL",
-      "description": "将 cURL 命令转换为 API 请求"
+      "description": "将 cURL 命令转换为 API 请求",
+      "input": "cURL 输入",
+      "pasteFromClipboard": "从剪贴板粘贴",
+      "clear": "清空",
+      "inputPlaceholder": "在此粘贴您的 cURL 命令...",
+      "requestBuilder": "请求构建器",
+      "copyAsCurl": "复制为 cURL",
+      "send": "发送",
+      "urlPlaceholder": "https://api.example.com/endpoint",
+      "headers": "请求头",
+      "body": "请求体",
+      "headerNamePlaceholder": "请求头名称",
+      "valuePlaceholder": "值",
+      "addHeader": "添加请求头",
+      "bodyPlaceholder": "{\"key\": \"value\"}",
+      "response": "响应",
+      "copy": "复制",
+      "responsePlaceholder": "发送请求后响应将显示在这里",
+      "errors": {
+        "noUrl": "请输入 URL",
+        "requestFailed": "请求失败"
+      }
     },
     "jwtDecoder": {
       "name": "JWT 开罐器",
@@ -45,22 +71,158 @@
     "base64": {
       "name": "Base 螺丝刀",
       "shortName": "Base",
-      "description": "支持文件的 Base16/32/64/URL/85 编码/解码"
+      "description": "支持文件的 Base16/32/64/URL/85 编码/解码",
+      "textTab": "文本",
+      "fileTab": "文件",
+      "encode": "编码",
+      "decode": "解码",
+      "formats": {
+        "base16": "Base16 (十六进制)",
+        "base32": "Base32",
+        "base64": "Base64",
+        "base64url": "Base64URL",
+        "ascii85": "ASCII85"
+      },
+      "swap": "交换",
+      "clear": "清空",
+      "input": "输入",
+      "output": "输出",
+      "copy": "复制",
+      "inputPlaceholder": {
+        "encode": "输入要编码的文本...",
+        "decode": "输入要解码的 {{format}}..."
+      },
+      "outputPlaceholder": "结果将显示在这里...",
+      "stats": {
+        "input": "输入：",
+        "output": "输出：",
+        "expansion": "扩展率：",
+        "chars": "字符"
+      },
+      "file": {
+        "dropZone": "拖放文件到这里进行编码",
+        "dropZoneDescription": "或点击浏览 - 支持大文件流式处理",
+        "selectFile": "选择文件",
+        "processing": "处理中...",
+        "extracting": "正在编码文件...",
+        "output": "{{format}} 输出",
+        "outputDescription": "{{count}} 个字符",
+        "truncated": "... (显示已截断)",
+        "decodeTitle": "将 {{format}} 解码为文件",
+        "decodeDescription": "粘贴 {{format}} 编码数据",
+        "decodePlaceholder": "粘贴 {{format}} 编码数据...",
+        "downloadDecoded": "保存解码文件",
+        "clear": "清空",
+        "chooseAnother": "选择其他文件"
+      },
+      "errors": {
+        "processingFailed": "处理失败",
+        "invalidFormat": "无效的 {{format}} 字符串",
+        "failedToProcess": "文件处理失败",
+        "failedToDownload": "下载解码文件失败",
+        "failedToEncode": "编码失败",
+        "invalidHex": "无效的十六进制字符串",
+        "invalidBase32": "无效的 Base32 字符串",
+        "invalidAscii85": "无效的 ASCII85 字符"
+      },
+      "success": {
+        "downloaded": "文件已保存到下载文件夹"
+      }
     },
     "jsonCsv": {
       "name": "JSON/CSV 旋转刀",
       "shortName": "转换",
-      "description": "在数据格式之间转换"
+      "description": "在数据格式之间转换",
+      "from": "从：",
+      "to": "到：",
+      "autoFix": "自动修复错误的 JSON",
+      "clear": "清空",
+      "convert": "转换",
+      "input": "输入",
+      "output": "输出",
+      "inputPlaceholder": "在此粘贴您的 {{format}} 数据...",
+      "outputPlaceholder": "转换结果将显示在这里...",
+      "copy": "复制",
+      "autoFixSuccess": "JSON 已自动修复并成功转换",
+      "conversionFailed": "转换失败"
     },
     "blameIntern": {
       "name": "甩锅实习生订书机",
       "shortName": "甩锅",
-      "description": "生成假的 git 历史记录甩锅给 Jordan"
+      "description": "生成假的 git 历史记录甩锅给 Jordan",
+      "title": "甩锅实习生订书机",
+      "subtitle": "生成假的 git 历史记录，将任何错误归咎于虚构的实习生",
+      "bugDetails": "错误详情",
+      "bugDetailsDescription": "描述错误并自定义替罪羊",
+      "internName": "实习生姓名",
+      "internNamePlaceholder": "Jordan",
+      "bugDescription": "错误描述",
+      "bugDescriptionPlaceholder": "例如：登录按钮在 Safari 上不工作，高流量时数据库超时...",
+      "generating": "生成甩锅记录中...",
+      "generate": "生成甩锅历史",
+      "output": "Git 甩锅输出",
+      "outputDescription": "完全合法的提交历史",
+      "copied": "已复制！",
+      "copyLog": "复制日志",
+      "noHistory": "尚未生成甩锅历史",
+      "noHistoryHint": "描述一个错误并点击生成",
+      "internBadge": "实习生",
+      "copyCommitTooltip": "点击复制提交",
+      "errors": {
+        "noBugDescription": "请先描述错误！"
+      },
+      "success": {
+        "generated": "甩锅历史已生成！",
+        "generatedDescription": "{{internName}} 已成功被甩锅。"
+      }
     },
     "deployRoulette": {
       "name": "部署轮盘旋转器",
       "shortName": "部署",
-      "description": "60/40 几率：部署或被 Rickroll"
+      "description": "60/40 几率：部署或被 Rickroll",
+      "title": "部署轮盘旋转器",
+      "subtitle": "60% 几率部署，40% 几率被 Rickroll",
+      "config": "部署配置",
+      "workingDirectory": "工作目录",
+      "directoryPlaceholder": "/path/to/project",
+      "browseDirectory": "浏览目录",
+      "deployCommand": "部署命令",
+      "commandPlaceholder": "npm run deploy",
+      "deploy": "部署？",
+      "spinning": "旋转中...",
+      "determiningFate": "正在决定你的命运...",
+      "deploying": "部署中！",
+      "rickrolled": "被 RICKROLL 了！",
+      "rickrollMessage": "永不放弃你...",
+      "warning": "使用风险自负。结果可能有所不同。",
+      "statistics": "统计",
+      "statisticsDescription": "你的部署生存率",
+      "survivalRate": "生存率",
+      "deploys": "部署",
+      "rickrolls": "Rickroll",
+      "history": "历史",
+      "noHistory": "还没有旋转记录。感觉幸运吗？",
+      "deployed": "已部署",
+      "rickrolledBadge": "被 Rickroll",
+      "rickrollDialog": {
+        "title": "你被 Rickroll 了！",
+        "description": "永不放弃你，永不让你失望...",
+        "close": "关闭（如果你敢）"
+      },
+      "toast": {
+        "directoryRequired": "目录选择器需要 Tauri 桌面应用",
+        "directorySelected": "目录已选择",
+        "selectionCancelled": "选择已取消",
+        "failedToPick": "打开目录选择器失败",
+        "deployCommand": "部署命令",
+        "wouldRun": "将运行：{{command}} 在 {{directory}}",
+        "deployStarted": "部署已启动！",
+        "deployFailed": "部署失败",
+        "survived": "你存活了！正在部署...",
+        "running": "运行中：{{command}} 在 {{directory}}",
+        "rickrolled": "你被 Rickroll 了！",
+        "betterLuck": "下次好运..."
+      }
     },
     "bossMode": {
       "name": "老板模式诱饵",
@@ -211,6 +373,31 @@
         "weeks": "{{count}} 周前",
         "months": "{{count}} 个月前",
         "years": "{{count}} 年前"
+      },
+      "timeIn": {
+        "seconds": "{{count}} 秒后",
+        "seconds_other": "{{count}} 秒后",
+        "minutes": "{{count}} 分钟后",
+        "minutes_other": "{{count}} 分钟后",
+        "hours": "{{count}} 小时后",
+        "hours_other": "{{count}} 小时后",
+        "days": "{{count}} 天后",
+        "days_other": "{{count}} 天后",
+        "weeks": "{{count}} 周后",
+        "weeks_other": "{{count}} 周后",
+        "months": "{{count}} 个月后",
+        "months_other": "{{count}} 个月后",
+        "years": "{{count}} 年后",
+        "years_other": "{{count}} 年后"
+      },
+      "weekdays": {
+        "sunday": "星期日",
+        "monday": "星期一",
+        "tuesday": "星期二",
+        "wednesday": "星期三",
+        "thursday": "星期四",
+        "friday": "星期五",
+        "saturday": "星期六"
       }
     },
     "cronGenerator": {

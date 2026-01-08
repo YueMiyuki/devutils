@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useCopyAnimation } from "@/hooks/use-copy-animation";
+import { useTranslation } from "react-i18next";
 
 interface GitCommit {
   hash: string;
@@ -91,6 +92,7 @@ interface BlameInternProps {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
+  const { t } = useTranslation();
   const [bugDescription, setBugDescription] = useState("");
   const [internName, setInternName] = useState("Jordan");
   const [commits, setCommits] = useState<GitCommit[]>([]);
@@ -102,7 +104,7 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
 
   const generateBlameHistory = () => {
     if (!bugDescription) {
-      toast.error("Please describe the bug first!");
+      toast.error(t("tools.blameIntern.errors.noBugDescription"));
       return;
     }
 
@@ -139,8 +141,10 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
 
       setCommits(newCommits);
       setIsGenerating(false);
-      toast.success("Blame history generated!", {
-        description: `${internName} has been successfully blamed.`,
+      toast.success(t("tools.blameIntern.success.generated"), {
+        description: t("tools.blameIntern.success.generatedDescription", {
+          internName,
+        }),
       });
     }, 1800);
   };
@@ -174,9 +178,11 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
             <GitBranch className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold">Blame The Intern Stapler</h1>
+            <h1 className="text-xl font-semibold">
+              {t("tools.blameIntern.title")}
+            </h1>
             <p className="text-sm text-muted-foreground">
-              Generate fake git history that pins any bug on a fictional intern
+              {t("tools.blameIntern.subtitle")}
             </p>
           </div>
         </div>
@@ -184,14 +190,18 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
         <div className="grid gap-6 lg:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Bug Details</CardTitle>
+              <CardTitle className="text-base">
+                {t("tools.blameIntern.bugDetails")}
+              </CardTitle>
               <CardDescription>
-                Describe the bug and customize the scapegoat
+                {t("tools.blameIntern.bugDetailsDescription")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="intern-name">Intern Name</Label>
+                <Label htmlFor="intern-name">
+                  {t("tools.blameIntern.internName")}
+                </Label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -200,19 +210,21 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                       value={internName}
                       onChange={(e) => setInternName(e.target.value)}
                       className="pl-9"
-                      placeholder="Jordan"
+                      placeholder={t("tools.blameIntern.internNamePlaceholder")}
                     />
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="bug-description">Bug Description</Label>
+                <Label htmlFor="bug-description">
+                  {t("tools.blameIntern.bugDescription")}
+                </Label>
                 <Textarea
                   id="bug-description"
                   value={bugDescription}
                   onChange={(e) => setBugDescription(e.target.value)}
-                  placeholder="e.g., Login button doesn't work on Safari, Database timeouts on high traffic..."
+                  placeholder={t("tools.blameIntern.bugDescriptionPlaceholder")}
                   className="min-h-24 resize-none"
                 />
               </div>
@@ -225,12 +237,12 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                 {isGenerating ? (
                   <>
                     <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                    Generating Blame...
+                    {t("tools.blameIntern.generating")}
                   </>
                 ) : (
                   <>
                     <AlertTriangle className="w-4 h-4 mr-2" />
-                    Generate Blame History
+                    {t("tools.blameIntern.generate")}
                   </>
                 )}
               </Button>
@@ -240,9 +252,11 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <div>
-                <CardTitle className="text-base">Git Blame Output</CardTitle>
+                <CardTitle className="text-base">
+                  {t("tools.blameIntern.output")}
+                </CardTitle>
                 <CardDescription>
-                  Totally legitimate commit history
+                  {t("tools.blameIntern.outputDescription")}
                 </CardDescription>
               </div>
               {commits.length > 0 && (
@@ -255,12 +269,12 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                   {copiedLog ? (
                     <>
                       <Check className="w-4 h-4 mr-2 text-green-500" />
-                      Copied!
+                      {t("tools.blameIntern.copied")}
                     </>
                   ) : (
                     <>
                       <Copy className="w-4 h-4 mr-2" />
-                      Copy Log
+                      {t("tools.blameIntern.copyLog")}
                     </>
                   )}
                 </Button>
@@ -271,8 +285,12 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                 {commits.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center py-12 text-muted-foreground">
                     <GitBranch className="w-12 h-12 mb-4 opacity-20" />
-                    <p className="text-sm">No blame history generated yet</p>
-                    <p className="text-xs">Describe a bug and click generate</p>
+                    <p className="text-sm">
+                      {t("tools.blameIntern.noHistory")}
+                    </p>
+                    <p className="text-xs">
+                      {t("tools.blameIntern.noHistoryHint")}
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -314,7 +332,7 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                                     variant="destructive"
                                     className="text-[10px] animate-pulse"
                                   >
-                                    INTERN
+                                    {t("tools.blameIntern.internBadge")}
                                   </Badge>
                                 )}
                                 <Tooltip>
@@ -332,8 +350,10 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                                   <TooltipContent>
                                     <p>
                                       {isCopied
-                                        ? "Copied!"
-                                        : "Click to copy commit"}
+                                        ? t("tools.blameIntern.copied")
+                                        : t(
+                                            "tools.blameIntern.copyCommitTooltip",
+                                          )}
                                     </p>
                                   </TooltipContent>
                                 </Tooltip>
