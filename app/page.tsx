@@ -7,6 +7,13 @@ import { ToolContent } from "@/components/tool-content";
 import { SettingsDialog } from "@/components/settings-dialog";
 import { useTabStore } from "@/lib/tab-store";
 
+/**
+ * Renders the application's Home view including the tool sidebar, tab bar, main content area, and settings dialog.
+ *
+ * When running inside a Tauri environment, intercepts Ctrl/Cmd+W to close the active tab and registers a window-close handler that asks for confirmation before quitting.
+ *
+ * @returns The root React element for the Home layout.
+ */
 export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { activeTabId, removeTab } = useTabStore();

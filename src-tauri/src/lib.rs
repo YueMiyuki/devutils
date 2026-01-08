@@ -1,6 +1,21 @@
 use std::process::Command;
 use image::GenericImageView;
 
+/// Extracts a palette of dominant colors from an image file.
+///
+/// Processes the image at `file_path`, samples pixels, and uses k-means clustering to produce the most prevalent colors as hexadecimal strings.
+///
+/// # Returns
+///
+/// A `Vec<String>` of hex color codes (e.g., `"#rrggbb"`) sorted by cluster size, or an error message on failure.
+///
+/// # Examples
+///
+/// ```
+/// let rt = tokio::runtime::Runtime::new().unwrap();
+/// let colors = rt.block_on(extract_palette_from_image("assets/image.png".into(), 5)).unwrap();
+/// assert!(!colors.is_empty());
+/// ```
 #[tauri::command]
 async fn extract_palette_from_image(file_path: String, num_colors: usize) -> Result<Vec<String>, String> {
     // Don't block main thread
@@ -11,6 +26,24 @@ async fn extract_palette_from_image(file_path: String, num_colors: usize) -> Res
     .map_err(|e| format!("Task join error: {}", e))?
 }
 
+/// Extracts a palette of prominent colors from an image file.
+///
+/// Attempts to open and downsample the image at `file_path`, samples pixels while
+/// filtering out very dark and very light values, performs k-means clustering
+/// to find up to `num_colors` dominant colors, and returns those colors as
+/// hex `#rrggbb` strings sorted by cluster size (most frequent first).
+///
+/// # Errors
+///
+/// Returns `Err(String)` if the image cannot be opened, if no valid pixels are
+/// found after sampling, or if the clustering step fails.
+///
+/// # Examples
+///
+/// ```no_run
+/// let colors = extract_palette_from_image_blocking("assets/sample.png".to_string(), 5).unwrap();
+/// assert!(colors.iter().all(|c| c.starts_with('#')));
+/// ```
 fn extract_palette_from_image_blocking(file_path: String, num_colors: usize) -> Result<Vec<String>, String> {
     // Decode image
     let img = image::open(&file_path)
@@ -79,6 +112,28 @@ struct KmeansResult {
     pixel_counts: Vec<usize>,
 }
 
+/// Performs k-means clustering on a set of RGB pixels to identify representative color centroids.
+///
+/// Returns a `KmeansResult` containing `centers` (RGB centroids as `[u8; 3]`) and `pixel_counts`
+/// (number of pixels assigned to each centroid). Returns an `Err` if `pixels` is empty or if `k` is 0.
+/// The effective number of clusters is clamped to the number of provided pixels.
+///
+/// # Examples
+///
+/// ```
+/// // 4 pixels: two near red, two near blue -> with k=2 we expect two centroids
+/// let pixels: Vec<[u8; 3]> = vec![
+///     [250, 10, 10],
+///     [245, 20, 15],
+///     [10, 10, 240],
+///     [20, 15, 245],
+/// ];
+///
+/// let res = kmeans_clustering(&pixels, 2).unwrap();
+/// assert_eq!(res.centers.len(), 2);
+/// let total_count: usize = res.pixel_counts.iter().sum();
+/// assert_eq!(total_count, pixels.len());
+/// ```
 fn kmeans_clustering(pixels: &[[u8; 3]], k: usize) -> Result<KmeansResult, String> {
     if pixels.is_empty() {
         return Err("No pixels provided".to_string());
@@ -175,11 +230,44 @@ fn kmeans_clustering(pixels: &[[u8; 3]], k: usize) -> Result<KmeansResult, Strin
     })
 }
 
+/// Computes the squared Euclidean distance between two RGB colors.
+///
+/// # Examples
+///
+/// ```
+/// let d = color_distance_squared([0.0, 0.0, 0.0], [1.0, 2.0, 2.0]);
+/// assert_eq!(d, 9.0);
+/// ```
 fn color_distance_squared(c1: [f32; 3], c2: [f32; 3]) -> f32 {
     // Euclidean distance
     (c1[0] - c2[0]).powi(2) + (c1[1] - c2[1]).powi(2) + (c1[2] - c2[2]).powi(2)
 }
 
+/// Launches a new terminal window in the given directory and runs the provided command.
+///
+/// Attempts to open a platform-appropriate terminal emulator (Terminal.app on macOS,
+/// Command Prompt on Windows, and a list of common terminals on Linux) and execute the
+/// command in the specified working directory. Returns an informational success message
+/// when a terminal is launched or an error string if launching fails or no supported
+/// terminal is found.
+///
+/// # Parameters
+///
+/// - `directory`: Path of the working directory in which to run the command.
+/// - `command`: Shell command to execute inside the terminal; must be non-empty.
+///
+/// # Returns
+///
+/// `Ok` with a short success message identifying the terminal used (for example,
+/// `"Command launched in Terminal"`), or `Err` with a diagnostic string describing
+/// the failure (for example, `"Empty command"` or `"No terminal emulator found"`).
+///
+/// # Examples
+///
+/// ```
+/// let res = run_deploy_command(".".into(), "echo hello".into());
+/// assert!(res.is_ok());
+/// ```
 #[tauri::command]
 fn run_deploy_command(directory: String, command: String) -> Result<String, String> {
     if command.trim().is_empty() {
@@ -280,6 +368,19 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
     Err("Unsupported platform".to_string())
 }
 
+/// Builds and runs the Tauri application with configured plugins and invoke handlers.
+///
+/// The application is configured with the dialog and filesystem plugins, conditionally
+/// enables an info-level log plugin in debug builds, registers the `run_deploy_command`
+/// and `extract_palette_from_image` invoke handlers, and then launches the Tauri runtime.
+///
+/// # Examples
+///
+/// ```no_run
+/// fn main() {
+///     run();
+/// }
+/// ```
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()

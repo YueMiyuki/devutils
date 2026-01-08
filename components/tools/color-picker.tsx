@@ -136,7 +136,14 @@ const hslToHex = (h: number, s: number, l: number): string => {
   return `#${rHex}${gHex}${bHex}`;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/**
+ * Renders a tabbed color picker and palette generator UI.
+ *
+ * The component provides a Sketch-based color picker, color harmony presets, multiple color format outputs, and an image-driven palette extractor (uses Tauri commands when available). It supports drag-and-drop and file upload for extracting up to six palette colors, copying values with animated feedback, and theme-aware styling.
+ *
+ * @param tabId - Identifier prop required by the surrounding tab system; not otherwise used by this component.
+ * @returns A React element containing the color picker, harmonies, format outputs, and palette generation UI.
+ */
 export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
   const { t } = useTranslation();
   const { resolvedTheme } = useTheme();

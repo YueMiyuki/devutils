@@ -51,7 +51,14 @@ const MONTHS = [
   "December",
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/**
+ * Render a cron expression builder UI with presets, a human-readable description, and a preview of upcoming run times.
+ *
+ * The component exposes controls for selecting schedule frequency, time, day, month, and custom intervals; it displays the generated cron expression, a readable description, the next five estimated run timestamps, and preset buttons that populate common schedules. Includes a copy-to-clipboard action for the expression.
+ *
+ * @param tabId - Unused prop left for external tab tracking; provide the tab identifier string if available.
+ * @returns The React element rendering the cron generator interface.
+ */
 export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
   const { t } = useTranslation();
   const { copyWithAnimation, copyAnimationClass } = useCopyAnimation();

@@ -48,7 +48,12 @@ interface CommonPattern {
   description: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/**
+ * Render an interactive regex testing UI with pattern input, flag controls, live matching results, token-by-token explanations, and common preset patterns.
+ *
+ * @param tabId - Optional tab identifier; accepted by the component but not used for rendering logic.
+ * @returns The component's rendered UI for the regex tester.
+ */
 export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
   const { t } = useTranslation();
   const [pattern, setPattern] = useState("");

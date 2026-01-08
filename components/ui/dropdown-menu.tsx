@@ -43,6 +43,16 @@ function DropdownMenuContent({
   );
 }
 
+/**
+ * Render a styled dropdown menu item with optional inset spacing and visual variant.
+ *
+ * The component applies consistent className-based styles, sets data attributes for
+ * slot, inset, and variant, and forwards remaining props to the rendered element.
+ *
+ * @param inset - If true, applies inset spacing (used for aligned items such as those with icons)
+ * @param variant - Visual variant of the item; `"default"` for standard styling or `"destructive"` for destructive styling
+ * @returns A JSX element representing the rendered dropdown menu item
+ */
 function DropdownMenuItem({
   className,
   inset,
@@ -66,6 +76,14 @@ function DropdownMenuItem({
   );
 }
 
+/**
+ * Render a styled dropdown menu checkbox item with a left-aligned check indicator.
+ *
+ * @param className - Additional CSS classes to apply to the root element
+ * @param children - Content to display inside the item
+ * @param checked - Whether the checkbox item is currently checked
+ * @returns A DropdownMenu checkbox item React element
+ */
 function DropdownMenuCheckboxItem({
   className,
   children,
@@ -92,6 +110,12 @@ function DropdownMenuCheckboxItem({
   );
 }
 
+/**
+ * Renders a styled dropdown menu label element with an optional inset state.
+ *
+ * @param inset - When true, applies inset spacing to align the label with inset items.
+ * @returns The rendered DropdownMenu label element.
+ */
 function DropdownMenuLabel({
   className,
   inset,

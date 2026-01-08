@@ -51,7 +51,13 @@ interface TimestampFormats {
   julianDay: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/**
+ * Renders a timestamp converter UI that parses an input timestamp and shows multiple formatted representations with copy actions.
+ *
+ * When a valid date is parsed (supports Unix seconds, Unix milliseconds, and ISO-like strings), the component displays a comprehensive set of formats — including UNIX, ISO 8601, RFC 2822, UTC, local, SQL date/time, HTTP/Atom/RSS/W3C representations, Excel serial, Julian day, relative time, and individual date/time parts. The UI provides controls to set the input to the current time, clear it, and copy any format value with a brief copy animation and visual success state.
+ *
+ * @returns A React element containing the timestamp converter interface.
+ */
 export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
   const { t } = useTranslation();
   const [timestamp, setTimestamp] = useState<string>(() => {

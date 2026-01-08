@@ -30,6 +30,11 @@ const toolComponents: Record<string, React.ComponentType<{ tabId: string }>> = {
   "cron-generator": CronGenerator,
 };
 
+/**
+ * Renders the currently active tool for the selected tab or a contextual placeholder when no tool is available.
+ *
+ * @returns A React element containing the active tool component, a "No tool selected" placeholder if no tab is active, or a "Tool not found" message if the tab's tool ID is unrecognized.
+ */
 export function ToolContent() {
   const { tabs, activeTabId } = useTabStore();
   const activeTab = tabs.find((t) => t.id === activeTabId);

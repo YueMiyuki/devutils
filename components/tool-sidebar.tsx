@@ -77,6 +77,14 @@ interface ToolSidebarProps {
   onOpenSettings: () => void;
 }
 
+/**
+ * Renders the collapsible left sidebar containing utility and fun tool buttons, settings, and collapse controls.
+ *
+ * The sidebar shows tool icons and names when expanded, and only icons with right-side tooltips when collapsed.
+ *
+ * @param onOpenSettings - Callback invoked when the settings button is clicked
+ * @returns The sidebar React element that manages tool navigation, settings access, and collapse/expand state
+ */
 export function ToolSidebar({ onOpenSettings }: ToolSidebarProps) {
   const { t } = useTranslation();
   const { openOrFocusTab } = useTabStore();

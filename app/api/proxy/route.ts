@@ -20,6 +20,19 @@ function sanitizeHeaders(
   return sanitized;
 }
 
+/**
+ * Proxies an HTTP request to a normalized target URL and returns the proxied response metadata and body.
+ *
+ * The function reads a JSON body from the incoming request with properties `InputUrl`, `method`, `headers`, and `body`.
+ * It normalizes `InputUrl`, forwards the request to that URL with sanitized headers and a 30s timeout, measures response time,
+ * and returns the response status, status text, content type, response time (milliseconds), and response body (pretty-printed JSON when applicable or plain text).
+ *
+ * Error responses:
+ * - Returns HTTP 400 when `InputUrl` is missing or cannot be normalized.
+ * - Returns HTTP 500 on other failures with an `error` message.
+ *
+ * @returns A JSON response containing `status`, `statusText`, `responseTime` (ms), `data` (string), and `contentType` on success; on error, an object with an `error` message and an appropriate HTTP status.
+ */
 export async function POST(request: NextRequest) {
   try {
     const { InputUrl, method, headers, body } = await request.json();

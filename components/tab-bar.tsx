@@ -48,6 +48,15 @@ const funTools = [
   { id: "boss-mode", name: "Boss Mode Decoy" },
 ];
 
+/**
+ * Renders the horizontal tab bar used to display, switch between, add, and remove tool tabs.
+ *
+ * The tab bar syncs with tab state from the store, auto-scrolls the active tab into view,
+ * and enables horizontal scrolling via the mouse wheel. Each tab shows an icon, title,
+ * and a close control; a dropdown provides options to add new tabs.
+ *
+ * @returns The rendered tab bar element.
+ */
 export function TabBar() {
   const { tabs, activeTabId, addTab, removeTab, setActiveTab } = useTabStore();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
