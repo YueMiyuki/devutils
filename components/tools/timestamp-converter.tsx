@@ -201,11 +201,15 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
     };
 
     const getWeekOfYear = (date: Date): number => {
-      const startOfYear = new Date(date.getFullYear(), 0, 1);
-      const days = Math.floor(
-        (date.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000),
-      );
-      return Math.ceil((days + startOfYear.getDay() + 1) / 7);
+      // ISO 8601 week calculation
+      // Week 1 is the week containing January 4th
+      // Weeks start on Monday
+      const target = new Date(date.valueOf());
+      const dayNr = (date.getDay() + 6) % 7; // Monday = 0, Sunday = 6
+      target.setDate(target.getDate() - dayNr + 3); // Nearest Thursday
+      const jan4 = new Date(target.getFullYear(), 0, 4);
+      const dayDiff = (target.getTime() - jan4.getTime()) / 86400000;
+      return 1 + Math.round((dayDiff - ((jan4.getDay() + 6) % 7) + 3) / 7);
     };
 
     const getDayOfYear = (date: Date): number => {
