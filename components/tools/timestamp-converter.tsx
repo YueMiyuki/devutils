@@ -245,7 +245,7 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
       unix: Math.floor(parsedDate.getTime() / 1000).toString(),
       unixMs: parsedDate.getTime().toString(),
       iso8601: parsedDate.toISOString(),
-      rfc2822: parsedDate.toString(),
+      rfc2822: parsedDate.toUTCString().replace("GMT", "+0000"),
       utc: parsedDate.toUTCString(),
       local: parsedDate.toLocaleString(),
       relative: getTimeAgo(parsedDate),
