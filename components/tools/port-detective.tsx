@@ -58,11 +58,9 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
       const result = await invoke<PortInfo>("check_port", { port });
       return result;
     } catch (err) {
-      console.error("Error checking port:", err);
-      return {
-        port,
-        inUse: false,
-      };
+      throw new Error(
+        err instanceof Error ? err.message : "Failed to check port",
+      );
     }
   }, []);
 
@@ -126,11 +124,6 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
       startPort > endPort
     ) {
       setError(t("tools.portDetective.errors.invalidRange"));
-      return;
-    }
-
-    if (endPort - startPort > 65535) {
-      setError(t("tools.portDetective.errors.rangeTooLarge"));
       return;
     }
 
@@ -207,16 +200,10 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
             <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
             <div className="flex-1 space-y-1">
               <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                Admin privileges required
+                {t("tools.portDetective.adminWarning.title")}
               </p>
               <p className="text-sm text-amber-700 dark:text-amber-300">
-                Run this app with administrator/root privileges to see process
-                information (PID and process name) for ports in use. On
-                macOS/Linux, run with{" "}
-                <code className="px-1 py-0.5 bg-amber-900/20 rounded">
-                  sudo
-                </code>
-                . On Windows, run as Administrator.
+                {t("tools.portDetective.adminWarning.description")}
               </p>
             </div>
           </div>

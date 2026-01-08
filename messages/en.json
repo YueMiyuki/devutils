@@ -473,7 +473,6 @@
         "chooseAnother": "Choose Another"
       },
       "errors": {
-        "invalidPort": "Invalid port number",
         "unsupportedAlgorithm": "Unsupported algorithm",
         "hashFailed": "Hash generation failed",
         "processingFailed": "Processing failed",
@@ -583,7 +582,6 @@
       "errors": {
         "invalidPort": "Invalid port number (1-65535)",
         "invalidRange": "Invalid port range",
-        "rangeTooLarge": "Range too large (max 10000 ports)",
         "checkFailed": "Failed to check port",
         "killFailed": "Failed to kill process",
         "scanFailed": "Failed to scan ports"
@@ -591,6 +589,10 @@
       "success": {
         "processKilled": "Process killed successfully",
         "scanComplete": "Scan complete: {{count}} port(s) in use"
+      },
+      "adminWarning": {
+        "title": "Admin privileges required",
+        "description": "Run this app with administrator/root privileges to see process information (PID and process name) for ports in use. On macOS/Linux, run with sudo. On Windows, run as Administrator."
       }
     }
   },

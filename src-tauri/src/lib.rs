@@ -305,7 +305,7 @@ async fn check_port(port: u16) -> Result<PortInfo, String> {
 fn check_port_blocking(port: u16) -> Result<PortInfo, String> {
     let output = Command::new("sh")
         .arg("-c")
-        .arg(format!("netstat -anv | grep '\\.{}.*LISTEN'", port))
+        .arg(format!("netstat -anv | grep '\\.{} .*LISTEN'", port))
         .output()
         .map_err(|e| format!("Failed to run netstat: {}", e))?;
 
@@ -375,12 +375,30 @@ fn check_port_blocking(port: u16) -> Result<PortInfo, String> {
     let stdout = String::from_utf8_lossy(&output.stdout);
 
     for line in stdout.lines() {
-        if !line.contains(&format!(":{}", port)) || !line.contains("LISTENING") {
+        // Check for LISTENING
+        if !line.contains("LISTENING") {
             continue;
         }
 
         let parts: Vec<&str> = line.split_whitespace().collect();
         if parts.len() < 5 {
+            continue;
+        }
+
+        // Parse the local address to extract the port
+        if let Some(local_addr) = parts.get(1) {
+            if let Some(port_str) = local_addr.rsplit(':').next() {
+                if let Ok(line_port) = port_str.parse::<u16>() {
+                    if line_port != port {
+                        continue;
+                    }
+                } else {
+                    continue;
+                }
+            } else {
+                continue;
+            }
+        } else {
             continue;
         }
 
@@ -449,13 +467,7 @@ fn check_port_blocking(port: u16) -> Result<PortInfo, String> {
                 }
             }
 
-            return Ok(PortInfo {
-                port,
-                in_use: true,
-                pid: None,
-                process_name: None,
-                needs_admin: true,
-            });
+            continue;
         }
     }
 
@@ -473,30 +485,42 @@ fn check_port_blocking(port: u16) -> Result<PortInfo, String> {
 fn kill_process(pid: u32) -> Result<String, String> {
     #[cfg(target_os = "macos")]
     {
-        Command::new("kill")
+        let output = Command::new("kill")
             .args(["-9", &pid.to_string()])
             .output()
             .map_err(|e| format!("Failed to kill process: {}", e))?;
+
+        if !output.status.success() {
+            return Err(format!("Failed to kill process {}: process may not exist or permission denied", pid));
+        }
 
         return Ok(format!("Process {} killed successfully", pid));
     }
 
     #[cfg(target_os = "windows")]
     {
-        Command::new("taskkill")
+        let output = Command::new("taskkill")
             .args(["/PID", &pid.to_string(), "/F"])
             .output()
             .map_err(|e| format!("Failed to kill process: {}", e))?;
+
+        if !output.status.success() {
+            return Err(format!("Failed to kill process {}: process may not exist or permission denied", pid));
+        }
 
         return Ok(format!("Process {} killed successfully", pid));
     }
 
     #[cfg(target_os = "linux")]
     {
-        Command::new("kill")
+        let output = Command::new("kill")
             .args(["-9", &pid.to_string()])
             .output()
             .map_err(|e| format!("Failed to kill process: {}", e))?;
+
+        if !output.status.success() {
+            return Err(format!("Failed to kill process {}: process may not exist or permission denied", pid));
+        }
 
         return Ok(format!("Process {} killed successfully", pid));
     }

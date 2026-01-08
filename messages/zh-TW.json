@@ -466,7 +466,6 @@
         "chooseAnother": "選擇其他檔案"
       },
       "errors": {
-        "invalidPort": "無效的連接埠號碼",
         "unsupportedAlgorithm": "不支援的演算法",
         "hashFailed": "雜湊產生失敗",
         "processingFailed": "處理失敗",
@@ -576,7 +575,6 @@
       "errors": {
         "invalidPort": "無效的連接埠號碼 (1-65535)",
         "invalidRange": "無效的連接埠範圍",
-        "rangeTooLarge": "範圍太大 (最多 10000 個連接埠)",
         "checkFailed": "檢查連接埠失敗",
         "killFailed": "終止程序失敗",
         "scanFailed": "掃描連接埠失敗"
@@ -584,6 +582,10 @@
       "success": {
         "processKilled": "程序已成功終止",
         "scanComplete": "掃描完成：{{count}} 個連接埠正在使用"
+      },
+      "adminWarning": {
+        "title": "需要管理員權限",
+        "description": "使用管理員/root 權限執行此應用以查看連接埠使用的程序資訊（PID 和程序名稱）。在 macOS/Linux 上，使用 sudo 執行。在 Windows 上，以管理員身份執行。"
       }
     }
   },

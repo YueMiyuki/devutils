@@ -466,7 +466,6 @@
         "chooseAnother": "选择其他文件"
       },
       "errors": {
-        "invalidPort": "无效的端口号",
         "unsupportedAlgorithm": "不支持的算法",
         "hashFailed": "哈希生成失败",
         "processingFailed": "处理失败",
@@ -576,7 +575,6 @@
       "errors": {
         "invalidPort": "无效的端口号 (1-65535)",
         "invalidRange": "无效的端口范围",
-        "rangeTooLarge": "范围太大 (最多 10000 个端口)",
         "checkFailed": "检查端口失败",
         "killFailed": "终止进程失败",
         "scanFailed": "扫描端口失败"
@@ -584,6 +582,10 @@
       "success": {
         "processKilled": "进程已成功终止",
         "scanComplete": "扫描完成：{{count}} 个端口正在使用"
+      },
+      "adminWarning": {
+        "title": "需要管理员权限",
+        "description": "使用管理员/root 权限运行此应用以查看端口使用的进程信息（PID 和进程名称）。在 macOS/Linux 上，使用 sudo 运行。在 Windows 上，以管理员身份运行。"
       }
     }
   },

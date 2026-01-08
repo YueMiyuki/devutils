@@ -72,6 +72,17 @@ export function QRCodeTool({ tabId: _tabId }: QRCodeToolProps) {
 
   const { copyWithAnimation, copyAnimationClass } = useCopyAnimation();
 
+  const escapeWifiString = (str: string): string => {
+    // WiFi QR format requires escaping of special characters
+    // See: https://en.wikipedia.org/wiki/QR_code#WiFi
+    return str
+      .replace(/\\/g, "\\\\") // backslash first
+      .replace(/;/g, "\\;")
+      .replace(/,/g, "\\,")
+      .replace(/:/g, "\\:")
+      .replace(/"/g, '\\"');
+  };
+
   const handleJsonChange = (value: string) => {
     setJsonData(value);
     if (value.trim()) {
@@ -115,7 +126,7 @@ export function QRCodeTool({ tabId: _tabId }: QRCodeToolProps) {
       case "json":
         return jsonData;
       case "wifi":
-        return `WIFI:T:${wifiSecurity};S:${wifiSsid};P:${wifiPassword};H:${wifiHidden};`;
+        return `WIFI:T:${wifiSecurity};S:${escapeWifiString(wifiSsid)};P:${escapeWifiString(wifiPassword)};H:${wifiHidden};`;
       case "vcard":
         return `BEGIN:VCARD
 VERSION:3.0

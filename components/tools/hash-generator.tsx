@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Copy, Trash2, Upload, FileIcon, CheckCircle2 } from "lucide-react";
+import { toast } from "sonner";
 import { useCopyAnimation } from "@/hooks/use-copy-animation";
 import { useTranslation } from "react-i18next";
 import CryptoJS from "crypto-js";
@@ -96,7 +97,6 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
       onProgress: (percent: number) => void,
     ): Promise<string> => {
       const CHUNK_SIZE = 64 * 1024; // 64KB chunks
-      const MAX_FILE_SIZE_FOR_NON_STREAMING = 10 * 1024 * 1024;
       const fileSize = file.size;
       let offset = 0;
 
@@ -135,34 +135,38 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
             break;
           case "bcrypt": {
             // BCrypt doesn't support streaming, read whole file
-            if (fileSize > MAX_FILE_SIZE_FOR_NON_STREAMING) {
+            if (fileSize > 10 * 1024 * 1024) {
               throw new Error(
                 `File too large for BCrypt (max 10MB). Current: ${(fileSize / (1024 * 1024)).toFixed(1)}MB`,
               );
             }
             const arrayBuffer = await file.arrayBuffer();
             const uint8Array = new Uint8Array(arrayBuffer);
-            const text = new TextDecoder().decode(uint8Array);
+            // Convert binary data to base64 for safe hashing
+            const binaryString = String.fromCharCode(...uint8Array);
+            const base64Data = btoa(binaryString);
             onProgress(50);
-            const hash = await bcrypt.hash(text, bcryptRounds);
+            const hash = await bcrypt.hash(base64Data, bcryptRounds);
             onProgress(100);
             return hash;
           }
           case "argon2": {
             // Argon2 doesn't support streaming, read whole file
-            if (fileSize > MAX_FILE_SIZE_FOR_NON_STREAMING) {
+            if (fileSize > 10 * 1024 * 1024) {
               throw new Error(
                 `File too large for Argon2 (max 10MB). Current: ${(fileSize / (1024 * 1024)).toFixed(1)}MB`,
               );
             }
             const arrayBuffer = await file.arrayBuffer();
             const uint8Array = new Uint8Array(arrayBuffer);
-            const text = new TextDecoder().decode(uint8Array);
+            // Convert binary data to base64 for safe hashing
+            const binaryString = String.fromCharCode(...uint8Array);
+            const base64Data = btoa(binaryString);
             onProgress(50);
             const salt =
               argon2Salt || CryptoJS.lib.WordArray.random(16).toString();
             const hash = await argon2id({
-              password: text,
+              password: base64Data,
               salt: new TextEncoder().encode(salt),
               parallelism: argon2Parallelism,
               iterations: argon2Iterations,
@@ -284,30 +288,33 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
     ],
   );
 
-  const handleInputChange = async (value: string) => {
-    setInputText(value);
-    setError(null);
+  const handleInputChange = useCallback(
+    async (value: string) => {
+      setInputText(value);
+      setError(null);
 
-    if (!value.trim()) {
-      setOutputHash("");
-      return;
-    }
+      if (!value.trim()) {
+        setOutputHash("");
+        return;
+      }
 
-    try {
-      setIsProcessing(true);
-      const hash = await hashText(value);
-      setOutputHash(hash);
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : t("tools.hashGenerator.errors.processingFailed"),
-      );
-      setOutputHash("");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+      try {
+        setIsProcessing(true);
+        const hash = await hashText(value);
+        setOutputHash(hash);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : t("tools.hashGenerator.errors.processingFailed"),
+        );
+        setOutputHash("");
+      } finally {
+        setIsProcessing(false);
+      }
+    },
+    [hashText, t],
+  );
 
   const handleAlgorithmChange = (newAlgorithm: HashAlgorithm) => {
     setAlgorithm(newAlgorithm);
@@ -340,6 +347,17 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
 
   const processFile = useCallback(
     async (file: File) => {
+      // Show warning for bcrypt/argon2 on non-text files
+      if (
+        (algorithm === "bcrypt" || algorithm === "argon2") &&
+        file.type &&
+        !file.type.startsWith("text/")
+      ) {
+        toast.warning(
+          "BCrypt and Argon2 are designed for password hashing. File will be base64-encoded before hashing.",
+        );
+      }
+
       setFileInfo({
         name: file.name,
         size: file.size,
@@ -365,7 +383,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
         setIsProcessing(false);
       }
     },
-    [hashFileStream, t],
+    [hashFileStream, algorithm, t],
   );
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -464,9 +482,11 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                   <Input
                     type="number"
                     min={4}
-                    max={15}
+                    max={31}
                     value={bcryptRounds}
-                    onChange={(e) => setBcryptRounds(parseInt(e.target.value))}
+                    onChange={(e) =>
+                      setBcryptRounds(parseInt(e.target.value) || 10)
+                    }
                     className="w-20"
                   />
                 </div>
@@ -684,7 +704,9 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                   min={4}
                   max={31}
                   value={bcryptRounds}
-                  onChange={(e) => setBcryptRounds(parseInt(e.target.value, 10))}
+                  onChange={(e) =>
+                    setBcryptRounds(parseInt(e.target.value) || 10)
+                  }
                   className="w-20"
                 />
               </div>
