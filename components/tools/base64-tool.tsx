@@ -589,7 +589,8 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
             if (filePath) {
               readFile(filePath)
                 .then((uint8Array) => {
-                  const fileName = filePath.split("/").pop() || "dropped-file";
+                  const fileName =
+                    filePath.split(/[\\/]/).pop() || "dropped-file";
                   const blob = new Blob([uint8Array]);
                   const file = new File([blob], fileName, { type: blob.type });
                   processFile(file);
