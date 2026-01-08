@@ -95,12 +95,12 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
   const uint8ArrayToBinaryString = useCallback(
     (uint8Array: Uint8Array): string => {
       const CHUNK_SIZE = 8192; // 8KB chunks
-      let binaryString = "";
+      const chunks: string[] = [];
       for (let i = 0; i < uint8Array.length; i += CHUNK_SIZE) {
         const chunk = uint8Array.subarray(i, i + CHUNK_SIZE);
-        binaryString += String.fromCharCode(...chunk);
+        chunks.push(String.fromCharCode(...chunk));
       }
-      return binaryString;
+      return chunks.join("");
     },
     [],
   );
@@ -358,19 +358,44 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
   };
 
   useEffect(() => {
-    if (inputText.trim()) {
-      handleInputChange(inputText);
+    if (!inputText.trim()) {
+      setOutputHash("");
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    algorithm,
-    bcryptRounds,
-    argon2Salt,
-    argon2Iterations,
-    argon2Memory,
-    argon2Parallelism,
-    argon2HashLength,
-  ]);
+
+    let cancelled = false;
+
+    const computeHash = async () => {
+      setError(null);
+      setIsProcessing(true);
+
+      try {
+        const hash = await hashText(inputText);
+        if (!cancelled) {
+          setOutputHash(hash);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof Error
+              ? err.message
+              : t("tools.hashGenerator.errors.processingFailed"),
+          );
+          setOutputHash("");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsProcessing(false);
+        }
+      }
+    };
+
+    computeHash();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [inputText, hashText, t]);
 
   const clearAll = () => {
     setInputText("");
