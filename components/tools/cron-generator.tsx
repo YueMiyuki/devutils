@@ -223,10 +223,10 @@ export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
 
           let daysAdded = 0;
           let matchingDaysFound = 0;
-          const candidate = new Date(now);
 
           while (matchingDaysFound < i + 1) {
             daysAdded++;
+            const candidate = new Date(now);
             candidate.setDate(now.getDate() + daysAdded);
             const dayOfWeek = candidate.getDay();
 
