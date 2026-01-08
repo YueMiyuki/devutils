@@ -143,7 +143,7 @@ export function ToolSidebar({ onOpenSettings }: ToolSidebarProps) {
             <Wrench className="w-4 h-4" />
           </div>
           {!sidebarCollapsed && (
-            <div className="flex flex-col">
+            <div className="flex flex-col" suppressHydrationWarning>
               <span className="text-sm font-semibold text-sidebar-foreground">
                 {t("sidebar.title")}
               </span>
