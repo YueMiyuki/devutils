@@ -324,33 +324,14 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
     ],
   );
 
-  const handleInputChange = useCallback(
-    async (value: string) => {
-      setInputText(value);
-      setError(null);
+  const handleInputChange = useCallback((value: string) => {
+    setInputText(value);
+    setError(null);
 
-      if (!value.trim()) {
-        setOutputHash("");
-        return;
-      }
-
-      try {
-        setIsProcessing(true);
-        const hash = await hashText(value);
-        setOutputHash(hash);
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : t("tools.hashGenerator.errors.processingFailed"),
-        );
-        setOutputHash("");
-      } finally {
-        setIsProcessing(false);
-      }
-    },
-    [hashText, t],
-  );
+    if (!value.trim()) {
+      setOutputHash("");
+    }
+  }, []);
 
   const handleAlgorithmChange = (newAlgorithm: HashAlgorithm) => {
     setAlgorithm(newAlgorithm);
