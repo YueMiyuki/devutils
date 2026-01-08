@@ -14,6 +14,9 @@ import { RegexTester } from "@/components/tools/regex-tester";
 import { ColorPicker } from "@/components/tools/color-picker";
 import { TimestampConverter } from "@/components/tools/timestamp-converter";
 import { CronGenerator } from "@/components/tools/cron-generator";
+import { HashGenerator } from "@/components/tools/hash-generator";
+import { QRCodeTool } from "@/components/tools/qr-code-tool";
+import { PortDetective } from "@/components/tools/port-detective";
 import { Wrench } from "lucide-react";
 
 const toolComponents: Record<string, React.ComponentType<{ tabId: string }>> = {
@@ -28,6 +31,9 @@ const toolComponents: Record<string, React.ComponentType<{ tabId: string }>> = {
   "color-picker": ColorPicker,
   "timestamp-converter": TimestampConverter,
   "cron-generator": CronGenerator,
+  "hash-generator": HashGenerator,
+  "qr-code": QRCodeTool,
+  "port-detective": PortDetective,
 };
 
 export function ToolContent() {

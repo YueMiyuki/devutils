@@ -280,6 +280,439 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
     Err("Unsupported platform".to_string())
 }
 
+#[derive(serde::Serialize)]
+struct PortInfo {
+    port: u16,
+    #[serde(rename = "inUse")]
+    in_use: bool,
+    pid: Option<u32>,
+    #[serde(rename = "processName")]
+    process_name: Option<String>,
+    #[serde(rename = "needsAdmin")]
+    needs_admin: bool,
+}
+
+#[tauri::command]
+async fn check_port(port: u16) -> Result<PortInfo, String> {
+    tokio::task::spawn_blocking(move || {
+        check_port_blocking(port)
+    })
+    .await
+    .map_err(|e| format!("Task join error: {}", e))?
+}
+
+#[cfg(target_os = "macos")]
+fn check_port_blocking(port: u16) -> Result<PortInfo, String> {
+    let output = Command::new("sh")
+        .arg("-c")
+        .arg(format!("netstat -anv | grep '\\.{}.*LISTEN'", port))
+        .output()
+        .map_err(|e| format!("Failed to run netstat: {}", e))?;
+
+    if !output.status.success() || output.stdout.is_empty() {
+        // Free port
+        return Ok(PortInfo {
+            port,
+            in_use: false,
+            pid: None,
+            process_name: None,
+            needs_admin: false,
+        });
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+
+    for line in stdout.lines() {
+        let parts: Vec<&str> = line.split_whitespace().collect();
+
+        if parts.len() > 10 {
+            let process_info = parts[10];
+
+            if let Some(colon_pos) = process_info.rfind(':') {
+                let process_name = process_info[..colon_pos].to_string();
+                let pid_str = &process_info[colon_pos + 1..];
+
+                if let Ok(pid) = pid_str.parse::<u32>() {
+                    return Ok(PortInfo {
+                        port,
+                        in_use: true,
+                        pid: Some(pid),
+                        process_name: Some(process_name),
+                        needs_admin: false,
+                    });
+                }
+            }
+        }
+    }
+
+    // No info
+    Ok(PortInfo {
+        port,
+        in_use: true,
+        pid: None,
+        process_name: None,
+        needs_admin: false,
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn check_port_blocking(port: u16) -> Result<PortInfo, String> {
+    let output = Command::new("netstat")
+        .args(["-ano", "-p", "TCP"])
+        .output()
+        .map_err(|e| format!("Failed to run netstat: {}", e))?;
+
+    if !output.status.success() {
+        return Ok(PortInfo {
+            port,
+            in_use: false,
+            pid: None,
+            process_name: None,
+            needs_admin: false,
+        });
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+
+    for line in stdout.lines() {
+        if !line.contains(&format!(":{}", port)) || !line.contains("LISTENING") {
+            continue;
+        }
+
+        let parts: Vec<&str> = line.split_whitespace().collect();
+        if parts.len() < 5 {
+            continue;
+        }
+
+        // Get PID
+        if let Some(pid_str) = parts.last() {
+            if let Ok(pid) = pid_str.parse::<u32>() {
+                // Get name
+                let name_output = Command::new("tasklist")
+                    .args(["/FI", &format!("PID eq {}", pid), "/FO", "CSV", "/NH"])
+                    .output();
+
+                let process_name = name_output
+                    .ok()
+                    .map(|o| String::from_utf8_lossy(&o.stdout).to_string())
+                    .and_then(|s| s.split(',').next().map(|n| n.trim_matches('"').to_string()));
+
+                return Ok(PortInfo {
+                    port,
+                    in_use: true,
+                    pid: Some(pid),
+                    process_name,
+                    needs_admin: false,
+                });
+            }
+        }
+    }
+
+    // Free port
+    Ok(PortInfo {
+        port,
+        in_use: false,
+        pid: None,
+        process_name: None,
+        needs_admin: false,
+    })
+}
+
+#[cfg(target_os = "linux")]
+fn check_port_blocking(port: u16) -> Result<PortInfo, String> {
+    // netstat -antp
+    let output = Command::new("sh")
+        .arg("-c")
+        .arg(format!("netstat -antp 2>/dev/null | grep ':{} .*LISTEN'", port))
+        .output()
+        .map_err(|e| format!("Failed to run netstat: {}", e))?;
+
+    if output.status.success() && !output.stdout.is_empty() {
+        let stdout = String::from_utf8_lossy(&output.stdout);
+
+        for line in stdout.lines() {
+            let parts: Vec<&str> = line.split_whitespace().collect();
+
+            if parts.len() > 6 {
+                let process_info = parts[6];
+                if let Some(slash_pos) = process_info.find('/') {
+                    let pid = process_info[..slash_pos].parse::<u32>().ok();
+                    let process_name = Some(process_info[slash_pos + 1..].to_string());
+
+                    return Ok(PortInfo {
+                        port,
+                        in_use: true,
+                        pid,
+                        process_name,
+                        needs_admin: pid.is_none(),
+                    });
+                }
+            }
+
+            return Ok(PortInfo {
+                port,
+                in_use: true,
+                pid: None,
+                process_name: None,
+                needs_admin: true,
+            });
+        }
+    }
+
+    // Free port
+    Ok(PortInfo {
+        port,
+        in_use: false,
+        pid: None,
+        process_name: None,
+        needs_admin: false,
+    })
+}
+
+#[tauri::command]
+fn kill_process(pid: u32) -> Result<String, String> {
+    #[cfg(target_os = "macos")]
+    {
+        Command::new("kill")
+            .args(["-9", &pid.to_string()])
+            .output()
+            .map_err(|e| format!("Failed to kill process: {}", e))?;
+
+        return Ok(format!("Process {} killed successfully", pid));
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        Command::new("taskkill")
+            .args(["/PID", &pid.to_string(), "/F"])
+            .output()
+            .map_err(|e| format!("Failed to kill process: {}", e))?;
+
+        return Ok(format!("Process {} killed successfully", pid));
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        Command::new("kill")
+            .args(["-9", &pid.to_string()])
+            .output()
+            .map_err(|e| format!("Failed to kill process: {}", e))?;
+
+        return Ok(format!("Process {} killed successfully", pid));
+    }
+
+    #[allow(unreachable_code)]
+    Err("Unsupported platform".to_string())
+}
+
+#[tauri::command]
+async fn scan_listening_ports(start_port: u16, end_port: u16) -> Result<Vec<PortInfo>, String> {
+    tokio::task::spawn_blocking(move || {
+        scan_listening_ports_blocking(start_port, end_port)
+    })
+    .await
+    .map_err(|e| format!("Task join error: {}", e))?
+}
+
+#[cfg(target_os = "macos")]
+fn scan_listening_ports_blocking(start_port: u16, end_port: u16) -> Result<Vec<PortInfo>, String> {
+    let output = Command::new("sh")
+        .arg("-c")
+        .arg("netstat -anv | grep LISTEN")
+        .output()
+        .map_err(|e| format!("Failed to run netstat: {}", e))?;
+
+    if !output.status.success() {
+        return Ok(vec![]);
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+
+    let mut results = Vec::new();
+
+    for line in stdout.lines() {
+        let parts: Vec<&str> = line.split_whitespace().collect();
+
+        if parts.len() <= 10 {
+            continue;
+        }
+
+        // Parse addr
+        // Formats: *.3000, 127.0.0.1.7265, ::1.8021
+        let local_addr = parts[3];
+
+        let port = if let Some(port_str) = local_addr.strip_prefix("*.") {
+            // *.3000
+            port_str.parse::<u16>().ok()
+        } else if let Some(last_dot) = local_addr.rfind('.') {
+            // 127.0.0.1.7265 or ::1.8021
+            local_addr[last_dot + 1..].parse::<u16>().ok()
+        } else {
+            None
+        };
+
+        if let Some(port_num) = port {
+            // Filter by port range
+            if port_num < start_port || port_num > end_port {
+                continue;
+            }
+
+            let process_info = parts[10];
+            let (pid, process_name) = if let Some(colon_pos) = process_info.rfind(':') {
+                let name = process_info[..colon_pos].to_string();
+                let pid = process_info[colon_pos + 1..].parse::<u32>().ok();
+                (pid, Some(name))
+            } else {
+                (None, None)
+            };
+
+            results.push(PortInfo {
+                port: port_num,
+                in_use: true,
+                pid,
+                process_name,
+                needs_admin: false,
+            });
+        }
+    }
+
+    // Dedupe & sort
+    results.sort_by_key(|p| p.port);
+    results.dedup_by_key(|p| p.port);
+
+    Ok(results)
+}
+
+#[cfg(target_os = "windows")]
+fn scan_listening_ports_blocking(start_port: u16, end_port: u16) -> Result<Vec<PortInfo>, String> {
+    let output = Command::new("netstat")
+        .args(["-ano", "-p", "TCP"])
+        .output()
+        .map_err(|e| format!("Failed to run netstat: {}", e))?;
+
+    if !output.status.success() {
+        return Ok(vec![]);
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+
+    let mut results = Vec::new();
+
+    for line in stdout.lines() {
+        if !line.contains("LISTENING") {
+            continue;
+        }
+
+        let parts: Vec<&str> = line.split_whitespace().collect();
+        if parts.len() < 5 {
+            continue;
+        }
+
+        let local_addr = parts[1];
+        let port = if let Some(colon_pos) = local_addr.rfind(':') {
+            local_addr[colon_pos + 1..].parse::<u16>().ok()
+        } else {
+            None
+        };
+
+        if let Some(port_num) = port {
+            if port_num < start_port || port_num > end_port {
+                continue;
+            }
+
+            let pid = parts.last().and_then(|s| s.parse::<u32>().ok());
+
+            let process_name = if let Some(pid_val) = pid {
+                let name_output = Command::new("tasklist")
+                    .args(["/FI", &format!("PID eq {}", pid_val), "/FO", "CSV", "/NH"])
+                    .output();
+
+                name_output
+                    .ok()
+                    .map(|o| String::from_utf8_lossy(&o.stdout).to_string())
+                    .and_then(|s| s.split(',').next().map(|n| n.trim_matches('"').to_string()))
+            } else {
+                None
+            };
+
+            results.push(PortInfo {
+                port: port_num,
+                in_use: true,
+                pid,
+                process_name,
+                needs_admin: pid.is_none(),
+            });
+        }
+    }
+
+    results.sort_by_key(|p| p.port);
+    results.dedup_by_key(|p| p.port);
+    Ok(results)
+}
+
+#[cfg(target_os = "linux")]
+fn scan_listening_ports_blocking(start_port: u16, end_port: u16) -> Result<Vec<PortInfo>, String> {
+    let output = Command::new("sh")
+        .arg("-c")
+        .arg("netstat -antp 2>/dev/null | grep LISTEN")
+        .output()
+        .map_err(|e| format!("Failed to run netstat: {}", e))?;
+
+    if !output.status.success() {
+        return Ok(vec![]);
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+
+    let mut results = Vec::new();
+
+    for line in stdout.lines() {
+        let parts: Vec<&str> = line.split_whitespace().collect();
+        if parts.len() < 4 {
+            continue;
+        }
+
+        let local_addr = parts[3];
+        let port = if let Some(colon_pos) = local_addr.rfind(':') {
+            local_addr[colon_pos + 1..].parse::<u16>().ok()
+        } else {
+            None
+        };
+
+        if let Some(port_num) = port {
+            if port_num < start_port || port_num > end_port {
+                continue;
+            }
+
+            let (pid, process_name) = if parts.len() > 6 {
+                let process_info = parts[6];
+                if let Some(slash_pos) = process_info.find('/') {
+                    let pid = process_info[..slash_pos].parse::<u32>().ok();
+                    let name = Some(process_info[slash_pos + 1..].to_string());
+                    (pid, name)
+                } else {
+                    (None, None)
+                }
+            } else {
+                (None, None)
+            };
+
+            results.push(PortInfo {
+                port: port_num,
+                in_use: true,
+                pid,
+                process_name,
+                needs_admin: pid.is_none(),
+            });
+        }
+    }
+
+    results.sort_by_key(|p| p.port);
+    results.dedup_by_key(|p| p.port);
+    Ok(results)
+}
+
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()
@@ -297,7 +730,10 @@ pub fn run() {
     })
     .invoke_handler(tauri::generate_handler![
         run_deploy_command,
-        extract_palette_from_image
+        extract_palette_from_image,
+        check_port,
+        kill_process,
+        scan_listening_ports
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
