@@ -1,13 +1,69 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ToolSidebar } from "@/components/tool-sidebar";
 import { TabBar } from "@/components/tab-bar";
 import { ToolContent } from "@/components/tool-content";
 import { SettingsDialog } from "@/components/settings-dialog";
+import { useTabStore } from "@/lib/tab-store";
 
 export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const { activeTabId, removeTab } = useTabStore();
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check for Ctrl+W (Windows/Linux) or Cmd+W (Mac)
+      if ((e.ctrlKey || e.metaKey) && e.key === "w") {
+        e.preventDefault();
+        if (activeTabId) {
+          removeTab(activeTabId);
+        }
+      }
+    };
+
+    // Close handler
+    let unlisten: (() => void) | undefined;
+
+    const setupTauriCloseHandler = async () => {
+      const tauriAvailable =
+        typeof window !== "undefined" && "__TAURI__" in window;
+
+      if (!tauriAvailable) return;
+
+      try {
+        const { getCurrentWindow } = await import("@tauri-apps/api/window");
+        const { ask } = await import("@tauri-apps/plugin-dialog");
+
+        const appWindow = getCurrentWindow();
+
+        unlisten = await appWindow.onCloseRequested(async (event) => {
+          event.preventDefault();
+          const confirmed = await ask("Are you sure you want to quit?", {
+            title: "Confirm Exit",
+            kind: "warning",
+          });
+
+          if (confirmed) {
+            appWindow.close();
+          }
+        });
+      } catch (error) {
+        console.error("Failed to setup Tauri close handler:", error);
+      }
+    };
+
+    setupTauriCloseHandler();
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      if (unlisten) {
+        unlisten();
+      }
+    };
+  }, [activeTabId, removeTab]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">

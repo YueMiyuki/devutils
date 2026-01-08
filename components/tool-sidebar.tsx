@@ -84,7 +84,7 @@ export function ToolSidebar({ onOpenSettings }: ToolSidebarProps) {
           <Button
             variant="ghost"
             className={cn(
-              "w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+              "w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer",
               sidebarCollapsed && "justify-center px-2",
             )}
             onClick={() => handleToolClick(tool.id, tool.name)}
@@ -165,7 +165,7 @@ export function ToolSidebar({ onOpenSettings }: ToolSidebarProps) {
               <Button
                 variant="ghost"
                 className={cn(
-                  "w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                  "w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer",
                   sidebarCollapsed && "justify-center px-2",
                 )}
                 onClick={onOpenSettings}
@@ -186,7 +186,7 @@ export function ToolSidebar({ onOpenSettings }: ToolSidebarProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="w-full text-muted-foreground hover:text-sidebar-foreground"
+                className="w-full text-muted-foreground hover:text-sidebar-foreground cursor-pointer"
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               >
                 {sidebarCollapsed ? (

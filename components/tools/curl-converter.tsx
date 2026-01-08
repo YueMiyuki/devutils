@@ -110,6 +110,27 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
         }
       }
 
+      // Strategy 3: Unquoted URL - last non-flag token in cleaned string
+      if (!url) {
+        const tokens = withoutHeaders
+          .trim()
+          .split(/\s+/)
+          .filter((token) => token.length > 0);
+
+        // Get last token that's not 'curl' and doesn't start with '-'
+        for (let i = tokens.length - 1; i >= 0; i--) {
+          const token = tokens[i];
+          if (
+            token.toLowerCase() !== "curl" &&
+            !token.startsWith("-") &&
+            token.length > 0
+          ) {
+            url = token;
+            break;
+          }
+        }
+      }
+
       result.url = url;
 
       // Extract method
@@ -121,22 +142,20 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
       // Extract headers
       // Match both single-quoted and double-quoted headers separately
       // to preserve quotes inside values
-      const headerRegexSingle = /-H\s+'([^']+)'/gi;
-      const headerRegexDouble = /-H\s+"([^"]+)"/gi;
-
-      let headerMatch;
+      const singleQuotedHeaders = [...trimmed.matchAll(/-H\s+'([^']+)'/gi)];
+      const doubleQuotedHeaders = [...trimmed.matchAll(/-H\s+"([^"]+)"/gi)];
 
       // Process single-quoted headers
-      while ((headerMatch = headerRegexSingle.exec(trimmed)) !== null) {
-        const [key, ...valueParts] = headerMatch[1].split(":");
+      for (const match of singleQuotedHeaders) {
+        const [key, ...valueParts] = match[1].split(":");
         if (key && valueParts.length > 0) {
           result.headers[key.trim()] = valueParts.join(":").trim();
         }
       }
 
       // Process double-quoted headers
-      while ((headerMatch = headerRegexDouble.exec(trimmed)) !== null) {
-        const [key, ...valueParts] = headerMatch[1].split(":");
+      for (const match of doubleQuotedHeaders) {
+        const [key, ...valueParts] = match[1].split(":");
         if (key && valueParts.length > 0) {
           result.headers[key.trim()] = valueParts.join(":").trim();
         }
@@ -254,7 +273,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          url,
+          InputUrl: url,
           method,
           headers: headersObj,
           body: method !== "GET" && body ? body : undefined,
