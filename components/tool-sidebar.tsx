@@ -30,6 +30,9 @@ import {
   Pipette,
   Clock,
   CalendarClock,
+  Hash,
+  QrCode,
+  Activity,
 } from "lucide-react";
 
 const utilityToolIds = [
@@ -41,6 +44,9 @@ const utilityToolIds = [
   "color-picker",
   "timestamp-converter",
   "cron-generator",
+  "hash-generator",
+  "qr-code",
+  "port-detective",
 ];
 const funToolIds = ["blame-intern", "deploy-roulette", "boss-mode"];
 
@@ -54,6 +60,9 @@ const toolKeyMap: Record<string, string> = {
   "color-picker": "colorPicker",
   "timestamp-converter": "timestampConverter",
   "cron-generator": "cronGenerator",
+  "hash-generator": "hashGenerator",
+  "qr-code": "qrCode",
+  "port-detective": "portDetective",
   "blame-intern": "blameIntern",
   "deploy-roulette": "deployRoulette",
   "boss-mode": "bossMode",
@@ -68,6 +77,9 @@ const toolIcons = {
   "color-picker": Pipette,
   "timestamp-converter": Clock,
   "cron-generator": CalendarClock,
+  "hash-generator": Hash,
+  "qr-code": QrCode,
+  "port-detective": Activity,
   "blame-intern": GitBranch,
   "deploy-roulette": Rocket,
   "boss-mode": TableProperties,

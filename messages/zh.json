@@ -425,6 +425,168 @@
       "nextRunsDescription": "即将执行的时间预览",
       "presets": "常用预设",
       "presetsDescription": "快速访问常用计划"
+    },
+    "hashGenerator": {
+      "name": "哈希生成器",
+      "shortName": "哈希",
+      "description": "MD5、SHA 系列、BCrypt、Argon2——粘贴或拖放文件",
+      "textTab": "文本",
+      "fileTab": "文件",
+      "input": "输入",
+      "output": "哈希输出",
+      "copy": "复制",
+      "clear": "清除",
+      "inputPlaceholder": "输入要哈希的文本...",
+      "outputPlaceholder": "哈希结果将显示在这里...",
+      "processing": "正在哈希...",
+      "bcryptRounds": "BCrypt 轮数",
+      "argon2Params": "Argon2 参数",
+      "argon2ParamsDescription": "配置内存、迭代次数和并行度",
+      "iterations": "迭代次数",
+      "memory": "内存",
+      "parallelism": "并行度",
+      "hashLength": "哈希长度",
+      "salt": "盐值",
+      "optional": "可选",
+      "saltPlaceholder": "留空使用随机盐值",
+      "stats": {
+        "input": "输入：",
+        "output": "输出：",
+        "chars": "字符",
+        "algorithm": "算法："
+      },
+      "file": {
+        "dropZone": "将文件拖放到此处以进行哈希",
+        "dropZoneDescription": "或点击浏览",
+        "selectFile": "选择文件",
+        "processing": "正在处理...",
+        "output": "{{algorithm}} 哈希",
+        "outputDescription": "文件哈希结果",
+        "clear": "清除",
+        "chooseAnother": "选择其他文件"
+      },
+      "errors": {
+        "unsupportedAlgorithm": "不支持的算法",
+        "hashFailed": "哈希生成失败",
+        "processingFailed": "处理失败",
+        "failedToProcess": "处理文件失败"
+      },
+      "success": {
+        "copied": "哈希已复制到剪贴板"
+      }
+    },
+    "qrCode": {
+      "name": "二维码工具",
+      "shortName": "二维码",
+      "description": "生成和读取 URL、WiFi、名片等二维码",
+      "generateTab": "生成",
+      "scanTab": "扫描",
+      "selectType": "二维码类型",
+      "types": {
+        "text": "文本",
+        "url": "URL",
+        "json": "JSON",
+        "wifi": "WiFi",
+        "vcard": "联系人"
+      },
+      "textInput": "文本内容",
+      "urlInput": "URL",
+      "textPlaceholder": "输入要编码的文本...",
+      "urlPlaceholder": "https://example.com",
+      "jsonInput": "JSON 数据",
+      "jsonInputDescription": "输入有效的 JSON 以编码到二维码",
+      "jsonPlaceholder": "{\"key\": \"value\"}",
+      "formatJson": "格式化 JSON",
+      "wifiConfig": "WiFi 配置",
+      "wifiConfigDescription": "扫描以连接到 WiFi 网络",
+      "wifi": {
+        "ssid": "网络名称 (SSID)",
+        "ssidPlaceholder": "我的 WiFi 网络",
+        "password": "密码",
+        "passwordPlaceholder": "网络密码",
+        "security": "安全类型",
+        "noPassword": "无密码",
+        "hidden": "隐藏网络"
+      },
+      "vcardInfo": "联系人信息",
+      "vcardInfoDescription": "扫描以保存联系人",
+      "vcard": {
+        "name": "全名",
+        "namePlaceholder": "张三",
+        "phone": "电话号码",
+        "phonePlaceholder": "+86 138 0000 0000",
+        "email": "电子邮件",
+        "emailPlaceholder": "zhangsan@example.com",
+        "organization": "组织",
+        "organizationPlaceholder": "示例公司",
+        "website": "网站",
+        "websitePlaceholder": "https://example.com"
+      },
+      "generate": "生成二维码",
+      "clear": "清除",
+      "qrCodeOutput": "二维码",
+      "copyData": "复制数据",
+      "download": "下载二维码",
+      "scanQRCode": "扫描二维码",
+      "scanDescription": "上传包含二维码的图像以读取",
+      "selectImage": "选择图像",
+      "scannedResult": "扫描结果",
+      "copy": "复制",
+      "errors": {
+        "emptyData": "请输入一些数据",
+        "generateFailed": "生成二维码失败",
+        "invalidJson": "无效的 JSON 格式",
+        "noQRFound": "图像中未找到二维码",
+        "scanFailed": "扫描二维码失败"
+      },
+      "success": {
+        "downloaded": "二维码已下载",
+        "scanned": "二维码扫描成功",
+        "jsonFormatted": "JSON 格式化成功"
+      }
+    },
+    "portDetective": {
+      "name": "端口侦探",
+      "shortName": "端口",
+      "description": "检查端口使用情况、查找 PID、终止进程、扫描范围",
+      "singlePortTab": "检查端口",
+      "scanTab": "扫描端口",
+      "checkPort": "检查端口状态",
+      "checkPortDescription": "检查特定端口是否正在使用以及哪个进程正在使用",
+      "portPlaceholder": "3000",
+      "check": "检查",
+      "checking": "正在检查...",
+      "port": "端口",
+      "inUse": "正在使用",
+      "available": "可用",
+      "pid": "进程 ID",
+      "process": "进程",
+      "killProcess": "终止进程",
+      "scanPorts": "扫描端口范围",
+      "scanPortsDescription": "扫描本地主机端口 1-65535 以查找所有正在使用的端口",
+      "startPort": "起始端口",
+      "endPort": "结束端口",
+      "scan": "扫描",
+      "scanning": "正在扫描...",
+      "scanningProgress": "正在扫描端口...",
+      "resultsTitle": "{{count}} 个端口正在使用",
+      "kill": "终止",
+      "noPortsInUse": "此范围内没有正在使用的端口",
+      "errors": {
+        "invalidPort": "无效的端口号 (1-65535)",
+        "invalidRange": "无效的端口范围",
+        "checkFailed": "检查端口失败",
+        "killFailed": "终止进程失败",
+        "scanFailed": "扫描端口失败"
+      },
+      "success": {
+        "processKilled": "进程已成功终止",
+        "scanComplete": "扫描完成：{{count}} 个端口正在使用"
+      },
+      "adminWarning": {
+        "title": "需要管理员权限",
+        "description": "使用管理员/root 权限运行此应用以查看端口使用的进程信息（PID 和进程名称）。在 macOS/Linux 上，使用 sudo 运行。在 Windows 上，以管理员身份运行。"
+      }
     }
   },
   "settings": {
