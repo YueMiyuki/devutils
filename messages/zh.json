@@ -435,7 +435,7 @@
       "input": "输入",
       "output": "哈希输出",
       "copy": "复制",
-      "clear": "清除",
+      "clear": "清空",
       "inputPlaceholder": "输入要哈希的文本...",
       "outputPlaceholder": "哈希结果将显示在这里...",
       "processing": "正在哈希...",
@@ -462,7 +462,7 @@
         "processing": "正在处理...",
         "output": "{{algorithm}} 哈希",
         "outputDescription": "文件哈希结果",
-        "clear": "清除",
+        "clear": "清空",
         "chooseAnother": "选择其他文件"
       },
       "errors": {
@@ -655,7 +655,7 @@
       "name": "WebSocket 鱼鳞器",
       "shortName": "WS",
       "description": "全双工测试，带二进制/十六进制视图和自动重连",
-      "title": "WebSocket Fish Scaler",
+      "title": "WebSocket 鱼鳞器",
       "subtitle": "带重连策略的 WebSocket 收发调试台",
       "status": {
         "connecting": "连接中",

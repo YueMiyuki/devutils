@@ -91,7 +91,14 @@ function hostMatches(host: string, candidates: string[]): boolean {
 
     if (candidate.startsWith("*.")) {
       const domain = candidate.slice(2);
-      return normalizedHost === domain || normalizedHost.endsWith(`.${domain}`);
+      if (!domain) return false;
+      if (!normalizedHost.endsWith(`.${domain}`)) return false;
+
+      const hostParts = normalizedHost.split(".");
+      const domainParts = domain.split(".");
+      if (hostParts.length !== domainParts.length + 1) return false;
+
+      return hostParts.slice(1).join(".") === domain;
     }
 
     return normalizedHost === candidate;
@@ -234,6 +241,14 @@ async function fetchRemoteCertificate(
   port: number,
 ): Promise<CertificatePayload> {
   return new Promise<CertificatePayload>((resolve, reject) => {
+    let settled = false;
+    const cleanup = () => {
+      socket.removeAllListeners("error");
+      socket.removeAllListeners("timeout");
+      socket.removeAllListeners("close");
+      socket.destroy();
+    };
+
     const socket = tls.connect(
       {
         host,
@@ -243,9 +258,11 @@ async function fetchRemoteCertificate(
         timeout: 8000,
       },
       () => {
+        if (settled) return;
         const peer = socket.getPeerCertificate(true);
         if (!peer || Object.keys(peer).length === 0) {
-          socket.destroy();
+          settled = true;
+          cleanup();
           reject(new Error("No certificate presented by remote host"));
           return;
         }
@@ -289,7 +306,7 @@ async function fetchRemoteCertificate(
           chainValid,
         });
 
-        resolve({
+        const payload: CertificatePayload = {
           source: "remote",
           subject,
           subjectCN,
@@ -314,19 +331,25 @@ async function fetchRemoteCertificate(
             (peer as tls.PeerCertificate & { fingerprint256?: string })
               .fingerprint256 ?? null,
           warnings,
-        });
+        };
 
-        socket.end();
+        settled = true;
+        cleanup();
+        resolve(payload);
       },
     );
 
     socket.on("error", (err) => {
-      socket.destroy();
+      if (settled) return;
+      settled = true;
+      cleanup();
       reject(err);
     });
 
     socket.on("timeout", () => {
-      socket.destroy(new Error("Connection to remote host timed out"));
+      if (settled) return;
+      settled = true;
+      cleanup();
       reject(new Error("Connection to remote host timed out"));
     });
   });
@@ -448,7 +471,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const result = await fetchRemoteCertificate(host as string, port || 443);
+    const result = await fetchRemoteCertificate(host as string, port);
     return Response.json(result);
   } catch (error) {
     return Response.json(

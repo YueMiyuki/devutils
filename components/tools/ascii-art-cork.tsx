@@ -51,6 +51,7 @@ export function ASCIIArtCork({ tabId: _tabId }: ASCIIArtCorkProps) {
   const [frame, setFrame] = useState(false);
   const [padding, setPadding] = useState("1");
   const loadedFontsRef = useRef<Set<FontOption>>(new Set());
+  const renderRunRef = useRef(0);
   const { copyWithAnimation } = useCopyAnimation();
   void _tabId;
 
@@ -99,17 +100,22 @@ export function ASCIIArtCork({ tabId: _tabId }: ASCIIArtCorkProps) {
   );
 
   const render = useCallback(
-    async (value: string) => {
-      // Don't block
+    async (value: string, runId: number) => {
       const baseText = uppercase ? value.toUpperCase() : value;
       if (!baseText.trim()) {
-        setArt("");
+        if (renderRunRef.current === runId) {
+          setArt("");
+          setLoading(false);
+        }
         return;
       }
 
+      if (renderRunRef.current !== runId) return;
       setLoading(true);
       try {
         await ensureFont(font);
+        if (renderRunRef.current !== runId) return;
+
         const options = {
           font,
           horizontalLayout: "default",
@@ -123,21 +129,34 @@ export function ASCIIArtCork({ tabId: _tabId }: ASCIIArtCorkProps) {
         );
 
         const finalArt = withFrame(withPadding(ascii));
+        if (renderRunRef.current !== runId) return;
         setArt(finalArt);
       } catch (err) {
+        if (renderRunRef.current !== runId) return;
         setArt(
           err instanceof Error ? err.message : "Unable to render ASCII art.",
         );
       } finally {
-        setLoading(false);
+        if (renderRunRef.current === runId) {
+          setLoading(false);
+        }
       }
     },
     [ensureFont, font, withFrame, withPadding, uppercase],
   );
 
+  const scheduleRender = useCallback(
+    (value: string) => {
+      const runId = renderRunRef.current + 1;
+      renderRunRef.current = runId;
+      void render(value, runId);
+    },
+    [render],
+  );
+
   useEffect(() => {
-    void render(text);
-  }, [font, frame, padding, text, uppercase, render]);
+    scheduleRender(text);
+  }, [font, frame, padding, text, uppercase, scheduleRender]);
 
   return (
     <div className="flex flex-col h-full p-4 gap-4 overflow-y-auto">
@@ -251,7 +270,7 @@ export function ASCIIArtCork({ tabId: _tabId }: ASCIIArtCorkProps) {
               <Button
                 className="w-full gap-2"
                 variant="secondary"
-                onClick={() => void render(text)}
+                onClick={() => scheduleRender(text)}
               >
                 <Wand2 className="w-4 h-4" />
                 {t("tools.asciiCork.actions.render")}

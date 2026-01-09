@@ -655,7 +655,7 @@
       "name": "WebSocket 魚鱗器",
       "shortName": "WS",
       "description": "全雙工測試，含二進位/十六進位檢視與自動重連",
-      "title": "WebSocket Fish Scaler",
+      "title": "WebSocket 魚鱗器",
       "subtitle": "帶重連策略的 WebSocket 收發調試台",
       "status": {
         "connecting": "連線中",

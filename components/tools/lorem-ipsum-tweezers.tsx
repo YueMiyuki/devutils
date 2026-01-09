@@ -241,6 +241,11 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
     setIbanValue(generateIban(ibanCountry));
   };
 
+  const regenerateAll = () => {
+    regenerateLorem();
+    regenerateIdentity();
+  };
+
   useEffect(() => {
     regenerateLorem();
     regenerateIdentity();
@@ -267,7 +272,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
             {t("tools.loremTweezers.subtitle")}
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={regenerateIdentity}>
+        <Button variant="outline" size="sm" onClick={regenerateAll}>
           <RefreshCcw className="w-4 h-4 mr-2" />
           {t("tools.loremTweezers.actions.refreshAll")}
         </Button>

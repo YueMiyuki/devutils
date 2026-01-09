@@ -143,6 +143,14 @@ export function WebSocketFishScaler({
     });
   }, []);
 
+  const clearSocketHandlers = (socket: WebSocket | null) => {
+    if (!socket) return;
+    socket.onopen = null;
+    socket.onmessage = null;
+    socket.onerror = null;
+    socket.onclose = null;
+  };
+
   const clearReconnectTimer = () => {
     if (reconnectTimerRef.current) {
       clearTimeout(reconnectTimerRef.current);
@@ -198,6 +206,7 @@ export function WebSocketFishScaler({
 
     try {
       if (wsRef.current) {
+        clearSocketHandlers(wsRef.current);
         wsRef.current.close();
       }
 
@@ -207,6 +216,7 @@ export function WebSocketFishScaler({
       setReadyState(socket.readyState);
 
       socket.onopen = () => {
+        if (wsRef.current !== socket) return;
         setConnecting(false);
         setReadyState(socket.readyState);
         setRetryCount(0);
@@ -218,6 +228,7 @@ export function WebSocketFishScaler({
       };
 
       socket.onmessage = async (event: MessageEvent) => {
+        if (wsRef.current !== socket) return;
         const limitKb = Math.round(MAX_MESSAGE_BYTES / 1024);
         const handleOversized = (bytes: number) => {
           addMessage({
@@ -261,6 +272,7 @@ export function WebSocketFishScaler({
           }
 
           const arr = await event.data.arrayBuffer();
+          if (wsRef.current !== socket) return;
           isBinary = true;
           size = arr.byteLength;
           if (size > MAX_MESSAGE_BYTES) {
@@ -282,6 +294,7 @@ export function WebSocketFishScaler({
       };
 
       socket.onerror = () => {
+        if (wsRef.current !== socket) return;
         setReadyState(socket.readyState);
         addMessage({
           direction: "info",
@@ -291,6 +304,8 @@ export function WebSocketFishScaler({
       };
 
       socket.onclose = (evt: CloseEvent) => {
+        if (wsRef.current !== socket) return;
+        wsRef.current = null;
         setReadyState(socket.readyState);
         setConnecting(false);
         addMessage({
@@ -322,13 +337,20 @@ export function WebSocketFishScaler({
     shouldReconnectRef.current = false;
     clearReconnectTimer();
     setRetryCount(0);
-    wsRef.current?.close();
+    const socket = wsRef.current;
+    if (!socket) return;
+    setConnecting(false);
+    setReadyState(WebSocket.CLOSING);
+    socket.close();
   };
 
   useEffect(() => {
     return () => {
       clearReconnectTimer();
-      wsRef.current?.close();
+      if (wsRef.current) {
+        clearSocketHandlers(wsRef.current);
+        wsRef.current.close();
+      }
     };
   }, []);
 
@@ -355,10 +377,12 @@ export function WebSocketFishScaler({
 
       wsRef.current.send(payloadToSend);
 
-      const hex =
+      const payloadBytes =
         typeof payloadToSend === "string"
-          ? bufferToHex(new TextEncoder().encode(payloadToSend))
-          : bufferToHex(payloadToSend);
+          ? new TextEncoder().encode(payloadToSend)
+          : new Uint8Array(payloadToSend);
+
+      const hex = bufferToHex(payloadBytes);
 
       addMessage({
         direction: "sent",
@@ -369,10 +393,7 @@ export function WebSocketFishScaler({
         hex,
         timestamp: Date.now(),
         isBinary: sendFormat === "hex",
-        size:
-          typeof payloadToSend === "string"
-            ? payloadToSend.length
-            : payloadToSend.byteLength,
+        size: payloadBytes.byteLength,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to send message");
@@ -457,11 +478,20 @@ export function WebSocketFishScaler({
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <Button onClick={connect} disabled={connecting} className="gap-2">
+              <Button
+                onClick={connect}
+                disabled={connecting || readyState === WebSocket.OPEN}
+                className="gap-2"
+              >
                 {connecting && <Loader2 className="w-4 h-4 animate-spin" />}
                 {t("tools.websocketFish.actions.connect")}
               </Button>
-              <Button variant="outline" onClick={disconnect} className="gap-2">
+              <Button
+                variant="outline"
+                onClick={disconnect}
+                disabled={readyState !== WebSocket.OPEN}
+                className="gap-2"
+              >
                 <Square className="w-4 h-4" />
                 {t("tools.websocketFish.actions.disconnect")}
               </Button>
@@ -511,10 +541,18 @@ export function WebSocketFishScaler({
                 </Select>
               </div>
               <div className="flex gap-2">
-                <Button variant="secondary" onClick={() => setPayload("")}>
+                <Button
+                  variant="secondary"
+                  onClick={() => setPayload("")}
+                  disabled={readyState !== WebSocket.OPEN}
+                >
                   {t("common.clear")}
                 </Button>
-                <Button className="gap-2" onClick={handleSend}>
+                <Button
+                  className="gap-2"
+                  onClick={handleSend}
+                  disabled={readyState !== WebSocket.OPEN}
+                >
                   <ArrowUp className="w-4 h-4" />
                   {t("tools.websocketFish.actions.send")}
                 </Button>
