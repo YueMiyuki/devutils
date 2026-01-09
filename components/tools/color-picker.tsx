@@ -352,7 +352,7 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
                 </div>
                 <Button variant="outline" size="sm" onClick={clearAll}>
                   <Trash2 className="w-4 h-4 mr-2" />
-                  {t("tools.colorPicker.clear")}
+                  {t("common.clear")}
                 </Button>
               </div>
             </CardHeader>

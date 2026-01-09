@@ -50,11 +50,11 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1
       "@tauri-apps/plugin-dialog":
-        specifier: ~2.4.2
-        version: 2.4.2
+        specifier: ~2.5.0
+        version: 2.5.0
       "@tauri-apps/plugin-fs":
-        specifier: ^2.4.4
-        version: 2.4.4
+        specifier: ^2.4.5
+        version: 2.4.5
       "@uiw/react-color-sketch":
         specifier: ^2.9.2
         version: 2.9.2(@babel/runtime@7.28.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -70,6 +70,9 @@ importers:
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
+      figlet:
+        specifier: ^1.9.4
+        version: 1.9.4
       hash-wasm:
         specifier: ^4.12.0
         version: 4.12.0
@@ -131,12 +134,12 @@ importers:
       "@tauri-apps/cli":
         specifier: ^2.9.6
         version: 2.9.6
-      "@types/bcryptjs":
-        specifier: ^3.0.0
-        version: 3.0.0
       "@types/crypto-js":
         specifier: ^4.2.2
         version: 4.2.2
+      "@types/figlet":
+        specifier: ^1.7.0
+        version: 1.7.0
       "@types/node":
         specifier: ^25.0.3
         version: 25.0.3
@@ -150,8 +153,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.7)
       "@typescript/native-preview":
-        specifier: 7.0.0-dev.20260107.1
-        version: 7.0.0-dev.20260107.1
+        specifier: 7.0.0-dev.20260108.1
+        version: 7.0.0-dev.20260108.1
       concurrently:
         specifier: ^9.2.1
         version: 9.2.1
@@ -165,8 +168,8 @@ importers:
         specifier: ^9.1.7
         version: 9.1.7
       knip:
-        specifier: ^5.80.0
-        version: 5.80.0(@types/node@25.0.3)(typescript@5.9.3)
+        specifier: ^5.80.1
+        version: 5.80.1(@types/node@25.0.3)(typescript@5.9.3)
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
@@ -2150,16 +2153,16 @@ packages:
     engines: { node: ">= 10" }
     hasBin: true
 
-  "@tauri-apps/plugin-dialog@2.4.2":
+  "@tauri-apps/plugin-dialog@2.5.0":
     resolution:
       {
-        integrity: sha512-lNIn5CZuw8WZOn8zHzmFmDSzg5zfohWoa3mdULP0YFh/VogVdMVWZPcWSHlydsiJhRQYaTNSYKN7RmZKE2lCYQ==,
+        integrity: sha512-I0R0ygwRd9AN8Wj5GnzCogOlqu2+OWAtBd0zEC4+kQCI32fRowIyuhPCBoUv4h/lQt2bM39kHlxPHD5vDcFjiA==,
       }
 
-  "@tauri-apps/plugin-fs@2.4.4":
+  "@tauri-apps/plugin-fs@2.4.5":
     resolution:
       {
-        integrity: sha512-MTorXxIRmOnOPT1jZ3w96vjSuScER38ryXY88vl5F0uiKdnvTKKTtaEjTEo8uPbl4e3gnUtfsDVwC7h77GQLvQ==,
+        integrity: sha512-dVxWWGE6VrOxC7/jlhyE+ON/Cc2REJlM35R3PJX3UvFw2XwYhLGQVAIyrehenDdKjotipjYEVc4YjOl3qq90fA==,
       }
 
   "@tokenizer/inflate@0.2.7":
@@ -2181,13 +2184,6 @@ packages:
         integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==,
       }
 
-  "@types/bcryptjs@3.0.0":
-    resolution:
-      {
-        integrity: sha512-WRZOuCuaz8UcZZE4R5HXTco2goQSI2XxjGY3hbM/xDvwmqFWd4ivooImsMx65OKM6CtNKbnZ5YL+YwAwK7c1dg==,
-      }
-    deprecated: This is a stub types definition. bcryptjs provides its own type definitions, so you do not need this installed.
-
   "@types/crypto-js@4.2.2":
     resolution:
       {
@@ -2198,6 +2194,12 @@ packages:
     resolution:
       {
         integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==,
+      }
+
+  "@types/figlet@1.7.0":
+    resolution:
+      {
+        integrity: sha512-KwrT7p/8Eo3Op/HBSIwGXOsTZKYiM9NpWRBJ5sVjWP/SmlS+oxxRvJht/FNAtliJvja44N3ul1yATgohnVBV0Q==,
       }
 
   "@types/http-cache-semantics@4.0.4":
@@ -2333,66 +2335,66 @@ packages:
       }
     engines: { node: ^18.18.0 || ^20.9.0 || >=21.1.0 }
 
-  "@typescript/native-preview-darwin-arm64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-darwin-arm64@7.0.0-dev.20260108.1":
     resolution:
       {
-        integrity: sha512-IlmAcBuRJ16iP458tHhnsuE5ANzZkkO0m9y5WSgxrSj2Y5pVHa8mE5mC9SMFDLeUiLUAJ0kyXU0/LeDUOYtxXQ==,
+        integrity: sha512-ASs9Qec6SFtmvFp89DpuXaRbR4H5ilIxG/l3WZY9YdBQyr/ZNdY0itHYx+3JtlsTxoo2r7daRoreRy8olpkJEw==,
       }
     cpu: [arm64]
     os: [darwin]
 
-  "@typescript/native-preview-darwin-x64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-darwin-x64@7.0.0-dev.20260108.1":
     resolution:
       {
-        integrity: sha512-33mTAoeFzwrfikWpo+nfWDgasAAuoLLtRoAZAVYQmCTVZed0yqrNED2tI8bsHYAsqlau/T66qb7cWXQjJ6aT5g==,
+        integrity: sha512-bqD5TBjN7ikeQjyoDFcHjooLzIJ8qwBihhrmVASXHFNHhbbD11nf1rL/v42B7O2kUcFTt6fyBFsS4rJPAMWbbg==,
       }
     cpu: [x64]
     os: [darwin]
 
-  "@typescript/native-preview-linux-arm64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-linux-arm64@7.0.0-dev.20260108.1":
     resolution:
       {
-        integrity: sha512-3euY/vSJQ0L8WfMYDQ/2DtImNtnBevIN+g3qU18LiKv1Be/MNld/Wk7zmvAdvbQ1lXCAFeGG8dGa5NHpVIQE2A==,
+        integrity: sha512-stUw/kVZCWEmYDkcY5sorZwRUufUrirMNFjntUAgetUCFcqNErpxwaDstF7HKdcTC44oo40afE0qT2ZhCtisyw==,
       }
     cpu: [arm64]
     os: [linux]
 
-  "@typescript/native-preview-linux-arm@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-linux-arm@7.0.0-dev.20260108.1":
     resolution:
       {
-        integrity: sha512-zYrp5E/Mda2nKTR+ahT2+hPOXJE7MoJdhyxw8Uzdoy/buETnS+UBCEdahb9Wx2cxFyXpZpiHuNOOGujfJgIv+Q==,
+        integrity: sha512-2DFXwvxf4ZKx408s/BWjUeLlqmyzW7aTIML2m8Tn8qsElImJS4Uujr7qF7a+2ahnA886MySTmzZJ2tDZp7P+KA==,
       }
     cpu: [arm]
     os: [linux]
 
-  "@typescript/native-preview-linux-x64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-linux-x64@7.0.0-dev.20260108.1":
     resolution:
       {
-        integrity: sha512-5lD2j5RyG6ShedMghgMZ+yK4sFf0KnqQhRBndgC9PY6W+QaqvyVrCUURN28TAj4C6oea/Xs8DYMCafEGrv7pPA==,
+        integrity: sha512-fGQ7vCwZ8ipNF1wdJ1JXPOniKWnFvgfsT6yBFWMlPUERDSZLByIBXZIajilV2ypl8tTQgPygCJoXO68Fb8599Q==,
       }
     cpu: [x64]
     os: [linux]
 
-  "@typescript/native-preview-win32-arm64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-win32-arm64@7.0.0-dev.20260108.1":
     resolution:
       {
-        integrity: sha512-eGPP25i28mhjtAsaQLG85HMWYagaz4c6KE5HmSn0z1Tr3CZFet2wnmoBe71mcFQJbLfXJ37PCJg6GB6oNuJh5Q==,
+        integrity: sha512-zcvtTXRR9wlkzdmKtoHDvzBL0sAySkovXrMydtmynwSoZRYS2EFh68sdiysyRmKDaUVSR8IRmbqiiGjkIXHWdw==,
       }
     cpu: [arm64]
     os: [win32]
 
-  "@typescript/native-preview-win32-x64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-win32-x64@7.0.0-dev.20260108.1":
     resolution:
       {
-        integrity: sha512-t7UCZLnQqE93RGSP1YAqu1eegVJX5KhgwSuaTO62cf+UeptEz7cuIP0vPVNxyzial5bKvOoXekkWXQ4u5G1wlQ==,
+        integrity: sha512-ZZ/n5ILDUS1MPchVr9FTqXgKfZ/WWfXcU2YxBxiNJ6ksirE49Yuzfias80siRS1O8F9BoDEvUzOKJZjU+Ez9NA==,
       }
     cpu: [x64]
     os: [win32]
 
-  "@typescript/native-preview@7.0.0-dev.20260107.1":
+  "@typescript/native-preview@7.0.0-dev.20260108.1":
     resolution:
       {
-        integrity: sha512-GkMZ4alU9Pr/5pUjZRzA9NMQ2wadrCPN+YHhjOlr8VM2gCFoSg5+ewLVMu4ZcdjdJDs8DUcCyuHQiW6Zr5iBvQ==,
+        integrity: sha512-c7unqmodysPZ5K9gVKOz9u2Ca9g/CUsSQZfHJ+RJ3TDlopfYYOs7Ui/OyDD8lbn9epteXB0S8LgdFRWpUqhgMg==,
       }
     hasBin: true
 
@@ -2892,10 +2894,10 @@ packages:
         integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==,
       }
 
-  baseline-browser-mapping@2.9.12:
+  baseline-browser-mapping@2.9.13:
     resolution:
       {
-        integrity: sha512-Mij6Lij93pTAIsSYy5cyBQ975Qh9uLEc5rwGTpomiZeXZL9yIS6uORJakb3ScHgfs0serMMfIbXzokPMuEiRyw==,
+        integrity: sha512-WhtvB2NG2wjr04+h77sg3klAIwrgOqnjS49GGudnUPGFFgg7G17y7Qecqp+2Dr5kUDxNRBca0SK7cG8JwzkWDQ==,
       }
     hasBin: true
 
@@ -3008,10 +3010,10 @@ packages:
       }
     engines: { node: ">=6" }
 
-  caniuse-lite@1.0.30001762:
+  caniuse-lite@1.0.30001763:
     resolution:
       {
-        integrity: sha512-PxZwGNvH7Ak8WX5iXzoK1KPZttBXNPuaOvI2ZYU7NrlM+d9Ov+TUvlLOBNGzVXAntMSMMlJPd+jY6ovrVjSmUw==,
+        integrity: sha512-mh/dGtq56uN98LlNX9qdbKnzINhX0QzhiWBFEkFfsFO4QyCvL8YegrJAazCwXIeqkIob8BlZPGM3xdnY+sgmvQ==,
       }
 
   chalk@4.1.2:
@@ -3065,6 +3067,13 @@ packages:
       {
         integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==,
       }
+
+  commander@14.0.2:
+    resolution:
+      {
+        integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==,
+      }
+    engines: { node: ">=20" }
 
   commander@6.2.1:
     resolution:
@@ -3613,6 +3622,14 @@ packages:
       {
         integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==,
       }
+
+  figlet@1.9.4:
+    resolution:
+      {
+        integrity: sha512-uN6QE+TrzTAHC1IWTyrc4FfGo2KH/82J8Jl1tyKB7+z5DBit/m3D++Iu5lg91qJMnQQ3vpJrj5gxcK/pk4R9tQ==,
+      }
+    engines: { node: ">= 17.0.0" }
+    hasBin: true
 
   file-entry-cache@8.0.0:
     resolution:
@@ -4319,10 +4336,10 @@ packages:
       }
     engines: { node: ">=0.10.0" }
 
-  knip@5.80.0:
+  knip@5.80.1:
     resolution:
       {
-        integrity: sha512-K/Ga2f/SHEUXXriVdaw2GfeIUJ5muwdqusHGkCtaG/1qeMmQJiuwZj9KnPxaDbnYPAu8RWjYYh8Nyb+qlJ3d8A==,
+        integrity: sha512-aMqGxyoAgLzTd6g3bN7J+Mef0R/WqWKz4zazvKQisprPdszp7X/CHRAPVsVYIkUAIDWCiC/s65JOrva3DwR9yQ==,
       }
     engines: { node: ">=18.18.0" }
     hasBin: true
@@ -7021,11 +7038,11 @@ snapshots:
       "@tauri-apps/cli-win32-ia32-msvc": 2.9.6
       "@tauri-apps/cli-win32-x64-msvc": 2.9.6
 
-  "@tauri-apps/plugin-dialog@2.4.2":
+  "@tauri-apps/plugin-dialog@2.5.0":
     dependencies:
       "@tauri-apps/api": 2.9.1
 
-  "@tauri-apps/plugin-fs@2.4.4":
+  "@tauri-apps/plugin-fs@2.4.5":
     dependencies:
       "@tauri-apps/api": 2.9.1
 
@@ -7044,13 +7061,11 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  "@types/bcryptjs@3.0.0":
-    dependencies:
-      bcryptjs: 3.0.3
-
   "@types/crypto-js@4.2.2": {}
 
   "@types/estree@1.0.8": {}
+
+  "@types/figlet@1.7.0": {}
 
   "@types/http-cache-semantics@4.0.4": {}
 
@@ -7165,36 +7180,36 @@ snapshots:
       "@typescript-eslint/types": 8.52.0
       eslint-visitor-keys: 4.2.1
 
-  "@typescript/native-preview-darwin-arm64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-darwin-arm64@7.0.0-dev.20260108.1":
     optional: true
 
-  "@typescript/native-preview-darwin-x64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-darwin-x64@7.0.0-dev.20260108.1":
     optional: true
 
-  "@typescript/native-preview-linux-arm64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-linux-arm64@7.0.0-dev.20260108.1":
     optional: true
 
-  "@typescript/native-preview-linux-arm@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-linux-arm@7.0.0-dev.20260108.1":
     optional: true
 
-  "@typescript/native-preview-linux-x64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-linux-x64@7.0.0-dev.20260108.1":
     optional: true
 
-  "@typescript/native-preview-win32-arm64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-win32-arm64@7.0.0-dev.20260108.1":
     optional: true
 
-  "@typescript/native-preview-win32-x64@7.0.0-dev.20260107.1":
+  "@typescript/native-preview-win32-x64@7.0.0-dev.20260108.1":
     optional: true
 
-  "@typescript/native-preview@7.0.0-dev.20260107.1":
+  "@typescript/native-preview@7.0.0-dev.20260108.1":
     optionalDependencies:
-      "@typescript/native-preview-darwin-arm64": 7.0.0-dev.20260107.1
-      "@typescript/native-preview-darwin-x64": 7.0.0-dev.20260107.1
-      "@typescript/native-preview-linux-arm": 7.0.0-dev.20260107.1
-      "@typescript/native-preview-linux-arm64": 7.0.0-dev.20260107.1
-      "@typescript/native-preview-linux-x64": 7.0.0-dev.20260107.1
-      "@typescript/native-preview-win32-arm64": 7.0.0-dev.20260107.1
-      "@typescript/native-preview-win32-x64": 7.0.0-dev.20260107.1
+      "@typescript/native-preview-darwin-arm64": 7.0.0-dev.20260108.1
+      "@typescript/native-preview-darwin-x64": 7.0.0-dev.20260108.1
+      "@typescript/native-preview-linux-arm": 7.0.0-dev.20260108.1
+      "@typescript/native-preview-linux-arm64": 7.0.0-dev.20260108.1
+      "@typescript/native-preview-linux-x64": 7.0.0-dev.20260108.1
+      "@typescript/native-preview-win32-arm64": 7.0.0-dev.20260108.1
+      "@typescript/native-preview-win32-x64": 7.0.0-dev.20260108.1
 
   "@uiw/color-convert@2.9.2(@babel/runtime@7.28.4)":
     dependencies:
@@ -7534,7 +7549,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.9.12: {}
+  baseline-browser-mapping@2.9.13: {}
 
   bcryptjs@3.0.3: {}
 
@@ -7564,8 +7579,8 @@ snapshots:
 
   browserslist@4.28.1:
     dependencies:
-      baseline-browser-mapping: 2.9.12
-      caniuse-lite: 1.0.30001762
+      baseline-browser-mapping: 2.9.13
+      caniuse-lite: 1.0.30001763
       electron-to-chromium: 1.5.267
       node-releases: 2.0.27
       update-browserslist-db: 1.2.3(browserslist@4.28.1)
@@ -7610,7 +7625,7 @@ snapshots:
 
   camelcase@5.3.1: {}
 
-  caniuse-lite@1.0.30001762: {}
+  caniuse-lite@1.0.30001763: {}
 
   chalk@4.1.2:
     dependencies:
@@ -7642,6 +7657,8 @@ snapshots:
       color-name: 1.1.4
 
   color-name@1.1.4: {}
+
+  commander@14.0.2: {}
 
   commander@6.2.1: {}
 
@@ -8126,6 +8143,10 @@ snapshots:
 
   fflate@0.8.2: {}
 
+  figlet@1.9.4:
+    dependencies:
+      commander: 14.0.2
+
   file-entry-cache@8.0.0:
     dependencies:
       flat-cache: 4.0.1
@@ -8514,7 +8535,7 @@ snapshots:
 
   kind-of@6.0.3: {}
 
-  knip@5.80.0(@types/node@25.0.3)(typescript@5.9.3):
+  knip@5.80.1(@types/node@25.0.3)(typescript@5.9.3):
     dependencies:
       "@nodelib/fs.walk": 1.2.8
       "@types/node": 25.0.3
@@ -8665,8 +8686,8 @@ snapshots:
     dependencies:
       "@next/env": 16.1.1
       "@swc/helpers": 0.5.15
-      baseline-browser-mapping: 2.9.12
-      caniuse-lite: 1.0.30001762
+      baseline-browser-mapping: 2.9.13
+      caniuse-lite: 1.0.30001763
       postcss: 8.4.31
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)

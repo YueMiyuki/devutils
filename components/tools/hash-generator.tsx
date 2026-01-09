@@ -537,7 +537,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
 
             <Button variant="outline" size="sm" onClick={clearAll}>
               <Trash2 className="w-4 h-4 mr-2" />
-              {t("tools.hashGenerator.clear")}
+              {t("common.clear")}
             </Button>
           </div>
 
@@ -828,7 +828,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                         setProgress(0);
                       }}
                     >
-                      {t("tools.hashGenerator.file.clear")}
+                      {t("common.clear")}
                     </Button>
                     <Button
                       variant="outline"

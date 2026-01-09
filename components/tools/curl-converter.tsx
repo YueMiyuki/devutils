@@ -361,7 +361,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
               </Button>
               <Button variant="outline" size="sm" onClick={clearAll}>
                 <Trash2 className="w-4 h-4 mr-2" />
-                {t("tools.curlConverter.clear")}
+                {t("common.clear")}
               </Button>
             </div>
           </div>

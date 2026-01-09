@@ -552,7 +552,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
 
             <Button variant="outline" size="sm" onClick={clearAll}>
               <Trash2 className="w-4 h-4 mr-2" />
-              {t("tools.jsonCsv.clear")}
+              {t("common.clear")}
             </Button>
 
             <Button size="sm" onClick={convert}>

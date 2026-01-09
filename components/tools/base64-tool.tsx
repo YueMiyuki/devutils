@@ -712,7 +712,7 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
               </Button>
               <Button variant="outline" size="sm" onClick={clearAll}>
                 <Trash2 className="w-4 h-4 mr-2" />
-                {t("tools.base64.clear")}
+                {t("common.clear")}
               </Button>
             </div>
           </div>
@@ -882,7 +882,7 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
                         setProgress(0);
                       }}
                     >
-                      {t("tools.base64.file.clear")}
+                      {t("common.clear")}
                     </Button>
                     <Button
                       variant="outline"

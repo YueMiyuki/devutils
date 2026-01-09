@@ -587,6 +587,214 @@
         "title": "需要管理員權限",
         "description": "使用管理員/root 權限執行此應用以查看連接埠使用的程序資訊（PID 和程序名稱）。在 macOS/Linux 上，使用 sudo 執行。在 Windows 上，以管理員身份執行。"
       }
+    },
+    "sslToothbrush": {
+      "name": "SSL 憑證牙刷",
+      "shortName": "SSL",
+      "description": "檢視到期、SAN、鏈路驗證並警告網域不符",
+      "title": "SSL 憑證牙刷",
+      "subtitle": "上線前刷一遍：效期、SAN、鏈路與網域覆蓋",
+      "tabs": {
+        "live": "線上抓取",
+        "pem": "貼上 PEM"
+      },
+      "live": {
+        "title": "線上憑證檢查",
+        "description": "連線主機並讀取呈現的憑證",
+        "host": "主機/網域",
+        "port": "連接埠",
+        "check": "檢查憑證"
+      },
+      "pem": {
+        "title": "貼上憑證",
+        "description": "不連到遠端也能解析 PEM",
+        "optionalHost": "可選：檢查網域覆蓋",
+        "parse": "解析憑證"
+      },
+      "status": {
+        "hostname": "網域覆蓋",
+        "chain": "鏈路驗證",
+        "expiry": "到期",
+        "valid": "有效",
+        "invalid": "不匹配",
+        "expired": "已過期",
+        "daysLeft": "剩餘 {{count}} 天",
+        "unknown": "未知",
+        "skip": "未檢查"
+      },
+      "warnings": {
+        "expired": "憑證已過期",
+        "expiresSoon": "{{days}} 天內到期",
+        "hostnameMismatch": "憑證不匹配 {{host}}",
+        "chainInvalid": "鏈路驗證失敗"
+      },
+      "result": {
+        "title": "憑證詳情",
+        "description": "到期時間、SAN、簽發者與指紋",
+        "empty": "先線上檢查或貼上 PEM 才能查看詳情。",
+        "identity": "身分",
+        "subject": "主題",
+        "issuer": "簽發者",
+        "serial": "序列號",
+        "fingerprint": "SHA256 指紋",
+        "validity": "有效期",
+        "validFrom": "生效時間",
+        "validTo": "到期時間",
+        "daysRemaining": "剩餘天數",
+        "san": "主體替代名稱（SAN）",
+        "noSan": "沒有 SAN 記錄",
+        "raw": "原始 PEM",
+        "copyPem": "複製 PEM"
+      },
+      "errors": {
+        "hostRequired": "請填寫主機名",
+        "pemRequired": "請先貼上 PEM 憑證"
+      }
+    },
+    "websocketFish": {
+      "name": "WebSocket 魚鱗器",
+      "shortName": "WS",
+      "description": "全雙工測試，含二進位/十六進位檢視與自動重連",
+      "title": "WebSocket Fish Scaler",
+      "subtitle": "帶重連策略的 WebSocket 收發調試台",
+      "status": {
+        "connecting": "連線中",
+        "open": "已連線",
+        "closing": "關閉中",
+        "closed": "已關閉"
+      },
+      "connection": {
+        "title": "連線",
+        "description": "撥號一個 WebSocket 端點並保持存活",
+        "endpoint": "WebSocket 位址"
+      },
+      "reconnect": {
+        "label": "自動重連策略",
+        "off": "關閉",
+        "instant": "立即重試",
+        "backoff": "指數退避",
+        "retries": "已重試 {{count}} 次"
+      },
+      "actions": {
+        "connect": "連線",
+        "disconnect": "斷線",
+        "send": "送出",
+        "clear": "清除紀錄"
+      },
+      "payload": {
+        "title": "負載",
+        "description": "傳送文字、JSON 或十六進位資料",
+        "placeholder": "輸入訊息、JSON 或十六進位位元組...",
+        "format": {
+          "text": "文字",
+          "json": "JSON",
+          "hex": "十六進位/二進位"
+        }
+      },
+      "log": {
+        "title": "流量紀錄",
+        "description": "查看收發幀與十六進位檢視",
+        "hint": "最新訊息在最上方，十六進位永遠可見。",
+        "empty": "尚無流量。"
+      },
+      "labels": {
+        "sent": "送出",
+        "received": "接收",
+        "info": "資訊",
+        "binary": "二進位負載",
+        "noHex": "無十六進位資料"
+      },
+      "events": {
+        "connected": "已連線到 {{url}}",
+        "error": "連線發生錯誤",
+        "closed": "已關閉 ({{code}})：{{reason}}",
+        "droppedLargeMessage": "丟棄超過 {{limitKb}} KB 的訊息（{{size}} 位元組）",
+        "maxRetries": "重試 {{count}} 次後停止自動重連"
+      },
+      "errors": {
+        "urlRequired": "請輸入 WebSocket 位址",
+        "invalidUrl": "請輸入有效的 ws:// 或 wss:// 位址",
+        "failed": "連線失敗",
+        "notConnected": "請先連線再發送",
+        "hexRequired": "送出二進位前請提供十六進位位元組"
+      }
+    },
+    "loremTweezers": {
+      "name": "Lipsum 鑷子",
+      "shortName": "Lorem",
+      "description": "產生占位文字、電子郵件、地址、測試卡號與假 IBAN",
+      "title": "Lipsum 鑷子",
+      "subtitle": "快速產出填充文字與測試用假資料",
+      "actions": {
+        "refreshAll": "全部刷新",
+        "generate": "產生",
+        "copy": "複製",
+        "regenerate": "重新產生"
+      },
+      "text": {
+        "title": "占位文字",
+        "description": "帶點技術味的段落",
+        "paragraphs": "段落數"
+      },
+      "length": {
+        "short": "短",
+        "medium": "中等",
+        "long": "長"
+      },
+      "identity": {
+        "title": "聯絡資訊",
+        "description": "用於示範的郵件與地址",
+        "email": "電子郵件",
+        "address": "地址"
+      },
+      "payment": {
+        "title": "支付測試資料",
+        "description": "通過 Luhn 驗證的卡號與可用 IBAN",
+        "brands": {
+          "visa": "Visa",
+          "mastercard": "Mastercard",
+          "amex": "Amex"
+        },
+        "cardNumber": "卡號",
+        "iban": "IBAN"
+      },
+      "meta": {
+        "title": "使用說明",
+        "description": "全部皆為虛構資料，僅供測試。",
+        "note1": "卡號通過 Luhn 驗證，但不對應真實帳戶。",
+        "note2": "IBAN 含有效校驗碼，但帳戶部分為隨機。"
+      }
+    },
+    "asciiCork": {
+      "name": "ASCII Art 塞子",
+      "shortName": "ASCII",
+      "description": "用多種樣式產生 ASCII 文字藝術",
+      "title": "ASCII Art 塞子",
+      "subtitle": "選擇字型、留白、邊框，生成可複製的字元畫",
+      "actions": {
+        "copy": "複製藝術字",
+        "render": "生成"
+      },
+      "input": {
+        "title": "文字與樣式",
+        "description": "選擇文字、字型、留白和效果",
+        "placeholder": "輸入要轉換的文字...",
+        "font": "字型",
+        "padding": "留白",
+        "uppercase": "全部大寫",
+        "frame": "加入邊框"
+      },
+      "output": {
+        "title": "生成結果",
+        "description": "複製或繼續微調輸出"
+      },
+      "fonts": {
+        "standard": "標準",
+        "slant": "斜體",
+        "big": "大號",
+        "ghost": "幽靈",
+        "doom": "Doom"
+      }
     }
   },
   "settings": {
@@ -614,6 +822,7 @@
     "filter": "篩選",
     "sort": "排序",
     "refresh": "重新整理",
+    "clear": "清空",
     "loading": "載入中...",
     "error": "錯誤",
     "success": "成功",

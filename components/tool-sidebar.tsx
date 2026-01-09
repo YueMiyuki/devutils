@@ -33,6 +33,10 @@ import {
   Hash,
   QrCode,
   Activity,
+  Shield,
+  Fish,
+  FileText,
+  Braces,
 } from "lucide-react";
 
 const utilityToolIds = [
@@ -47,6 +51,10 @@ const utilityToolIds = [
   "hash-generator",
   "qr-code",
   "port-detective",
+  "ssl-toothbrush",
+  "websocket-fish",
+  "lorem-tweezers",
+  "ascii-cork",
 ];
 const funToolIds = ["blame-intern", "deploy-roulette", "boss-mode"];
 
@@ -63,6 +71,10 @@ const toolKeyMap: Record<string, string> = {
   "hash-generator": "hashGenerator",
   "qr-code": "qrCode",
   "port-detective": "portDetective",
+  "ssl-toothbrush": "sslToothbrush",
+  "websocket-fish": "websocketFish",
+  "lorem-tweezers": "loremTweezers",
+  "ascii-cork": "asciiCork",
   "blame-intern": "blameIntern",
   "deploy-roulette": "deployRoulette",
   "boss-mode": "bossMode",
@@ -80,6 +92,10 @@ const toolIcons = {
   "hash-generator": Hash,
   "qr-code": QrCode,
   "port-detective": Activity,
+  "ssl-toothbrush": Shield,
+  "websocket-fish": Fish,
+  "lorem-tweezers": FileText,
+  "ascii-cork": Braces,
   "blame-intern": GitBranch,
   "deploy-roulette": Rocket,
   "boss-mode": TableProperties,
