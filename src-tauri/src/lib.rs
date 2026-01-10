@@ -1,20 +1,23 @@
-use std::process::Command;
 use image::GenericImageView;
+use std::process::Command;
 
 #[tauri::command]
-async fn extract_palette_from_image(file_path: String, num_colors: usize) -> Result<Vec<String>, String> {
+async fn extract_palette_from_image(
+    file_path: String,
+    num_colors: usize,
+) -> Result<Vec<String>, String> {
     // Don't block main thread
-    tokio::task::spawn_blocking(move || {
-        extract_palette_from_image_blocking(file_path, num_colors)
-    })
-    .await
-    .map_err(|e| format!("Task join error: {}", e))?
+    tokio::task::spawn_blocking(move || extract_palette_from_image_blocking(file_path, num_colors))
+        .await
+        .map_err(|e| format!("Task join error: {}", e))?
 }
 
-fn extract_palette_from_image_blocking(file_path: String, num_colors: usize) -> Result<Vec<String>, String> {
+fn extract_palette_from_image_blocking(
+    file_path: String,
+    num_colors: usize,
+) -> Result<Vec<String>, String> {
     // Decode image
-    let img = image::open(&file_path)
-        .map_err(|e| format!("Failed to open image: {}", e))?;
+    let img = image::open(&file_path).map_err(|e| format!("Failed to open image: {}", e))?;
 
     // Downsample
     let max_dimension = 200;
@@ -23,11 +26,7 @@ fn extract_palette_from_image_blocking(file_path: String, num_colors: usize) -> 
     let new_width = ((width as f32 * scale).round() as u32).max(1);
     let new_height = ((height as f32 * scale).round() as u32).max(1);
 
-    let img = img.resize_exact(
-        new_width,
-        new_height,
-        image::imageops::FilterType::Lanczos3,
-    );
+    let img = img.resize_exact(new_width, new_height, image::imageops::FilterType::Lanczos3);
 
     // Sample pixels
     let mut pixels: Vec<[u8; 3]> = Vec::new();
@@ -61,10 +60,7 @@ fn extract_palette_from_image_blocking(file_path: String, num_colors: usize) -> 
         .iter()
         .zip(result.pixel_counts.iter())
         .map(|(center, &count)| {
-            let hex = format!(
-                "#{:02x}{:02x}{:02x}",
-                center[0], center[1], center[2]
-            );
+            let hex = format!("#{:02x}{:02x}{:02x}", center[0], center[1], center[2]);
             (hex, count)
         })
         .collect();
@@ -194,19 +190,18 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
         // 1. Shell escaping (single quotes) for bash/zsh execution
         // 2. AppleScript escaping (double quotes) for AppleScript string safety
         let escaped_command = command
-            .replace("'", "'\\''")      // Shell: escape single quotes
-            .replace("\"", "\\\"");     // AppleScript: escape double quotes
+            .replace("'", "'\\''") // Shell: escape single quotes
+            .replace("\"", "\\\""); // AppleScript: escape double quotes
         let escaped_directory = directory
-            .replace("'", "'\\''")      // Shell: escape single quotes
-            .replace("\"", "\\\"");     // AppleScript: escape double quotes
+            .replace("'", "'\\''") // Shell: escape single quotes
+            .replace("\"", "\\\""); // AppleScript: escape double quotes
 
         let script = format!(
             r#"tell application "Terminal"
                 activate
                 do script "cd '{}' && {}"
             end tell"#,
-            escaped_directory,
-            escaped_command
+            escaped_directory, escaped_command
         );
 
         Command::new("osascript")
@@ -222,9 +217,7 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
     #[cfg(target_os = "windows")]
     {
         // For directory (inside double quotes): use "" to escape quotes
-        let escape_quoted = |s: &str| -> String {
-            s.replace("\"", "\"\"")
-        };
+        let escape_quoted = |s: &str| -> String { s.replace("\"", "\"\"") };
 
         // For command (outside quotes): use ^ to escape special characters
         let escape_unquoted = |s: &str| -> String {
@@ -237,9 +230,17 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
         };
 
         Command::new("cmd")
-            .args(["/C", "start", "cmd", "/K", &format!("cd /d \"{}\" && {}",
-                escape_quoted(&directory),
-                escape_unquoted(&command))])
+            .args([
+                "/C",
+                "start",
+                "cmd",
+                "/K",
+                &format!(
+                    "cd /d \"{}\" && {}",
+                    escape_quoted(&directory),
+                    escape_unquoted(&command)
+                ),
+            ])
             .spawn()
             .map_err(|e| format!("Failed to open terminal: {}", e))?;
 
@@ -258,13 +259,35 @@ fn run_deploy_command(directory: String, command: String) -> Result<String, Stri
         for term in terminals {
             let result = match term {
                 "gnome-terminal" => Command::new(term)
-                    .args(["--", "bash", "-c", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, escaped_command)])
+                    .args([
+                        "--",
+                        "bash",
+                        "-c",
+                        &format!(
+                            "cd '{}' && {} ; read -p 'Press Enter to close...'",
+                            escaped_directory, escaped_command
+                        ),
+                    ])
                     .spawn(),
                 "konsole" => Command::new(term)
-                    .args(["-e", "bash", "-c", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, escaped_command)])
+                    .args([
+                        "-e",
+                        "bash",
+                        "-c",
+                        &format!(
+                            "cd '{}' && {} ; read -p 'Press Enter to close...'",
+                            escaped_directory, escaped_command
+                        ),
+                    ])
                     .spawn(),
                 _ => Command::new(term)
-                    .args(["-e", &format!("cd '{}' && {} ; read -p 'Press Enter to close...'", escaped_directory, escaped_command)])
+                    .args([
+                        "-e",
+                        &format!(
+                            "cd '{}' && {} ; read -p 'Press Enter to close...'",
+                            escaped_directory, escaped_command
+                        ),
+                    ])
                     .spawn(),
             };
 
@@ -294,11 +317,9 @@ struct PortInfo {
 
 #[tauri::command]
 async fn check_port(port: u16) -> Result<PortInfo, String> {
-    tokio::task::spawn_blocking(move || {
-        check_port_blocking(port)
-    })
-    .await
-    .map_err(|e| format!("Task join error: {}", e))?
+    tokio::task::spawn_blocking(move || check_port_blocking(port))
+        .await
+        .map_err(|e| format!("Task join error: {}", e))?
 }
 
 #[cfg(target_os = "macos")]
@@ -441,7 +462,10 @@ fn check_port_blocking(port: u16) -> Result<PortInfo, String> {
     // netstat -antp
     let output = Command::new("sh")
         .arg("-c")
-        .arg(format!("netstat -antp 2>/dev/null | grep ':{}\\b.*LISTEN'", port))
+        .arg(format!(
+            "netstat -antp 2>/dev/null | grep ':{}\\b.*LISTEN'",
+            port
+        ))
         .output()
         .map_err(|e| format!("Failed to run netstat: {}", e))?;
 
@@ -491,7 +515,10 @@ fn kill_process(pid: u32) -> Result<String, String> {
             .map_err(|e| format!("Failed to kill process: {}", e))?;
 
         if !output.status.success() {
-            return Err(format!("Failed to kill process {}: process may not exist or permission denied", pid));
+            return Err(format!(
+                "Failed to kill process {}: process may not exist or permission denied",
+                pid
+            ));
         }
 
         return Ok(format!("Process {} killed successfully", pid));
@@ -505,7 +532,10 @@ fn kill_process(pid: u32) -> Result<String, String> {
             .map_err(|e| format!("Failed to kill process: {}", e))?;
 
         if !output.status.success() {
-            return Err(format!("Failed to kill process {}: process may not exist or permission denied", pid));
+            return Err(format!(
+                "Failed to kill process {}: process may not exist or permission denied",
+                pid
+            ));
         }
 
         return Ok(format!("Process {} killed successfully", pid));
@@ -519,7 +549,10 @@ fn kill_process(pid: u32) -> Result<String, String> {
             .map_err(|e| format!("Failed to kill process: {}", e))?;
 
         if !output.status.success() {
-            return Err(format!("Failed to kill process {}: process may not exist or permission denied", pid));
+            return Err(format!(
+                "Failed to kill process {}: process may not exist or permission denied",
+                pid
+            ));
         }
 
         return Ok(format!("Process {} killed successfully", pid));
@@ -531,11 +564,9 @@ fn kill_process(pid: u32) -> Result<String, String> {
 
 #[tauri::command]
 async fn scan_listening_ports(start_port: u16, end_port: u16) -> Result<Vec<PortInfo>, String> {
-    tokio::task::spawn_blocking(move || {
-        scan_listening_ports_blocking(start_port, end_port)
-    })
-    .await
-    .map_err(|e| format!("Task join error: {}", e))?
+    tokio::task::spawn_blocking(move || scan_listening_ports_blocking(start_port, end_port))
+        .await
+        .map_err(|e| format!("Task join error: {}", e))?
 }
 
 #[cfg(target_os = "macos")]
@@ -736,29 +767,28 @@ fn scan_listening_ports_blocking(start_port: u16, end_port: u16) -> Result<Vec<P
     Ok(results)
 }
 
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-  tauri::Builder::default()
-    .plugin(tauri_plugin_dialog::init())
-    .plugin(tauri_plugin_fs::init())
-    .setup(|app| {
-      if cfg!(debug_assertions) {
-        app.handle().plugin(
-          tauri_plugin_log::Builder::default()
-            .level(log::LevelFilter::Info)
-            .build(),
-        )?;
-      }
-      Ok(())
-    })
-    .invoke_handler(tauri::generate_handler![
-        run_deploy_command,
-        extract_palette_from_image,
-        check_port,
-        kill_process,
-        scan_listening_ports
-    ])
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+    tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_fs::init())
+        .setup(|app| {
+            if cfg!(debug_assertions) {
+                app.handle().plugin(
+                    tauri_plugin_log::Builder::default()
+                        .level(log::LevelFilter::Info)
+                        .build(),
+                )?;
+            }
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![
+            run_deploy_command,
+            extract_palette_from_image,
+            check_port,
+            kill_process,
+            scan_listening_ports
+        ])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }

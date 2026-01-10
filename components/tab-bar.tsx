@@ -27,6 +27,13 @@ import {
   Pipette,
   Clock,
   Calendar,
+  Hash,
+  QrCode,
+  Activity,
+  Shield,
+  Fish,
+  FileText,
+  Braces,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -42,6 +49,13 @@ const toolIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "color-picker": Pipette,
   "timestamp-converter": Clock,
   "cron-generator": Calendar,
+  "hash-generator": Hash,
+  "qr-code": QrCode,
+  "port-detective": Activity,
+  "ssl-toothbrush": Shield,
+  "websocket-fish": Fish,
+  "lorem-tweezers": FileText,
+  "ascii-cork": Braces,
 };
 
 // Tool ID to translation key mapping
@@ -57,6 +71,13 @@ const toolTranslationKeys: Record<string, string> = {
   "color-picker": "tools.colorPicker.name",
   "timestamp-converter": "tools.timestampConverter.name",
   "cron-generator": "tools.cronGenerator.name",
+  "hash-generator": "tools.hashGenerator.name",
+  "qr-code": "tools.qrCode.name",
+  "port-detective": "tools.portDetective.name",
+  "ssl-toothbrush": "tools.sslToothbrush.name",
+  "websocket-fish": "tools.websocketFish.name",
+  "lorem-tweezers": "tools.loremTweezers.name",
+  "ascii-cork": "tools.asciiCork.name",
 };
 
 const utilityToolIds = [
@@ -68,6 +89,13 @@ const utilityToolIds = [
   "color-picker",
   "timestamp-converter",
   "cron-generator",
+  "hash-generator",
+  "qr-code",
+  "port-detective",
+  "ssl-toothbrush",
+  "websocket-fish",
+  "lorem-tweezers",
+  "ascii-cork",
 ];
 const funToolIds = ["blame-intern", "deploy-roulette", "boss-mode"];
 

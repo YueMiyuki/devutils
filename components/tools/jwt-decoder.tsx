@@ -289,7 +289,7 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                     }}
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
-                    {t("tools.jwtDecoder.clear")}
+                    {t("common.clear")}
                   </Button>
                 </div>
               </div>

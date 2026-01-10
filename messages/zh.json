@@ -435,7 +435,7 @@
       "input": "输入",
       "output": "哈希输出",
       "copy": "复制",
-      "clear": "清除",
+      "clear": "清空",
       "inputPlaceholder": "输入要哈希的文本...",
       "outputPlaceholder": "哈希结果将显示在这里...",
       "processing": "正在哈希...",
@@ -462,7 +462,7 @@
         "processing": "正在处理...",
         "output": "{{algorithm}} 哈希",
         "outputDescription": "文件哈希结果",
-        "clear": "清除",
+        "clear": "清空",
         "chooseAnother": "选择其他文件"
       },
       "errors": {
@@ -587,6 +587,214 @@
         "title": "需要管理员权限",
         "description": "使用管理员/root 权限运行此应用以查看端口使用的进程信息（PID 和进程名称）。在 macOS/Linux 上，使用 sudo 运行。在 Windows 上，以管理员身份运行。"
       }
+    },
+    "sslToothbrush": {
+      "name": "SSL 证书牙刷",
+      "shortName": "SSL",
+      "description": "查看过期、SAN、链路验证并提示域名不匹配",
+      "title": "SSL 证书牙刷",
+      "subtitle": "上线前刷一遍：有效期、SAN、链路和域名覆盖",
+      "tabs": {
+        "live": "在线抓取",
+        "pem": "粘贴 PEM"
+      },
+      "live": {
+        "title": "在线证书检查",
+        "description": "连接主机并读取呈现的证书",
+        "host": "主机/域名",
+        "port": "端口",
+        "check": "检查证书"
+      },
+      "pem": {
+        "title": "粘贴证书",
+        "description": "无需访问远端，直接解析 PEM",
+        "optionalHost": "可选：校验域名覆盖",
+        "parse": "解析证书"
+      },
+      "status": {
+        "hostname": "域名覆盖",
+        "chain": "链路验证",
+        "expiry": "到期",
+        "valid": "有效",
+        "invalid": "不匹配",
+        "expired": "已过期",
+        "daysLeft": "剩余 {{count}} 天",
+        "unknown": "未知",
+        "skip": "未检查"
+      },
+      "warnings": {
+        "expired": "证书已过期",
+        "expiresSoon": "{{days}} 天内过期",
+        "hostnameMismatch": "证书不匹配 {{host}}",
+        "chainInvalid": "链路验证失败"
+      },
+      "result": {
+        "title": "证书详情",
+        "description": "到期时间、SAN、颁发者与指纹",
+        "empty": "先在线检查或粘贴 PEM 才能查看详情。",
+        "identity": "身份",
+        "subject": "主题",
+        "issuer": "颁发者",
+        "serial": "序列号",
+        "fingerprint": "SHA256 指纹",
+        "validity": "有效期",
+        "validFrom": "生效时间",
+        "validTo": "到期时间",
+        "daysRemaining": "剩余天数",
+        "san": "主题可选名称（SAN）",
+        "noSan": "没有 SAN 记录",
+        "raw": "原始 PEM",
+        "copyPem": "复制 PEM"
+      },
+      "errors": {
+        "hostRequired": "请填写主机名",
+        "pemRequired": "请先粘贴 PEM 证书"
+      }
+    },
+    "websocketFish": {
+      "name": "WebSocket 鱼鳞器",
+      "shortName": "WS",
+      "description": "全双工测试，带二进制/十六进制视图和自动重连",
+      "title": "WebSocket 鱼鳞器",
+      "subtitle": "带重连策略的 WebSocket 收发调试台",
+      "status": {
+        "connecting": "连接中",
+        "open": "已连接",
+        "closing": "关闭中",
+        "closed": "已关闭"
+      },
+      "connection": {
+        "title": "连接",
+        "description": "拨号一个 WebSocket 端点并保持存活",
+        "endpoint": "WebSocket 地址"
+      },
+      "reconnect": {
+        "label": "自动重连策略",
+        "off": "关闭",
+        "instant": "立即重试",
+        "backoff": "指数退避",
+        "retries": "重试 {{count}} 次"
+      },
+      "actions": {
+        "connect": "连接",
+        "disconnect": "断开",
+        "send": "发送",
+        "clear": "清空日志"
+      },
+      "payload": {
+        "title": "负载",
+        "description": "发送文本、JSON 或十六进制数据",
+        "placeholder": "输入消息、JSON 或十六进制字节...",
+        "format": {
+          "text": "文本",
+          "json": "JSON",
+          "hex": "十六进制/二进制"
+        }
+      },
+      "log": {
+        "title": "流量日志",
+        "description": "查看收发帧及十六进制视图",
+        "hint": "最新消息在最上方，十六进制始终可见。",
+        "empty": "暂无流量。"
+      },
+      "labels": {
+        "sent": "发送",
+        "received": "接收",
+        "info": "信息",
+        "binary": "二进制负载",
+        "noHex": "无十六进制数据"
+      },
+      "events": {
+        "connected": "已连接到 {{url}}",
+        "error": "连接出现错误",
+        "closed": "已关闭 ({{code}})：{{reason}}",
+        "droppedLargeMessage": "丢弃超过 {{limitKb}} KB 的消息（{{size}} 字节）",
+        "maxRetries": "重试 {{count}} 次后停止自动重连"
+      },
+      "errors": {
+        "urlRequired": "请输入 WebSocket 地址",
+        "invalidUrl": "请输入有效的 ws:// 或 wss:// 地址",
+        "failed": "连接失败",
+        "notConnected": "请先连接后再发送",
+        "hexRequired": "发送二进制前请提供十六进制字节"
+      }
+    },
+    "loremTweezers": {
+      "name": "Lipsum 镊子",
+      "shortName": "Lorem",
+      "description": "生成占位文本、邮箱、地址、测试卡号与伪造 IBAN",
+      "title": "Lipsum 镊子",
+      "subtitle": "快速生成填充文本和测试用假数据",
+      "actions": {
+        "refreshAll": "全部刷新",
+        "generate": "生成",
+        "copy": "复制",
+        "regenerate": "重新生成"
+      },
+      "text": {
+        "title": "占位文本",
+        "description": "带点技术味的段落",
+        "paragraphs": "段落数"
+      },
+      "length": {
+        "short": "短",
+        "medium": "中等",
+        "long": "长"
+      },
+      "identity": {
+        "title": "联系信息",
+        "description": "用于演示的邮箱与地址",
+        "email": "邮箱",
+        "address": "地址"
+      },
+      "payment": {
+        "title": "支付测试数据",
+        "description": "通过 Luhn 校验的卡号与可用 IBAN",
+        "brands": {
+          "visa": "Visa",
+          "mastercard": "Mastercard",
+          "amex": "Amex"
+        },
+        "cardNumber": "卡号",
+        "iban": "IBAN"
+      },
+      "meta": {
+        "title": "使用说明",
+        "description": "全部为虚构数据，仅限测试用途。",
+        "note1": "卡号通过 Luhn 校验，但不对应真实账户。",
+        "note2": "IBAN 带有效校验位，但账户部分为随机。"
+      }
+    },
+    "asciiCork": {
+      "name": "ASCII Art 塞子",
+      "shortName": "ASCII",
+      "description": "用多种样式生成 ASCII 文本艺术",
+      "title": "ASCII Art 塞子",
+      "subtitle": "选择字体、留白、边框，生成可复制的字符画",
+      "actions": {
+        "copy": "复制艺术字",
+        "render": "生成"
+      },
+      "input": {
+        "title": "文本与样式",
+        "description": "选择文本、字体、留白和效果",
+        "placeholder": "输入要转换的文本...",
+        "font": "字体",
+        "padding": "留白",
+        "uppercase": "全部大写",
+        "frame": "添加边框"
+      },
+      "output": {
+        "title": "生成结果",
+        "description": "复制或继续微调输出"
+      },
+      "fonts": {
+        "standard": "标准",
+        "slant": "斜体",
+        "big": "大号",
+        "ghost": "幽灵",
+        "doom": "Doom"
+      }
     }
   },
   "settings": {
@@ -614,6 +822,7 @@
     "filter": "筛选",
     "sort": "排序",
     "refresh": "刷新",
+    "clear": "清空",
     "loading": "加载中...",
     "error": "错误",
     "success": "成功",

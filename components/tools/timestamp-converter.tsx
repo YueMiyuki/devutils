@@ -311,7 +311,7 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
               </Button>
               <Button variant="outline" size="sm" onClick={clearAll}>
                 <Trash2 className="w-4 h-4 mr-2" />
-                {t("tools.timestampConverter.clear")}
+                {t("common.clear")}
               </Button>
             </div>
           </div>

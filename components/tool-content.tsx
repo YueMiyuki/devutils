@@ -17,6 +17,10 @@ import { CronGenerator } from "@/components/tools/cron-generator";
 import { HashGenerator } from "@/components/tools/hash-generator";
 import { QRCodeTool } from "@/components/tools/qr-code-tool";
 import { PortDetective } from "@/components/tools/port-detective";
+import { SSLToothbrush } from "@/components/tools/ssl-toothbrush";
+import { WebSocketFishScaler } from "@/components/tools/websocket-fish-scaler";
+import { LoremTweezers } from "@/components/tools/lorem-ipsum-tweezers";
+import { ASCIIArtCork } from "@/components/tools/ascii-art-cork";
 import { Wrench } from "lucide-react";
 
 const toolComponents: Record<string, React.ComponentType<{ tabId: string }>> = {
@@ -34,6 +38,10 @@ const toolComponents: Record<string, React.ComponentType<{ tabId: string }>> = {
   "hash-generator": HashGenerator,
   "qr-code": QRCodeTool,
   "port-detective": PortDetective,
+  "ssl-toothbrush": SSLToothbrush,
+  "websocket-fish": WebSocketFishScaler,
+  "lorem-tweezers": LoremTweezers,
+  "ascii-cork": ASCIIArtCork,
 };
 
 export function ToolContent() {

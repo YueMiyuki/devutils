@@ -33,6 +33,10 @@ import {
   Hash,
   QrCode,
   Activity,
+  Shield,
+  Fish,
+  FileText,
+  Braces,
 } from "lucide-react";
 
 const utilityToolIds = [
@@ -47,6 +51,10 @@ const utilityToolIds = [
   "hash-generator",
   "qr-code",
   "port-detective",
+  "ssl-toothbrush",
+  "websocket-fish",
+  "lorem-tweezers",
+  "ascii-cork",
 ];
 const funToolIds = ["blame-intern", "deploy-roulette", "boss-mode"];
 
@@ -63,6 +71,10 @@ const toolKeyMap: Record<string, string> = {
   "hash-generator": "hashGenerator",
   "qr-code": "qrCode",
   "port-detective": "portDetective",
+  "ssl-toothbrush": "sslToothbrush",
+  "websocket-fish": "websocketFish",
+  "lorem-tweezers": "loremTweezers",
+  "ascii-cork": "asciiCork",
   "blame-intern": "blameIntern",
   "deploy-roulette": "deployRoulette",
   "boss-mode": "bossMode",
@@ -80,6 +92,10 @@ const toolIcons = {
   "hash-generator": Hash,
   "qr-code": QrCode,
   "port-detective": Activity,
+  "ssl-toothbrush": Shield,
+  "websocket-fish": Fish,
+  "lorem-tweezers": FileText,
+  "ascii-cork": Braces,
   "blame-intern": GitBranch,
   "deploy-roulette": Rocket,
   "boss-mode": TableProperties,
@@ -140,14 +156,14 @@ export function ToolSidebar({ onOpenSettings }: ToolSidebarProps) {
     <TooltipProvider delayDuration={0}>
       <div
         className={cn(
-          "flex flex-col h-full bg-sidebar border-r border-sidebar-border transition-all duration-200",
+          "flex flex-col h-full bg-sidebar border-r border-sidebar-border transition-all duration-200 overflow-hidden",
           sidebarCollapsed ? "w-16" : "w-60",
         )}
       >
         {/* Logo */}
         <div
           className={cn(
-            "flex items-center gap-2 p-4 border-b border-sidebar-border",
+            "flex items-center gap-2 p-4 border-b border-sidebar-border shrink-0",
             sidebarCollapsed && "justify-center",
           )}
         >
@@ -168,7 +184,7 @@ export function ToolSidebar({ onOpenSettings }: ToolSidebarProps) {
         </div>
 
         {/* Tools List */}
-        <ScrollArea className="flex-1 py-2">
+        <ScrollArea className="flex-1 min-h-0 py-2">
           <div className="px-2 space-y-1">
             {!sidebarCollapsed && (
               <span className="px-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
@@ -195,7 +211,7 @@ export function ToolSidebar({ onOpenSettings }: ToolSidebarProps) {
         </ScrollArea>
 
         {/* Bottom Actions */}
-        <div className="p-2 border-t border-sidebar-border space-y-1">
+        <div className="p-2 border-t border-sidebar-border space-y-1 shrink-0">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

@@ -594,6 +594,214 @@
         "title": "Admin privileges required",
         "description": "Run this app with administrator/root privileges to see process information (PID and process name) for ports in use. On macOS/Linux, run with sudo. On Windows, run as Administrator."
       }
+    },
+    "sslToothbrush": {
+      "name": "SSL Certificate Toothbrush",
+      "shortName": "SSL",
+      "description": "Shows expiry, SANs, chain validation, and hostname mismatches",
+      "title": "SSL Certificate Toothbrush",
+      "subtitle": "Scrub certificates before shipping: expiry, SANs, chain and hostname coverage",
+      "tabs": {
+        "live": "Fetch From Host",
+        "pem": "Paste PEM"
+      },
+      "live": {
+        "title": "Live Certificate Check",
+        "description": "Connect to a host and inspect the presented certificate",
+        "host": "Host / Domain",
+        "port": "Port",
+        "check": "Check Certificate"
+      },
+      "pem": {
+        "title": "Paste a Certificate",
+        "description": "Parse PEM without calling a remote host",
+        "optionalHost": "Optional host coverage check",
+        "parse": "Parse Certificate"
+      },
+      "status": {
+        "hostname": "Hostname Coverage",
+        "chain": "Chain Validation",
+        "expiry": "Expiry",
+        "valid": "Valid",
+        "invalid": "Mismatch",
+        "expired": "Expired",
+        "daysLeft": "{{count}} day(s) left",
+        "unknown": "Unknown",
+        "skip": "Not checked"
+      },
+      "warnings": {
+        "expired": "Certificate is expired",
+        "expiresSoon": "Expires soon ({{days}} days)",
+        "hostnameMismatch": "Hostname mismatch for {{host}}",
+        "chainInvalid": "Chain failed validation"
+      },
+      "result": {
+        "title": "Certificate Details",
+        "description": "Expiry, SANs, issuer, and fingerprints",
+        "empty": "Run a live check or paste a PEM to see details.",
+        "identity": "Identity",
+        "subject": "Subject",
+        "issuer": "Issuer",
+        "serial": "Serial Number",
+        "fingerprint": "SHA256 Fingerprint",
+        "validity": "Validity",
+        "validFrom": "Valid From",
+        "validTo": "Valid To",
+        "daysRemaining": "Days Remaining",
+        "san": "Subject Alternative Names",
+        "noSan": "No subject alternative names present",
+        "raw": "Raw PEM",
+        "copyPem": "Copy PEM"
+      },
+      "errors": {
+        "hostRequired": "Host is required",
+        "pemRequired": "Paste a PEM certificate first"
+      }
+    },
+    "websocketFish": {
+      "name": "WebSocket Fish Scaler",
+      "shortName": "WS",
+      "description": "Full-duplex message testing with binary/hex view and auto-reconnect",
+      "title": "WebSocket Fish Scaler",
+      "subtitle": "Scale-test messages with hex view and reconnection plans",
+      "status": {
+        "connecting": "Connecting",
+        "open": "Open",
+        "closing": "Closing",
+        "closed": "Closed"
+      },
+      "connection": {
+        "title": "Connection",
+        "description": "Dial a WebSocket endpoint and keep it alive",
+        "endpoint": "WebSocket endpoint"
+      },
+      "reconnect": {
+        "label": "Auto-reconnect strategy",
+        "off": "Off",
+        "instant": "Instant retry",
+        "backoff": "Exponential backoff",
+        "retries": "Retries: {{count}}"
+      },
+      "actions": {
+        "connect": "Connect",
+        "disconnect": "Disconnect",
+        "send": "Send",
+        "clear": "Clear log"
+      },
+      "payload": {
+        "title": "Payload",
+        "description": "Compose text, JSON, or hex payloads",
+        "placeholder": "Type a message, JSON, or hex bytes...",
+        "format": {
+          "text": "Text",
+          "json": "JSON",
+          "hex": "Hex / binary"
+        }
+      },
+      "log": {
+        "title": "Traffic log",
+        "description": "See sent/received frames with hex view",
+        "hint": "Newest messages appear first. Hex view always available.",
+        "empty": "No traffic yet."
+      },
+      "labels": {
+        "sent": "Sent",
+        "received": "Received",
+        "info": "Info",
+        "binary": "Binary payload",
+        "noHex": "No hex payload"
+      },
+      "events": {
+        "connected": "Connected to {{url}}",
+        "error": "Socket reported an error",
+        "closed": "Closed ({{code}}): {{reason}}",
+        "droppedLargeMessage": "Dropped message larger than {{limitKb}} KB ({{size}} bytes)",
+        "maxRetries": "Stopped reconnecting after {{count}} attempts"
+      },
+      "errors": {
+        "urlRequired": "WebSocket URL is required",
+        "invalidUrl": "Enter a valid ws:// or wss:// URL",
+        "failed": "Failed to connect",
+        "notConnected": "Connect before sending",
+        "hexRequired": "Provide hex bytes to send binary"
+      }
+    },
+    "loremTweezers": {
+      "name": "Lipsum Tweezers",
+      "shortName": "Lorem",
+      "description": "Generate placeholder text plus fake emails, addresses, cards, IBANs",
+      "title": "Lipsum Tweezers",
+      "subtitle": "Generate filler text and test-friendly dummy identity data",
+      "actions": {
+        "refreshAll": "Refresh everything",
+        "generate": "Generate",
+        "copy": "Copy",
+        "regenerate": "Regenerate"
+      },
+      "text": {
+        "title": "Lorem text",
+        "description": "Paragraphs with developer-flavored jargon",
+        "paragraphs": "Paragraphs"
+      },
+      "length": {
+        "short": "Short",
+        "medium": "Medium",
+        "long": "Long"
+      },
+      "identity": {
+        "title": "Contact details",
+        "description": "Emails and mailing addresses for demos",
+        "email": "Email",
+        "address": "Address"
+      },
+      "payment": {
+        "title": "Payment test data",
+        "description": "Luhn-valid cards and IBANs for sandbox use",
+        "brands": {
+          "visa": "Visa",
+          "mastercard": "Mastercard",
+          "amex": "Amex"
+        },
+        "cardNumber": "Card number",
+        "iban": "IBAN"
+      },
+      "meta": {
+        "title": "Usage notes",
+        "description": "Everything generated is synthetic and for testing only.",
+        "note1": "Credit cards pass the Luhn check but are not linked to real accounts.",
+        "note2": "IBANs include valid check digits but use random BBANs."
+      }
+    },
+    "asciiCork": {
+      "name": "ASCII Art Cork",
+      "shortName": "ASCII",
+      "description": "Generate ASCII text art with multiple styles",
+      "title": "ASCII Art Cork",
+      "subtitle": "Corkboard-ready banners with fonts, padding, and frames",
+      "actions": {
+        "copy": "Copy art",
+        "render": "Render"
+      },
+      "input": {
+        "title": "Text and style",
+        "description": "Choose text, font, padding, and effects",
+        "placeholder": "Type something to render...",
+        "font": "Font",
+        "padding": "Padding",
+        "uppercase": "Uppercase text",
+        "frame": "Add frame"
+      },
+      "output": {
+        "title": "Rendered art",
+        "description": "Copy or tweak the ASCII output"
+      },
+      "fonts": {
+        "standard": "Standard",
+        "slant": "Slant",
+        "big": "Big",
+        "ghost": "Ghost",
+        "doom": "Doom"
+      }
     }
   },
   "settings": {
@@ -621,6 +829,7 @@
     "filter": "Filter",
     "sort": "Sort",
     "refresh": "Refresh",
+    "clear": "Clear",
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
