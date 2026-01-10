@@ -544,14 +544,14 @@ export function WebSocketFishScaler({
                 <Button
                   variant="secondary"
                   onClick={() => setPayload("")}
-                  disabled={readyState !== WebSocket.OPEN}
+                  // disabled={readyState !== WebSocket.OPEN}
                 >
                   {t("common.clear")}
                 </Button>
                 <Button
                   className="gap-2"
                   onClick={handleSend}
-                  disabled={readyState !== WebSocket.OPEN}
+                  // disabled={readyState !== WebSocket.OPEN}
                 >
                   <ArrowUp className="w-4 h-4" />
                   {t("tools.websocketFish.actions.send")}

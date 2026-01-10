@@ -7,12 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --fix",
+    "format:rust": "cd ./src-tauri && cargo fmt && cd ..",
     "tauri": "tauri",
     "check-types": "concurrently -n transpile,types -c cyan,magenta \"pnpm run check-types:transpile\" \"tsgo -p tsconfig.json\" && rm -rf .swc",
     "check-types:transpile": "swc app components hooks lib --out-dir .swc --ignore '**/*.d.ts' --ignore 'node_modules' --ignore '.next'",
     "prepare": "husky",
-    "prettier": "prettier -w --list-different .",
-    "pre-commit": "pnpm run check-types && pnpm run lint && pnpm run prettier",
+    "format": "prettier -w --list-different .",
+    "pre-commit": "pnpm run check-types && pnpm run lint && pnpm run format:rust && pnpm run format",
     "knip": "knip"
   },
   "dependencies": {

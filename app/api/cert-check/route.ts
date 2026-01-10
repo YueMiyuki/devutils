@@ -98,6 +98,7 @@ function hostMatches(host: string, candidates: string[]): boolean {
       const domainParts = domain.split(".");
       if (hostParts.length !== domainParts.length + 1) return false;
 
+      if (hostParts.length !== domainParts.length + 1) return false;
       return hostParts.slice(1).join(".") === domain;
     }
 
@@ -249,95 +250,94 @@ async function fetchRemoteCertificate(
       socket.destroy();
     };
 
-    const socket = tls.connect(
-      {
-        host,
-        port,
-        servername: host,
-        rejectUnauthorized: false,
-        timeout: 8000,
-      },
-      () => {
-        if (settled) return;
-        const peer = socket.getPeerCertificate(true);
-        if (!peer || Object.keys(peer).length === 0) {
-          settled = true;
-          cleanup();
-          reject(new Error("No certificate presented by remote host"));
-          return;
-        }
+    const socket = tls.connect({
+      host,
+      port,
+      servername: host,
+      rejectUnauthorized: false,
+    });
 
-        const { value: subject, cn: subjectCN } = subjectToString(peer.subject);
-        const { value: issuer, cn: issuerCN } = subjectToString(peer.issuer);
-
-        const san = parseAltNames(
-          (peer as tls.PeerCertificate & { subjectaltname?: string })
-            .subjectaltname,
-        );
-
-        const validFrom = peer.valid_from
-          ? new Date(peer.valid_from).toISOString()
-          : null;
-        const validTo = peer.valid_to
-          ? new Date(peer.valid_to).toISOString()
-          : null;
-        const daysRemaining = calculateDaysRemaining(validTo);
-        const isExpired =
-          validTo !== null && new Date(validTo).getTime() < Date.now();
-        const aboutToExpire =
-          !isExpired && daysRemaining !== null ? daysRemaining <= 14 : false;
-
-        const validForHost = hostMatches(
-          host,
-          san.length > 0
-            ? san
-            : subjectCN
-              ? [subjectCN]
-              : subject
-                ? [subject]
-                : [],
-        );
-
-        const chainValid = socket.authorized;
-        const warnings = collectWarnings({
-          isExpired,
-          aboutToExpire,
-          validForHost,
-          chainValid,
-        });
-
-        const payload: CertificatePayload = {
-          source: "remote",
-          subject,
-          subjectCN,
-          issuer,
-          issuerCN,
-          san,
-          validFrom,
-          validTo,
-          daysRemaining,
-          isExpired,
-          aboutToExpire,
-          chainValid,
-          authorizationError: socket.authorizationError
-            ? String(socket.authorizationError)
-            : null,
-          validForHost,
-          rawPem: bufferToPem(
-            (peer as tls.PeerCertificate & { raw?: Buffer }).raw,
-          ),
-          serialNumber: peer.serialNumber ?? null,
-          fingerprint256:
-            (peer as tls.PeerCertificate & { fingerprint256?: string })
-              .fingerprint256 ?? null,
-          warnings,
-        };
-
+    socket.once("secureConnect", () => {
+      const peer = socket.getPeerCertificate(true);
+      if (!peer || Object.keys(peer).length === 0) {
         settled = true;
         cleanup();
-        resolve(payload);
-      },
-    );
+        reject(new Error("No certificate presented by remote host"));
+        return;
+      }
+
+      const { value: subject, cn: subjectCN } = subjectToString(peer.subject);
+      const { value: issuer, cn: issuerCN } = subjectToString(peer.issuer);
+
+      const san = parseAltNames(
+        (peer as tls.PeerCertificate & { subjectaltname?: string })
+          .subjectaltname,
+      );
+
+      const validFrom = peer.valid_from
+        ? new Date(peer.valid_from).toISOString()
+        : null;
+      const validTo = peer.valid_to
+        ? new Date(peer.valid_to).toISOString()
+        : null;
+      const daysRemaining = calculateDaysRemaining(validTo);
+      const isExpired =
+        validTo !== null && new Date(validTo).getTime() < Date.now();
+      const aboutToExpire =
+        !isExpired && daysRemaining !== null ? daysRemaining <= 14 : false;
+
+      const validForHost = hostMatches(
+        host,
+        san.length > 0
+          ? san
+          : subjectCN
+            ? [subjectCN]
+            : subject
+              ? [subject]
+              : [],
+      );
+
+      const chainValid = socket.authorized;
+      const warnings = collectWarnings({
+        isExpired,
+        aboutToExpire,
+        validForHost,
+        chainValid,
+      });
+
+      const payload: CertificatePayload = {
+        source: "remote",
+        subject,
+        subjectCN,
+        issuer,
+        issuerCN,
+        san,
+        validFrom,
+        validTo,
+        daysRemaining,
+        isExpired,
+        aboutToExpire,
+        chainValid,
+        authorizationError: socket.authorizationError
+          ? String(socket.authorizationError)
+          : null,
+        validForHost,
+        rawPem: bufferToPem(
+          (peer as tls.PeerCertificate & { raw?: Buffer }).raw,
+        ),
+        serialNumber: peer.serialNumber ?? null,
+        fingerprint256:
+          (peer as tls.PeerCertificate & { fingerprint256?: string })
+            .fingerprint256 ?? null,
+        warnings,
+      };
+
+      settled = true;
+      cleanup();
+      resolve(payload);
+    });
+
+    socket.setTimeout(8000);
 
     socket.on("error", (err) => {
       if (settled) return;
@@ -422,16 +422,43 @@ function parseProvidedCertificate(
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const rawHost: string | undefined =
-      typeof body.host === "string" ? body.host.trim() : undefined;
+    // const body = await request.json();
+    interface CertCheckRequestBody {
+      host?: string;
+      port?: number | string;
+      certPem?: string;
+    }
+    let body: CertCheckRequestBody;
+    try {
+      body = await request.json();
+    } catch {
+      return Response.json({ error: "Invalid JSON body" }, { status: 400 });
+    }
+
+    // Debugging: Log input values
+    // console.log("Incoming body.host:", body.host);
+
+    const rawHost =
+      typeof body.host === "string"
+        ? body.host.trim()
+        : String(body.host ?? "").trim();
+    // console.log("Trimmed rawHost:", rawHost);
     const host =
-      rawHost && rawHost.startsWith("[") && rawHost.endsWith("]")
+      rawHost.length > 0 && rawHost.startsWith("[") && rawHost.endsWith("]")
         ? rawHost.slice(1, -1)
-        : rawHost;
+        : rawHost.length > 0
+          ? rawHost
+          : undefined;
+    // console.log("Final host for validation/use:", host);
     const requestedPort = Number(body.port);
     const port: number = Number.isInteger(requestedPort) ? requestedPort : 443;
-    const certPem: string | undefined = body.certPem;
+    // const certPem: string | undefined = body.certPem;
+    const certPem: string | undefined =
+      typeof body.certPem === "string" ? body.certPem : undefined;
+
+    if (certPem && certPem.length > 200_000) {
+      return Response.json({ error: "certPem is too large" }, { status: 413 });
+    }
 
     if (!host && !certPem) {
       return Response.json(
@@ -471,8 +498,19 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const result = await fetchRemoteCertificate(host as string, port);
-    return Response.json(result);
+    if (!host || typeof host !== "string" || host.length === 0) {
+      return Response.json({ error: "Host is required" }, { status: 400 });
+    }
+    try {
+      const result = await fetchRemoteCertificate(host, port);
+      return Response.json(result);
+    } catch (error) {
+      console.error("Error during fetchRemoteCertificate:", error);
+      return Response.json(
+        { error: error instanceof Error ? error.message : String(error) },
+        { status: 500 },
+      );
+    }
   } catch (error) {
     return Response.json(
       { error: error instanceof Error ? error.message : "Request failed" },
