@@ -207,7 +207,6 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
           echo: echoReply,
           echoPayload,
           respondDelayMs: replyDelay,
-          malformed,
           maxCapture: 12,
         }),
       });

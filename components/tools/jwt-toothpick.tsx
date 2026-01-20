@@ -159,8 +159,9 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
 
   const header = useMemo(() => decodeHeader(token), [token]);
   const algorithm =
-    typeof header?.alg === "string" ? header.alg.toUpperCase() : "HS256";
-  const supportedAlg = ["HS256", "HS384", "HS512"].includes(algorithm);
+    typeof header?.alg === "string" ? header.alg.toUpperCase() : undefined;
+  const supportedAlg =
+    algorithm !== undefined && ["HS256", "HS384", "HS512"].includes(algorithm);
 
   const handleStart = async () => {
     if (!token.trim()) {
@@ -168,6 +169,10 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
       return;
     }
     if (!header) {
+      setError(t("tools.jwtToothpick.errors.invalidToken"));
+      return;
+    }
+    if (!header?.alg) {
       setError(t("tools.jwtToothpick.errors.invalidToken"));
       return;
     }
@@ -277,6 +282,7 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
     setElapsedMs(0);
     setSpeed(0);
     setAttemptLog([]);
+    setError(null);
   };
 
   const fillWeakList = () => setWordlist(DEFAULT_WORDLIST.join("\n"));
