@@ -100,6 +100,15 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
     }
   }, [isAvailable]);
 
+  // Cleanup effect: stop listening if component unmounts while active
+  useEffect(() => {
+    return () => {
+      if (stopListeningRef.current === false && isListening) {
+        stopListeningRef.current = true;
+      }
+    };
+  }, [isListening]);
+
   const protocolBadge = useMemo(
     () =>
       sendProtocol === "tcp" ? (
