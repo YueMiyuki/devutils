@@ -93,6 +93,7 @@ async function verifySecret(
   try {
     await jwtVerify(token, new TextEncoder().encode(candidate), {
       algorithms: [algorithm],
+      currentDate: new Date(0),
     });
     return true;
   } catch {

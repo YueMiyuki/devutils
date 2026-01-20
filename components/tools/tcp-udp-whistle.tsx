@@ -494,7 +494,7 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
                     {t("tools.tcpWhistle.response.protocol")}
                   </p>
                   <p className="text-xl font-semibold">
-                    {sendProtocol.toUpperCase()}
+                    {(sendResult?.mode ?? sendProtocol)?.toUpperCase() ?? "—"}
                   </p>
                 </div>
               </div>
