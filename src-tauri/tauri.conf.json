@@ -28,11 +28,17 @@
       "capabilities": [
         {
           "identifier": "main-capability",
-          "windows": ["main"],
+          "windows": ["*"],
           "permissions": [
             "core:default",
             "dialog:default",
-            "fs:allow-read-file"
+            "core:window:allow-close",
+            "core:window:allow-destroy",
+            "core:app:allow-app-hide",
+            "core:app:allow-app-show",
+            "core:app:default",
+            "process:default",
+            "process:allow-exit"
           ]
         }
       ]

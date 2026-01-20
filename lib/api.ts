@@ -102,6 +102,18 @@ export async function httpProxy(request: ProxyRequest): Promise<ProxyResponse> {
     body: JSON.stringify(request),
   });
 
+  if (!response.ok) {
+    const errorBody = await response.text();
+    let errorMessage: string;
+    try {
+      const errorJson = JSON.parse(errorBody);
+      errorMessage = errorJson.error || errorBody;
+    } catch {
+      errorMessage = errorBody;
+    }
+    throw new Error(`HTTP ${response.status}: ${errorMessage}`);
+  }
+
   return response.json();
 }
 

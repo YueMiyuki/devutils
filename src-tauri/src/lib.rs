@@ -1110,18 +1110,17 @@ fn fetch_remote_certificate(host: &str, port: u16) -> Result<CertificatePayload,
         let verify_connector = TlsConnector::builder().build().ok();
 
         if let Some(vc) = verify_connector {
-            let verify_stream = TcpStream::connect_timeout(
-                &addr
-                    .to_socket_addrs()
-                    .ok()
-                    .and_then(|mut a| a.next())
-                    .unwrap(),
-                Duration::from_secs(5),
-            )
-            .ok();
+            let resolved_addr = addr.to_socket_addrs().ok().and_then(|mut a| a.next());
 
-            if let Some(vs) = verify_stream {
-                vc.connect(host, vs).is_ok()
+            if let Some(socket_addr) = resolved_addr {
+                let verify_stream =
+                    TcpStream::connect_timeout(&socket_addr, Duration::from_secs(5)).ok();
+
+                if let Some(vs) = verify_stream {
+                    vc.connect(host, vs).is_ok()
+                } else {
+                    false
+                }
             } else {
                 false
             }
@@ -1572,83 +1571,90 @@ async fn handle_tcp_listen(req: WhistleRequest) -> Result<WhistleListenResponse,
     let max_capture = req.max_capture.unwrap_or(10).min(25);
     let echo = req.echo.unwrap_or(false);
     let echo_payload = build_payload(req.echo_payload.as_deref(), req.malformed.unwrap_or(false));
+    let port = req.port;
 
-    let addr = format!("0.0.0.0:{}", req.port);
+    let captures = tokio::task::spawn_blocking(move || {
+        let addr = format!("0.0.0.0:{}", port);
 
-    let listener = TcpListener::bind(&addr).map_err(|e| format!("Bind failed: {}", e))?;
+        let listener = TcpListener::bind(&addr).map_err(|e| format!("Bind failed: {}", e))?;
 
-    listener
-        .set_nonblocking(true)
-        .map_err(|e| format!("Set nonblocking failed: {}", e))?;
+        listener
+            .set_nonblocking(true)
+            .map_err(|e| format!("Set nonblocking failed: {}", e))?;
 
-    let start = Instant::now();
-    let mut captures: Vec<CaptureEntry> = Vec::new();
+        let start = Instant::now();
+        let mut captures: Vec<CaptureEntry> = Vec::new();
 
-    let deadline = Duration::from_millis(duration_ms);
+        let deadline = Duration::from_millis(duration_ms);
 
-    while start.elapsed() < deadline && captures.len() < max_capture {
-        match listener.accept() {
-            Ok((mut stream, addr)) => {
-                let conn_start = Instant::now();
-                stream.set_read_timeout(Some(Duration::from_secs(5))).ok();
+        while start.elapsed() < deadline && captures.len() < max_capture {
+            match listener.accept() {
+                Ok((mut stream, addr)) => {
+                    let conn_start = Instant::now();
+                    stream.set_read_timeout(Some(Duration::from_secs(5))).ok();
 
-                let mut data = Vec::new();
-                let mut buf = [0u8; 8192];
-                loop {
-                    match stream.read(&mut buf) {
-                        Ok(0) => break,
-                        Ok(n) => {
-                            data.extend_from_slice(&buf[..n]);
-                            if data.len() >= MAX_RESPONSE_BYTES {
-                                data.truncate(MAX_RESPONSE_BYTES);
-                                break;
+                    let mut data = Vec::new();
+                    let mut buf = [0u8; 8192];
+                    loop {
+                        match stream.read(&mut buf) {
+                            Ok(0) => break,
+                            Ok(n) => {
+                                data.extend_from_slice(&buf[..n]);
+                                if data.len() >= MAX_RESPONSE_BYTES {
+                                    data.truncate(MAX_RESPONSE_BYTES);
+                                    break;
+                                }
                             }
+                            Err(_) => break,
                         }
-                        Err(_) => break,
+                    }
+
+                    captures.push(CaptureEntry {
+                        at: Utc::now().to_rfc3339(),
+                        remote_address: Some(addr.ip().to_string()),
+                        remote_port: Some(addr.port()),
+                        bytes: data.len(),
+                        hex: hex::encode(&data),
+                        text: String::from_utf8_lossy(&data).to_string(),
+                        elapsed_ms: Some(conn_start.elapsed().as_millis() as u64),
+                        note: None,
+                    });
+
+                    if echo {
+                        if respond_delay_ms > 0 {
+                            std::thread::sleep(Duration::from_millis(respond_delay_ms));
+                        }
+                        stream.write_all(&echo_payload).ok();
                     }
                 }
-
-                captures.push(CaptureEntry {
-                    at: Utc::now().to_rfc3339(),
-                    remote_address: Some(addr.ip().to_string()),
-                    remote_port: Some(addr.port()),
-                    bytes: data.len(),
-                    hex: hex::encode(&data),
-                    text: String::from_utf8_lossy(&data).to_string(),
-                    elapsed_ms: Some(conn_start.elapsed().as_millis() as u64),
-                    note: None,
-                });
-
-                if echo {
-                    if respond_delay_ms > 0 {
-                        std::thread::sleep(Duration::from_millis(respond_delay_ms));
-                    }
-                    stream.write_all(&echo_payload).ok();
+                Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => {
+                    std::thread::sleep(Duration::from_millis(50));
                 }
-            }
-            Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => {
-                std::thread::sleep(Duration::from_millis(50));
-            }
-            Err(e) => {
-                captures.push(CaptureEntry {
-                    at: Utc::now().to_rfc3339(),
-                    remote_address: None,
-                    remote_port: None,
-                    bytes: 0,
-                    hex: String::new(),
-                    text: String::new(),
-                    elapsed_ms: None,
-                    note: Some(format!("Accept error: {}", e)),
-                });
+                Err(e) => {
+                    captures.push(CaptureEntry {
+                        at: Utc::now().to_rfc3339(),
+                        remote_address: None,
+                        remote_port: None,
+                        bytes: 0,
+                        hex: String::new(),
+                        text: String::new(),
+                        elapsed_ms: None,
+                        note: Some(format!("Accept error: {}", e)),
+                    });
+                }
             }
         }
-    }
+
+        Ok::<(Vec<CaptureEntry>, u64), String>((captures, start.elapsed().as_millis() as u64))
+    })
+    .await
+    .map_err(|e| format!("Task error: {}", e))??;
 
     Ok(WhistleListenResponse {
         ok: true,
         mode: "tcp-listen".to_string(),
-        duration_ms: start.elapsed().as_millis() as u64,
-        captures,
+        duration_ms: captures.1,
+        captures: captures.0,
     })
 }
 
@@ -1658,67 +1664,74 @@ async fn handle_udp_listen(req: WhistleRequest) -> Result<WhistleListenResponse,
     let max_capture = req.max_capture.unwrap_or(10).min(25);
     let echo = req.echo.unwrap_or(false);
     let echo_payload = build_payload(req.echo_payload.as_deref(), req.malformed.unwrap_or(false));
+    let port = req.port;
 
-    let addr = format!("0.0.0.0:{}", req.port);
+    let captures = tokio::task::spawn_blocking(move || {
+        let addr = format!("0.0.0.0:{}", port);
 
-    let socket = UdpSocket::bind(&addr).map_err(|e| format!("Bind failed: {}", e))?;
+        let socket = UdpSocket::bind(&addr).map_err(|e| format!("Bind failed: {}", e))?;
 
-    socket
-        .set_nonblocking(true)
-        .map_err(|e| format!("Set nonblocking failed: {}", e))?;
+        socket
+            .set_nonblocking(true)
+            .map_err(|e| format!("Set nonblocking failed: {}", e))?;
 
-    let start = Instant::now();
-    let mut captures: Vec<CaptureEntry> = Vec::new();
+        let start = Instant::now();
+        let mut captures: Vec<CaptureEntry> = Vec::new();
 
-    let deadline = Duration::from_millis(duration_ms);
-    let mut buf = [0u8; 65535];
+        let deadline = Duration::from_millis(duration_ms);
+        let mut buf = [0u8; 65535];
 
-    while start.elapsed() < deadline && captures.len() < max_capture {
-        match socket.recv_from(&mut buf) {
-            Ok((n, addr)) => {
-                let data = buf[..n.min(MAX_RESPONSE_BYTES)].to_vec();
+        while start.elapsed() < deadline && captures.len() < max_capture {
+            match socket.recv_from(&mut buf) {
+                Ok((n, addr)) => {
+                    let data = buf[..n.min(MAX_RESPONSE_BYTES)].to_vec();
 
-                captures.push(CaptureEntry {
-                    at: Utc::now().to_rfc3339(),
-                    remote_address: Some(addr.ip().to_string()),
-                    remote_port: Some(addr.port()),
-                    bytes: data.len(),
-                    hex: hex::encode(&data),
-                    text: String::from_utf8_lossy(&data).to_string(),
-                    elapsed_ms: None,
-                    note: None,
-                });
+                    captures.push(CaptureEntry {
+                        at: Utc::now().to_rfc3339(),
+                        remote_address: Some(addr.ip().to_string()),
+                        remote_port: Some(addr.port()),
+                        bytes: data.len(),
+                        hex: hex::encode(&data),
+                        text: String::from_utf8_lossy(&data).to_string(),
+                        elapsed_ms: None,
+                        note: None,
+                    });
 
-                if echo {
-                    if respond_delay_ms > 0 {
-                        std::thread::sleep(Duration::from_millis(respond_delay_ms));
+                    if echo {
+                        if respond_delay_ms > 0 {
+                            std::thread::sleep(Duration::from_millis(respond_delay_ms));
+                        }
+                        socket.send_to(&echo_payload, addr).ok();
                     }
-                    socket.send_to(&echo_payload, addr).ok();
+                }
+                Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => {
+                    std::thread::sleep(Duration::from_millis(50));
+                }
+                Err(e) => {
+                    captures.push(CaptureEntry {
+                        at: Utc::now().to_rfc3339(),
+                        remote_address: None,
+                        remote_port: None,
+                        bytes: 0,
+                        hex: String::new(),
+                        text: String::new(),
+                        elapsed_ms: None,
+                        note: Some(format!("Recv error: {}", e)),
+                    });
                 }
             }
-            Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => {
-                std::thread::sleep(Duration::from_millis(50));
-            }
-            Err(e) => {
-                captures.push(CaptureEntry {
-                    at: Utc::now().to_rfc3339(),
-                    remote_address: None,
-                    remote_port: None,
-                    bytes: 0,
-                    hex: String::new(),
-                    text: String::new(),
-                    elapsed_ms: None,
-                    note: Some(format!("Recv error: {}", e)),
-                });
-            }
         }
-    }
+
+        Ok::<(Vec<CaptureEntry>, u64), String>((captures, start.elapsed().as_millis() as u64))
+    })
+    .await
+    .map_err(|e| format!("Task error: {}", e))??;
 
     Ok(WhistleListenResponse {
         ok: true,
         mode: "udp-listen".to_string(),
-        duration_ms: start.elapsed().as_millis() as u64,
-        captures,
+        duration_ms: captures.1,
+        captures: captures.0,
     })
 }
 

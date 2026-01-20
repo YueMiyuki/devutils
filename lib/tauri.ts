@@ -10,8 +10,10 @@ export function isTauri(): boolean {
 }
 
 /**
- * Invoke a Tauri command if in Tauri environment
- * Returns null if not in Tauri
+ * Invoke a Tauri command in the desktop environment.
+ * @throws {Error} Throws an Error with message "Not in Tauri environment"
+ *         when called outside of the Tauri desktop app context.
+ * @returns A promise that resolves with the command result of type T.
  */
 export async function invokeCommand<T>(
   command: string,

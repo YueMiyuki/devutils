@@ -301,7 +301,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
               <Textarea
                 value={pem}
                 onChange={(e) => setPem(e.target.value)}
-                className="min-h-45 font-mono text-xs"
+                className="min-h-44 font-mono text-xs"
                 placeholder="-----BEGIN CERTIFICATE-----"
               />
               <div className="flex flex-wrap justify-between gap-3">
@@ -354,7 +354,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
         </div>
       )}
 
-      <Card className="min-h-70 w-full shrink-0">
+      <Card className="min-h-72 w-full shrink-0">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
             <ShieldCheck className="size-4" />

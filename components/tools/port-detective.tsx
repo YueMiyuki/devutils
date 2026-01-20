@@ -64,14 +64,19 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   const [scanProgress, setScanProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
+  const isDesktop = isTauri();
+
   useEffect(() => {
-    if (!isTauri()) {
+    if (!isDesktop) {
       setShowNotAvailableDialog(true);
     }
-  }, []);
+  }, [isDesktop]);
 
   const checkPort = useCallback(
     async (port: number) => {
+      if (!isDesktop) {
+        throw new Error(t("tools.portDetective.desktopOnly.description"));
+      }
       try {
         const result = await invoke<PortInfo>("check_port", { port });
         return result;
@@ -83,10 +88,12 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
         );
       }
     },
-    [t],
+    [t, isDesktop],
   );
 
   const handleCheckSinglePort = async () => {
+    if (!isDesktop) return;
+
     const port = parseInt(singlePort);
     if (isNaN(port) || port < 1 || port > 65535) {
       setError(t("tools.portDetective.errors.invalidPort"));
@@ -114,6 +121,8 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   };
 
   const handleKillProcess = async (pid: number, port?: number) => {
+    if (!isDesktop) return;
+
     try {
       await invoke("kill_process", { pid });
       toast.success(t("tools.portDetective.success.processKilled"));
@@ -135,6 +144,8 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   };
 
   const handleScanPorts = async () => {
+    if (!isDesktop) return;
+
     const startPort = parseInt(scanStartPort);
     const endPort = parseInt(scanEndPort);
 
@@ -301,7 +312,7 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                 />
                 <Button
                   onClick={handleCheckSinglePort}
-                  disabled={isCheckingPort}
+                  disabled={!isDesktop || isCheckingPort}
                 >
                   <Search className="mr-2 size-4" />
                   {isCheckingPort
@@ -348,6 +359,7 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                           <Button
                             variant="destructive"
                             size="sm"
+                            disabled={!isDesktop}
                             onClick={() =>
                               handleKillProcess(
                                 singlePortInfo.pid!,
@@ -441,7 +453,10 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                     onChange={(e) => setScanEndPort(e.target.value)}
                   />
                 </div>
-                <Button onClick={handleScanPorts} disabled={isScanning}>
+                <Button
+                  onClick={handleScanPorts}
+                  disabled={!isDesktop || isScanning}
+                >
                   <RefreshCw
                     className={`
                       mr-2 size-4
