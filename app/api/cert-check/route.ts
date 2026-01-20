@@ -97,7 +97,7 @@ function hostMatches(host: string, candidates: string[]): boolean {
       const hostParts = normalizedHost.split(".");
       const domainParts = domain.split(".");
       if (hostParts.length !== domainParts.length + 1) return false;
-      
+
       return hostParts.slice(1).join(".") === domain;
     }
 
