@@ -946,7 +946,8 @@
         "echoHint": "對到達的內容發送快速回覆",
         "echoPayload": "回應負載",
         "echoDelay": "回應延遲（毫秒）",
-        "button": "開始監聽"
+        "button": "開始監聽",
+        "stopButton": "停止監聽"
       },
       "captures": {
         "title": "擷取的流量",

@@ -960,7 +960,8 @@
         "echoHint": "Send a quick reply to whatever arrives",
         "echoPayload": "Echo payload",
         "echoDelay": "Echo delay (ms)",
-        "button": "Start listening"
+        "button": "Start listening",
+        "stopButton": "Stop listening"
       },
       "captures": {
         "title": "Captured traffic",

@@ -23,6 +23,7 @@ import {
   PlugZap,
   RadioTower,
   Send,
+  Square,
   Timer,
   Waves,
 } from "lucide-react";
@@ -92,7 +93,8 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
 
   const [listenProtocol, setListenProtocol] = useState<Protocol>("udp");
   const [listenPort, setListenPort] = useState("9001");
-  const [listenDuration, setListenDuration] = useState("5000");
+  const [listenAbortController, setListenAbortController] =
+    useState<AbortController | null>(null);
   const [echoReply, setEchoReply] = useState(true);
   const [echoPayload, setEchoPayload] = useState("ack");
   const [respondDelay, setRespondDelay] = useState("150");
@@ -184,7 +186,6 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
 
   const handleListen = async () => {
     const portNumber = parseInt(listenPort, 10);
-    const duration = Math.max(parseInt(listenDuration, 10) || 0, 1000);
     const replyDelay = Math.max(parseInt(respondDelay, 10) || 0, 0);
 
     if (Number.isNaN(portNumber) || portNumber < 1 || portNumber > 65535) {
@@ -196,6 +197,9 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
     setIsListening(true);
     setListenResult(null);
 
+    const abortController = new AbortController();
+    setListenAbortController(abortController);
+
     try {
       const res = await fetch("/api/whistle", {
         method: "POST",
@@ -203,12 +207,13 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
         body: JSON.stringify({
           mode: `${listenProtocol}-listen`,
           port: portNumber,
-          durationMs: duration,
+          durationMs: 600000,
           echo: echoReply,
           echoPayload,
           respondDelayMs: replyDelay,
           maxCapture: 12,
         }),
+        signal: abortController.signal,
       });
 
       const data = (await res.json()) as ListenResult & { error?: string };
@@ -230,13 +235,26 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
         ].slice(0, 8),
       );
     } catch (err) {
-      setListenError(
-        err instanceof Error
-          ? err.message
-          : t("tools.tcpWhistle.errors.requestFailed"),
-      );
+      if (err instanceof Error && err.name === "AbortError") {
+        // User stopped listening, this is expected
+        setListenError(null);
+      } else {
+        setListenError(
+          err instanceof Error
+            ? err.message
+            : t("tools.tcpWhistle.errors.requestFailed"),
+        );
+      }
     } finally {
       setIsListening(false);
+      setListenAbortController(null);
+    }
+  };
+
+  const handleStopListening = () => {
+    if (listenAbortController) {
+      listenAbortController.abort();
+      setListenAbortController(null);
     }
   };
 
@@ -557,7 +575,7 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
               <div
                 className="
                 grid gap-3
-                md:grid-cols-3
+                md:grid-cols-2
               "
               >
                 <div className="space-y-1">
@@ -567,16 +585,6 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
                   <Input
                     value={listenPort}
                     onChange={(e) => setListenPort(e.target.value)}
-                    inputMode="numeric"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs text-muted-foreground">
-                    {t("tools.tcpWhistle.inputs.duration")}
-                  </label>
-                  <Input
-                    value={listenDuration}
-                    onChange={(e) => setListenDuration(e.target.value)}
                     inputMode="numeric"
                   />
                 </div>
@@ -660,10 +668,17 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
               </div>
 
               <div className="flex items-center gap-2">
-                <Button onClick={handleListen} disabled={isListening}>
-                  <Inbox className="mr-2 size-4" />
-                  {t("tools.tcpWhistle.listen.button")}
-                </Button>
+                {!isListening ? (
+                  <Button onClick={handleListen}>
+                    <Inbox className="mr-2 size-4" />
+                    {t("tools.tcpWhistle.listen.button")}
+                  </Button>
+                ) : (
+                  <Button onClick={handleStopListening} variant="destructive">
+                    <Square className="mr-2 size-4" />
+                    {t("tools.tcpWhistle.listen.stopButton")}
+                  </Button>
+                )}
                 {listenError && (
                   <span className="text-sm text-destructive">
                     {listenError}
