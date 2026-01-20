@@ -71,6 +71,7 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
+          cache-all-crates: true
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
