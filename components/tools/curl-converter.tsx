@@ -29,6 +29,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useCopyAnimation } from "@/hooks/use-copy-animation";
 import { useTranslation } from "react-i18next";
+import { httpProxy } from "@/lib/api";
 
 interface ParsedRequest {
   method: string;
@@ -268,21 +269,13 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
         }
       });
 
-      // Use proxy to avoid CORS issues
-      const res = await fetch("/api/proxy", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          InputUrl: url,
-          method,
-          headers: headersObj,
-          body: method !== "GET" && body ? body : undefined,
-        }),
+      // Use unified API (Tauri invoke or fetch proxy)
+      const data = await httpProxy({
+        InputUrl: url,
+        method,
+        headers: headersObj,
+        body: method !== "GET" && body ? body : undefined,
       });
-
-      const data = await res.json();
 
       if (data.error) {
         setError(data.error);

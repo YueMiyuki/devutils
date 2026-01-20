@@ -1,6 +1,6 @@
 [package]
 name = "devutils"
-version = "1.0.0"
+version = "1.0.1"
 description = "DevUtils - Developer Utilities Desktop Application"
 authors = ["miyukiyue"]
 license = "GPL-3.0-or-later"
@@ -25,5 +25,16 @@ tauri = { version = "2.9.5", features = [] }
 tauri-plugin-log = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
+tauri-plugin-process = "2"
 image = "0.25"
-tokio = { version = "1.49.0", features = ["rt"] }
+tokio = { version = "1.49.0", features = ["rt", "net", "time", "io-util"] }
+reqwest = { version = "0.12", features = ["json"] }
+tokio-native-tls = "0.3"
+native-tls = "0.2"
+x509-parser = "0.16"
+chrono = "0.4"
+url = "2.5"
+hex = "0.4"
+sha2 = "0.10"
+base64 = "0.22"
+time = "0.3"

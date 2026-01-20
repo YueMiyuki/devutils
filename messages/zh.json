@@ -588,6 +588,10 @@
       "adminWarning": {
         "title": "需要管理员权限",
         "description": "使用管理员/root 权限运行此应用以查看端口使用的进程信息（PID 和进程名称）。在 macOS/Linux 上，使用 sudo 运行。在 Windows 上，以管理员身份运行。"
+      },
+      "desktopOnly": {
+        "title": "需要桌面应用",
+        "description": "此工具需要桌面应用才能运行。端口扫描和进程管理在 Web 预览环境中不可用。"
       }
     },
     "sslToothbrush": {
@@ -968,6 +972,10 @@
         "hostRequired": "主机为必填",
         "portInvalid": "端口必须在 1-65535 之间",
         "requestFailed": "请求失败"
+      },
+      "desktopOnly": {
+        "title": "需要桌面应用",
+        "description": "此工具需要桌面应用才能运行。TCP/UDP 套接字操作在 Web 预览环境中不可用。"
       }
     }
   },
@@ -988,6 +996,7 @@
   },
   "common": {
     "close": "关闭",
+    "ok": "确定",
     "save": "保存",
     "cancel": "取消",
     "delete": "删除",
