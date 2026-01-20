@@ -75,6 +75,16 @@ function decodeHeader(token: string) {
   }
 }
 
+function decodePayload(token: string) {
+  try {
+    const parts = token.split(".");
+    if (parts.length < 2) return null;
+    return JSON.parse(base64UrlDecode(parts[1]));
+  } catch {
+    return null;
+  }
+}
+
 function parseWordlist(text: string): string[] {
   const unique = new Set<string>();
   text
@@ -91,9 +101,17 @@ async function verifySecret(
   candidate: string,
 ) {
   try {
+    const payload = decodePayload(token);
+    // Use token's iat (issued at) claim to stay within validity window,
+    // or use far future date to bypass time checks if iat is not present
+    const currentDate =
+      payload && typeof payload.iat === "number"
+        ? new Date(payload.iat * 1000)
+        : new Date("2099-01-01");
+
     await jwtVerify(token, new TextEncoder().encode(candidate), {
       algorithms: [algorithm],
-      currentDate: new Date(0),
+      currentDate,
     });
     return true;
   } catch {
