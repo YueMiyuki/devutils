@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const isProd = process.env.NODE_ENV === "production";
-const isVercel = process.env.VC_DEPLOY === "true"
+const isVercel = process.env.VC_DEPLOY === "true";
 
 const internalHost = process.env.TAURI_DEV_HOST || "localhost";
 
@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   // Required for static site generation (SSG) in Tauri
   // output: 'export',
   // Prevent vercel 405 error on /api routes
-  output: isVercel ? 'export' : undefined,
+  output: isVercel ? "export" : undefined,
   // Note: This feature is required to use the Next.js Image component in SSG mode.
   // See https://nextjs.org/docs/messages/export-image-api for different workarounds.
   images: {
