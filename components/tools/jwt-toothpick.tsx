@@ -99,16 +99,9 @@ async function verifySecret(
   token: string,
   algorithm: string,
   candidate: string,
+  currentDate: Date,
 ) {
   try {
-    const payload = decodePayload(token);
-    // Use token's iat (issued at) claim to stay within validity window,
-    // or use far future date to bypass time checks if iat is not present
-    const currentDate =
-      payload && typeof payload.iat === "number"
-        ? new Date(payload.iat * 1000)
-        : new Date("2099-01-01");
-
     await jwtVerify(token, new TextEncoder().encode(candidate), {
       algorithms: [algorithm],
       currentDate,
@@ -135,11 +128,28 @@ async function bruteForceToken({
   const start = performance.now();
   let attemptsMade = 0;
 
+  // Decode payload once to avoid redundant computation in the loop
+  const payload = decodePayload(token);
+
+  // Compute current date for verification:
+  // - Use iat claim if present to stay within validity window
+  // - If iat is missing but exp exists, use a date before expiration (1 day before exp)
+  // - Otherwise use epoch (1970) to bypass time checks
+  let currentDate: Date;
+  if (payload && typeof payload.iat === "number") {
+    currentDate = new Date(payload.iat * 1000);
+  } else if (payload && typeof payload.exp === "number") {
+    // Use a date 1 day before expiration to ensure it's valid
+    currentDate = new Date((payload.exp - 86400) * 1000);
+  } else {
+    currentDate = new Date(0); // Epoch
+  }
+
   for (const secret of secrets) {
     if (shouldAbort()) break;
     attemptsMade += 1;
 
-    const success = await verifySecret(token, algorithm, secret);
+    const success = await verifySecret(token, algorithm, secret, currentDate);
     const elapsedMs = performance.now() - start;
     onProgress({ secret, success, elapsedMs, attemptsMade });
 
