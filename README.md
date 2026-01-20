@@ -89,17 +89,23 @@ A: As much as any devtool built at midnight can be. Use it, break it, help it ge
 
 <details>
 <summary>My thoughts about AI Coding - Many text here</summary>
+
 Many laughed about Vibe Coding, but to be honest, it sometimes could be exhausting reading AI's code - more tiring than writing them yourself.  
-You see, LLMs write layers of defensive checks that a human would have compressed into a single elegant line, variable names that read like entire sentences, and comments that state the obvious with cheerful confidence.  
+You see, LLMs write layers of defensive checks that a human would have compressed into a single elegant line, variable names that read like entire sentences, 
+and comments that state the obvious with cheerful confidence.  
+
 Yes, the code _works_, but it doesn't _think_.  
+
 You quickly find yourself refactoring not for performance, but for comprehension, shrinking a 40-line AI solution into 8 lines that actually reveal intent.  
 And sure, you do learn things from that, but highkey it is 10x less fun.  
+
 I'm not saying that they are not helpful, they are indeed **VERY** helpful, it does save you time for things that really matters.  
 
 It really depends on how you are using AI, think of it like a kitchen intern:  
 If you just shout "make lunch!" and walk away, you'll return to a culinary catastrophe involving pickles, chocolate sauce, and a small fire.  
 But if you stand there saying, "julienne these carrots, now sauté them gently for exactly 3 minutes," you get a sous-chef that actually saves you time.  
 Vibe Coding works the same way. Are you the director giving clear scene-by-scene shots, or just yelling "make it cinematic!" from your trailer?  
+
 The magic happens when you treat AI like an enthusiastic partner who needs boundaries, not a genie who grants buggy wishes.  
 Pair its speed with your sanity-checks, and suddenly you're not just vibing—you're vibing productively.
 </details>
