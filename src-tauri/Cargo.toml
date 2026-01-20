@@ -1,6 +1,6 @@
 [package]
 name = "devutils"
-version = "0.1.0"
+version = "1.0.0"
 description = "DevUtils - Developer Utilities Desktop Application"
 authors = ["miyukiyue"]
 license = "GPL-3.0-or-later"
