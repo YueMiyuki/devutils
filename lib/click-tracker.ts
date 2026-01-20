@@ -40,12 +40,16 @@ function persistState() {
 function init() {
   if (initialized || typeof window === "undefined") return;
   initialized = true;
-  const parsed = safeParse(localStorage.getItem(STORAGE_KEY));
-  if (parsed?.lifetime && Number.isFinite(parsed.lifetime)) {
-    lifetime = parsed.lifetime;
-  }
-  if (typeof parsed?.persist === "boolean") {
-    persist = parsed.persist;
+  try {
+    const parsed = safeParse(localStorage.getItem(STORAGE_KEY));
+    if (parsed?.lifetime && Number.isFinite(parsed.lifetime)) {
+      lifetime = parsed.lifetime;
+    }
+    if (typeof parsed?.persist === "boolean") {
+      persist = parsed.persist;
+    }
+  } catch {
+    // ignore storage errors
   }
 }
 
@@ -65,6 +69,7 @@ export function resetSessionClicks() {
 }
 
 export function setClickPersist(enabled: boolean) {
+  init();
   persist = enabled;
   persistState();
   notify();

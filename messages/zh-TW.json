@@ -5,11 +5,13 @@
   },
   "sidebar": {
     "title": "瑞士軍刀",
+    "subtitle": "開發工具",
     "utilityTools": "實用工具",
     "funTools": "趣味工具",
     "settings": "設定",
     "collapse": "收起側邊欄",
-    "expand": "展開側邊欄"
+    "expand": "展開側邊欄",
+    "quickSearch": "快速搜尋..."
   },
   "tabBar": {
     "utilities": "實用工具",
@@ -797,51 +799,51 @@
       }
     },
     "clickSaver": {
-      "name": "Clicks Saved",
-      "shortName": "Clicks",
-      "description": "Automatically track mouse miles saved while using DevUtils",
-      "title": "How Many Clicks Did That Save?",
-      "subtitle": "Auto-counts clicks inside tools. Badges unlock as you work.",
+      "name": "節省點擊",
+      "shortName": "點擊",
+      "description": "自動追蹤使用 DevUtils 時節省的滑鼠里程",
+      "title": "節省了多少次點擊？",
+      "subtitle": "自動計算工具內的點擊次數，隨著使用解鎖徽章。",
       "inputs": {
-        "title": "Automatic tracking",
-        "description": "Clicks inside tools are auto-counted. Toggle persistence or reset your session.",
-        "persist": "Remember totals on this device"
+        "title": "自動追蹤",
+        "description": "工具內的點擊會自動計數。切換持久化或重置您的工作階段。",
+        "persist": "在此裝置上記住總數"
       },
       "stats": {
-        "total": "Clicks spared so far",
-        "mouseMiles": "Mouse miles traveled instead of Googling",
-        "lifetime": "Lifetime clicks",
-        "session": "Session clicks: {{count}}",
-        "distanceLabel": "Pointer distance",
-        "timeSaved": "Pointer time saved",
-        "perClick": "~{{seconds}}s per click avoided",
-        "distanceHint": "Assumes ~0.2m of hand travel per click"
+        "total": "目前節省的點擊數",
+        "mouseMiles": "省去 Google 搜尋的滑鼠移動距離",
+        "lifetime": "累計點擊數",
+        "session": "本次工作階段點擊數：{{count}}",
+        "distanceLabel": "游標移動距離",
+        "timeSaved": "節省的游標操作時間",
+        "perClick": "每次點擊約省 ~{{seconds}} 秒",
+        "distanceHint": "假設每次點擊約移動 0.2 公尺"
       },
       "messages": {
-        "persistNote": "Stored locally only—no data leaves your machine."
+        "persistNote": "僅儲存於本機——資料不會離開您的電腦。"
       },
       "actions": {
-        "resetSession": "Reset session counter",
-        "timeHint": "~{{seconds}}s per click",
-        "timeHintDetail": "Roughly keyboard/mouse wiggle avoided",
-        "sessionTotal": "Session: {{count}} clicks",
-        "sessionDetail": "Keeps counting until you reset"
+        "resetSession": "重置工作階段計數器",
+        "timeHint": "每次點擊約 ~{{seconds}} 秒",
+        "timeHintDetail": "省去的鍵盤/滑鼠操作時間",
+        "sessionTotal": "本次工作階段：{{count}} 次點擊",
+        "sessionDetail": "持續計數直到重置"
       },
       "badges": {
-        "title": "Badge cabinet",
-        "subtitle": "Unlock milestones for the lazy and efficient",
-        "starter": "Tab Tourist",
-        "apprentice": "Shortcut Apprentice",
-        "marathon": "Mouse Marathoner",
-        "everest": "Climbed Everest",
-        "earned": "{{count}} badges",
-        "earnedLabel": "Earned",
-        "goal": "{{count}} clicks",
-        "next": "{{badge}} in {{remaining}} clicks",
-        "allEarned": "All badges earned—go touch grass?",
-        "description": "≈ {{distance}} km of travel avoided"
+        "title": "徽章櫃",
+        "subtitle": "為懶人和高效者解鎖里程碑",
+        "starter": "分頁觀光客",
+        "apprentice": "快捷鍵學徒",
+        "marathon": "滑鼠馬拉松選手",
+        "everest": "攀登聖母峰",
+        "earned": "{{count}} 個徽章",
+        "earnedLabel": "已獲得",
+        "goal": "{{count}} 次點擊",
+        "next": "再 {{remaining}} 次點擊獲得 {{badge}}",
+        "allEarned": "所有徽章已獲得——出去走走吧？",
+        "description": "≈ 節省 {{distance}} 公里的移動"
       },
-      "metersPerClick": "~{{meters}}m per click"
+      "metersPerClick": "每次點擊約 ~{{meters}} 公尺"
     },
     "jwtToothpick": {
       "name": "JWT Brute-Force Toothpick",
@@ -970,6 +972,8 @@
   },
   "settings": {
     "title": "設定",
+    "subtitle": "自訂您的體驗",
+    "pressEscToClose": "按 Esc 關閉",
     "theme": "主題",
     "themeDescription": "在亮色和暗色模式之間切換",
     "light": "亮色",
@@ -1001,9 +1005,10 @@
     "info": "資訊"
   },
   "commandPalette": {
-    "title": "Quick Open",
-    "placeholder": "Search tools...",
-    "empty": "No tools found",
-    "hint": "Cmd/Ctrl + K"
+    "title": "快速開啟",
+    "placeholder": "搜尋工具...",
+    "empty": "找不到工具",
+    "hint": "Cmd/Ctrl + K",
+    "tryDifferent": "請嘗試其他搜尋關鍵字"
   }
 }

@@ -100,7 +100,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 {t("settings.title")}
               </DialogTitle>
               <p className="mt-0.5 text-xs text-muted-foreground/60">
-                Customize your experience
+                {t("settings.subtitle")}
               </p>
             </div>
           </div>
@@ -303,16 +303,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           "
           />
           <p className="text-center text-xs text-muted-foreground/40">
-            Press{" "}
-            <kbd
-              className="
-              mx-1 rounded-sm border border-foreground/10 bg-foreground/5 px-1.5
-              py-0.5 font-mono text-[10px]
-            "
-            >
-              Esc
-            </kbd>{" "}
-            to close
+            {t("settings.pressEscToClose")}
           </p>
         </div>
       </DialogContent>

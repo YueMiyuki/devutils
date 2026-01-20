@@ -21,6 +21,20 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const mainEl = mainRef.current;
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest?.("[data-ignore-click-saver]")) return;
+      incrementClicks(1);
+    };
+    mainEl?.addEventListener("click", handleClick);
+
+    return () => {
+      mainEl?.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const isTauri = typeof window !== "undefined" && "__TAURI__" in window;
       if ((e.ctrlKey || e.metaKey) && e.key === "w") {
@@ -76,21 +90,12 @@ export default function Home() {
 
     window.addEventListener("keydown", handleKeyDown);
 
-    const mainEl = mainRef.current;
-    const handleClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (target?.closest?.("[data-ignore-click-saver]")) return;
-      incrementClicks(1);
-    };
-    mainEl?.addEventListener("click", handleClick);
-
     return () => {
       isCleanedUp = true;
       window.removeEventListener("keydown", handleKeyDown);
       if (unlisten) {
         unlisten();
       }
-      mainEl?.removeEventListener("click", handleClick);
     };
   }, [activeTabId, removeTab]);
 

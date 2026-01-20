@@ -149,7 +149,7 @@ export function TabBar() {
                 {isActive && (
                   <div
                     className="
-                    bg-foreground/2-sm absolute inset-0 rounded-lg
+                    absolute inset-0 rounded-lg bg-foreground/5
                   "
                   />
                 )}

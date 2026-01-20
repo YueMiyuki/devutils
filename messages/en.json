@@ -5,11 +5,13 @@
   },
   "sidebar": {
     "title": "Swiss DevUtils",
+    "subtitle": "Dev Tools",
     "utilityTools": "Utility Tools",
     "funTools": "Fun Tools",
     "settings": "Settings",
     "collapse": "Collapse sidebar",
-    "expand": "Expand sidebar"
+    "expand": "Expand sidebar",
+    "quickSearch": "Quick search..."
   },
   "tabBar": {
     "utilities": "Utilities",
@@ -20,7 +22,8 @@
     "title": "Quick Open",
     "placeholder": "Search tools...",
     "empty": "No tools found",
-    "hint": "Cmd/Ctrl + K"
+    "hint": "Cmd/Ctrl + K",
+    "tryDifferent": "Try a different search term"
   },
   "tools": {
     "curlConverter": {
@@ -983,6 +986,8 @@
   },
   "settings": {
     "title": "Settings",
+    "subtitle": "Customize your experience",
+    "pressEscToClose": "Press Esc to close",
     "theme": "Theme",
     "themeDescription": "Switch between light and dark mode",
     "light": "Light",

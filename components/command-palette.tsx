@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const PARTICLE_INDICES = Array.from({ length: 20 }, (_, i) => i);
+
 interface PaletteItem {
   id: ToolId;
   name: string;
@@ -115,6 +117,7 @@ export function CommandPalette() {
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
+      if (filtered.length === 0) return;
       if (e.key === "ArrowDown") {
         e.preventDefault();
         setSelectedIndex((i) => (i + 1) % filtered.length);
@@ -182,7 +185,7 @@ export function CommandPalette() {
       />
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
+        {PARTICLE_INDICES.map((i) => (
           <div
             key={i}
             className={cn(
@@ -346,7 +349,7 @@ export function CommandPalette() {
                     {t("commandPalette.empty")}
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground/60">
-                    Try a different search term
+                    {t("commandPalette.tryDifferent")}
                   </p>
                 </div>
               ) : (

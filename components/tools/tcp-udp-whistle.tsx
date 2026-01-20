@@ -376,7 +376,7 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
                       size="sm"
                       onClick={() => setPayload(preset)}
                     >
-                      {t("tools.tcpWhistle.send.preset")}
+                      {preset.length > 12 ? `${preset.slice(0, 12)}…` : preset}
                     </Button>
                   ))}
                 </div>

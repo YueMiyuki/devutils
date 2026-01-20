@@ -103,7 +103,7 @@ async function handleTcpSend(req: WhistleRequest) {
   const chunkSize = parseChunkSize(req.chunkSize);
   const start = Date.now();
 
-  return await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const socket = new net.Socket();
     let collected = Buffer.alloc(0);
     let settled = false;
@@ -167,7 +167,7 @@ async function handleUdpSend(req: WhistleRequest) {
   const start = Date.now();
   const family = net.isIP(req.host ?? "") === 6 ? "udp6" : "udp4";
 
-  return await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const socket = dgram.createSocket(family);
     let settled = false;
     let responseBuffer = Buffer.alloc(0);
@@ -224,7 +224,7 @@ async function handleTcpListen(req: WhistleRequest) {
   const echoPayload = buildPayload(req.echoPayload, req.malformed);
   const captures: CaptureEntry[] = [];
 
-  return await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const server = net.createServer((socket) => {
       const started = Date.now();
       let collected = Buffer.alloc(0);
@@ -251,8 +251,12 @@ async function handleTcpListen(req: WhistleRequest) {
         });
 
         if (req.echo) {
-          await wait(respondDelayMs);
-          socket.write(echoPayload);
+          try {
+            await wait(respondDelayMs);
+            socket.write(echoPayload);
+          } catch {
+            // socket may have been destroyed
+          }
         }
         socket.end();
       });
@@ -295,7 +299,7 @@ async function handleUdpListen(req: WhistleRequest) {
   const captures: CaptureEntry[] = [];
   const reply = buildPayload(req.echoPayload, req.malformed);
 
-  return await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const socket = dgram.createSocket(family);
 
     socket.on("message", async (msg, rinfo) => {
@@ -312,8 +316,12 @@ async function handleUdpListen(req: WhistleRequest) {
       }
 
       if (req.echo) {
-        await wait(respondDelayMs);
-        socket.send(reply, rinfo.port, rinfo.address);
+        try {
+          await wait(respondDelayMs);
+          socket.send(reply, rinfo.port, rinfo.address);
+        } catch {
+          // socket may have been closed
+        }
       }
     });
 

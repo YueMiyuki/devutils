@@ -187,7 +187,7 @@ export function ToolSidebar({
                 {t("sidebar.title")}
               </span>
               <span className="text-xs text-muted-foreground/60">
-                Dev Tools
+                {t("sidebar.subtitle")}
               </span>
             </div>
           )}
@@ -231,6 +231,7 @@ export function ToolSidebar({
                 const event = new KeyboardEvent("keydown", {
                   key: "k",
                   metaKey: true,
+                  ctrlKey: true,
                   bubbles: true,
                 });
                 window.dispatchEvent(event);
@@ -254,7 +255,7 @@ export function ToolSidebar({
                 group-hover:text-foreground/60
               "
               >
-                Quick search...
+                {t("sidebar.quickSearch")}
               </span>
               <kbd
                 className="

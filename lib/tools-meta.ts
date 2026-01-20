@@ -28,7 +28,6 @@ export type ToolId =
   | "base64"
   | "blame-intern"
   | "boss-mode"
-  | "click-saver"
   | "color-picker"
   | "cron-generator"
   | "curl-converter"
@@ -51,7 +50,6 @@ export const TOOL_TRANSLATIONS: Record<ToolId, string> = {
   base64: "tools.base64.name",
   "blame-intern": "tools.blameIntern.name",
   "boss-mode": "tools.bossMode.name",
-  "click-saver": "tools.clickSaver.name",
   "color-picker": "tools.colorPicker.name",
   "cron-generator": "tools.cronGenerator.name",
   "curl-converter": "tools.curlConverter.name",
@@ -78,7 +76,6 @@ export const TOOL_ICONS: Record<
   base64: Binary,
   "blame-intern": GitBranch,
   "boss-mode": TableProperties,
-  "click-saver": MousePointerClick,
   "color-picker": Pipette,
   "cron-generator": CalendarClock,
   "curl-converter": Terminal,
@@ -100,7 +97,6 @@ export const TOOL_ICONS: Record<
 export const UTILITY_TOOLS: ToolId[] = [
   "ascii-cork",
   "base64",
-  "click-saver",
   "color-picker",
   "cron-generator",
   "curl-converter",

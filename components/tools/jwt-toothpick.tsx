@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { jwtVerify } from "jose";
 import { Button } from "@/components/ui/button";
@@ -161,10 +161,6 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
   const algorithm =
     typeof header?.alg === "string" ? header.alg.toUpperCase() : "HS256";
   const supportedAlg = ["HS256", "HS384", "HS512"].includes(algorithm);
-
-  useEffect(() => {
-    abortRef.current = false;
-  }, []);
 
   const handleStart = async () => {
     if (!token.trim()) {
