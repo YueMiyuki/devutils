@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   // Required for static site generation (SSG) in Tauri
   // output: 'export',
   // Prevent vercel 405 error on /api routes
-  output: isVercel ? "export" : undefined,
+  output: isVercel ? undefined : "export",
   // Note: This feature is required to use the Next.js Image component in SSG mode.
   // See https://nextjs.org/docs/messages/export-image-api for different workarounds.
   images: {
