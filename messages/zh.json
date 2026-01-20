@@ -946,7 +946,8 @@
         "echoHint": "对到达的内容发送快速回复",
         "echoPayload": "响应负载",
         "echoDelay": "响应延迟（毫秒）",
-        "button": "开始监听"
+        "button": "开始监听",
+        "stopButton": "停止监听"
       },
       "captures": {
         "title": "捕获的流量",

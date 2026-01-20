@@ -35,7 +35,7 @@ interface CaptureEntry {
 
 const MAX_PAYLOAD_BYTES = 4096;
 const MAX_RESPONSE_BYTES = 128 * 1024;
-const MAX_DURATION_MS = 15000;
+const MAX_DURATION_MS = 600000;
 const MAX_DELAY_MS = 8000;
 
 function toSafeDelay(value: unknown, fallback: number): number {
@@ -231,8 +231,8 @@ async function handleUdpSend(req: WhistleRequest) {
   });
 }
 
-async function handleTcpListen(req: WhistleRequest) {
-  const durationMs = toSafeDuration(req.durationMs, 5000);
+async function handleTcpListen(req: WhistleRequest, signal?: AbortSignal) {
+  const durationMs = toSafeDuration(req.durationMs, 600000);
   const respondDelayMs = toSafeDelay(req.respondDelayMs, 0);
   const maxCapture = Math.min(req.maxCapture ?? 10, 25);
   const echoPayload = buildPayload(req.echoPayload, req.malformed);
@@ -299,28 +299,42 @@ async function handleTcpListen(req: WhistleRequest) {
 
     server.on("error", (err) => reject(err));
 
-    server.listen(req.port, () => {
-      setTimeout(() => {
-        // Force-close all active sockets before closing the server
-        for (const socket of activeSockets) {
-          socket.destroy();
-        }
-        activeSockets.clear();
+    const cleanup = () => {
+      for (const socket of activeSockets) {
+        socket.destroy();
+      }
+      activeSockets.clear();
 
-        server.close(() => {
-          resolve({
-            ok: true,
-            mode: "tcp-listen" as const,
-            durationMs,
-            captures,
-          });
+      server.close(() => {
+        resolve({
+          ok: true,
+          mode: "tcp-listen" as const,
+          durationMs: Date.now() - serverStartTime,
+          captures,
         });
+      });
+    };
+
+    let serverStartTime = 0;
+    let timer: NodeJS.Timeout | null = null;
+
+    if (signal) {
+      signal.addEventListener("abort", () => {
+        if (timer) clearTimeout(timer);
+        cleanup();
+      });
+    }
+
+    server.listen(req.port, () => {
+      serverStartTime = Date.now();
+      timer = setTimeout(() => {
+        cleanup();
       }, durationMs);
     });
   });
 }
 
-async function handleUdpListen(req: WhistleRequest) {
+async function handleUdpListen(req: WhistleRequest, signal?: AbortSignal) {
   const durationMs = toSafeDuration(req.durationMs, 5000);
   const respondDelayMs = toSafeDelay(req.respondDelayMs, 0);
   const maxCapture = Math.min(req.maxCapture ?? 10, 25);
@@ -330,6 +344,23 @@ async function handleUdpListen(req: WhistleRequest) {
 
   return new Promise((resolve, reject) => {
     const socket = dgram.createSocket(family);
+    let serverStartTime = 0;
+    let timer: NodeJS.Timeout | null = null;
+
+    const cleanup = () => {
+      if (timer) clearTimeout(timer);
+      socket.close();
+      resolve({
+        ok: true,
+        mode: "udp-listen" as const,
+        durationMs: Date.now() - serverStartTime,
+        captures,
+      });
+    };
+
+    if (signal) {
+      signal.addEventListener("abort", cleanup);
+    }
 
     socket.on("message", async (msg, rinfo) => {
       if (captures.length < maxCapture) {
@@ -357,15 +388,8 @@ async function handleUdpListen(req: WhistleRequest) {
     socket.on("error", (err) => reject(err));
 
     socket.bind(req.port, req.host, () => {
-      setTimeout(() => {
-        socket.close();
-        resolve({
-          ok: true,
-          mode: "udp-listen" as const,
-          durationMs,
-          captures,
-        });
-      }, durationMs);
+      serverStartTime = Date.now();
+      timer = setTimeout(cleanup, durationMs);
     });
   });
 }
@@ -415,11 +439,11 @@ export async function POST(request: NextRequest) {
       return Response.json(result);
     }
     if (req.mode === "tcp-listen") {
-      const result = await handleTcpListen(req);
+      const result = await handleTcpListen(req, request.signal);
       return Response.json(result);
     }
     if (req.mode === "udp-listen") {
-      const result = await handleUdpListen(req);
+      const result = await handleUdpListen(req, request.signal);
       return Response.json(result);
     }
 
