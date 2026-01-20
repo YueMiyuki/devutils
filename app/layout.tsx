@@ -20,7 +20,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geist.className} ${geistMono.className}`}
+      className={`
+        ${geist.className}
+        ${geistMono.className}
+      `}
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">

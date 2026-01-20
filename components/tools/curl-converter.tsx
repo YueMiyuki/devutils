@@ -341,7 +341,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
   };
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4">
+    <div className="flex h-full flex-col gap-4 p-4">
       {/* cURL Input Section */}
       <Card>
         <CardHeader className="pb-3">
@@ -356,11 +356,11 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                 onClick={handlePasteFromClipboard}
                 className={copyAnimationClass}
               >
-                <ClipboardPaste className="w-4 h-4 mr-2" />
+                <ClipboardPaste className="mr-2 size-4" />
                 {t("tools.curlConverter.pasteFromClipboard")}
               </Button>
               <Button variant="outline" size="sm" onClick={clearAll}>
-                <Trash2 className="w-4 h-4 mr-2" />
+                <Trash2 className="mr-2 size-4" />
                 {t("common.clear")}
               </Button>
             </div>
@@ -371,7 +371,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
             placeholder={t("tools.curlConverter.inputPlaceholder")}
             value={curlInput}
             onChange={(e) => handleCurlChange(e.target.value)}
-            className="font-mono text-sm min-h-24"
+            className="min-h-24 font-mono text-sm"
           />
         </CardContent>
       </Card>
@@ -390,14 +390,14 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                 onClick={copyAsCurl}
                 className={copyAnimationClass}
               >
-                <Copy className="w-4 h-4 mr-2" />
+                <Copy className="mr-2 size-4" />
                 {t("tools.curlConverter.copyAsCurl")}
               </Button>
               <Button size="sm" onClick={executeRequest} disabled={isLoading}>
                 {isLoading ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 className="mr-2 size-4 animate-spin" />
                 ) : (
-                  <Play className="w-4 h-4 mr-2" />
+                  <Play className="mr-2 size-4" />
                 )}
                 {t("tools.curlConverter.send")}
               </Button>
@@ -449,14 +449,14 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="headers" className="space-y-2 mt-2">
+            <TabsContent value="headers" className="mt-2 space-y-2">
               {headers.map((header, index) => (
-                <div key={header.id} className="flex gap-2 items-center">
+                <div key={header.id} className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={header.enabled}
                     onChange={() => toggleHeader(index)}
-                    className="w-4 h-4"
+                    className="size-4"
                   />
                   <Input
                     placeholder={t("tools.curlConverter.headerNamePlaceholder")}
@@ -478,12 +478,12 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                     onClick={() => removeHeader(index)}
                     className="shrink-0"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="size-4" />
                   </Button>
                 </div>
               ))}
               <Button variant="outline" size="sm" onClick={addHeader}>
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="mr-2 size-4" />
                 {t("tools.curlConverter.addHeader")}
               </Button>
             </TabsContent>
@@ -493,7 +493,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                 placeholder={t("tools.curlConverter.bodyPlaceholder")}
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
-                className="font-mono text-sm min-h-32"
+                className="min-h-32 font-mono text-sm"
               />
             </TabsContent>
           </Tabs>
@@ -504,7 +504,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-base">
               {t("tools.curlConverter.response")}
               {responseStatus !== null && (
                 <>
@@ -521,9 +521,9 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                     )}
                   >
                     {responseStatus >= 200 && responseStatus < 300 ? (
-                      <CheckCircle2 className="w-3 h-3 mr-1" />
+                      <CheckCircle2 className="mr-1 size-3" />
                     ) : (
-                      <XCircle className="w-3 h-3 mr-1" />
+                      <XCircle className="mr-1 size-3" />
                     )}
                     {responseStatus}
                   </Badge>
@@ -542,7 +542,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                 onClick={() => copyWithAnimation(response)}
                 className={copyAnimationClass}
               >
-                <Copy className="w-4 h-4 mr-2" />
+                <Copy className="mr-2 size-4" />
                 {t("tools.curlConverter.copy")}
               </Button>
             )}
@@ -551,7 +551,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
         <CardContent>
           <ScrollArea className="h-48 rounded-md border">
             {error ? (
-              <div className="p-4 text-destructive font-mono text-sm">
+              <div className="p-4 font-mono text-sm text-destructive">
                 {error}
               </div>
             ) : response ? (
@@ -559,7 +559,7 @@ export function CurlConverter({ tabId: _tabId }: CurlConverterProps) {
                 {response}
               </pre>
             ) : (
-              <div className="p-4 text-muted-foreground text-sm">
+              <div className="p-4 text-sm text-muted-foreground">
                 {t("tools.curlConverter.responsePlaceholder")}
               </div>
             )}

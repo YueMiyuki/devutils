@@ -5,11 +5,13 @@
   },
   "sidebar": {
     "title": "瑞士軍刀",
+    "subtitle": "開發工具",
     "utilityTools": "實用工具",
     "funTools": "趣味工具",
     "settings": "設定",
     "collapse": "收起側邊欄",
-    "expand": "展開側邊欄"
+    "expand": "展開側邊欄",
+    "quickSearch": "快速搜尋..."
   },
   "tabBar": {
     "utilities": "實用工具",
@@ -795,10 +797,183 @@
         "ghost": "幽靈",
         "doom": "Doom"
       }
+    },
+    "clickSaver": {
+      "name": "節省點擊",
+      "shortName": "點擊",
+      "description": "自動追蹤使用 DevUtils 時節省的滑鼠里程",
+      "title": "節省了多少次點擊？",
+      "subtitle": "自動計算工具內的點擊次數，隨著使用解鎖徽章。",
+      "inputs": {
+        "title": "自動追蹤",
+        "description": "工具內的點擊會自動計數。切換持久化或重置您的工作階段。",
+        "persist": "在此裝置上記住總數"
+      },
+      "stats": {
+        "total": "目前節省的點擊數",
+        "mouseMiles": "省去 Google 搜尋的滑鼠移動距離",
+        "lifetime": "累計點擊數",
+        "session": "本次工作階段點擊數：{{count}}",
+        "distanceLabel": "游標移動距離",
+        "timeSaved": "節省的游標操作時間",
+        "perClick": "每次點擊約省 ~{{seconds}} 秒",
+        "distanceHint": "假設每次點擊約移動 0.2 公尺"
+      },
+      "messages": {
+        "persistNote": "僅儲存於本機——資料不會離開您的電腦。"
+      },
+      "actions": {
+        "resetSession": "重置工作階段計數器",
+        "timeHint": "每次點擊約 ~{{seconds}} 秒",
+        "timeHintDetail": "省去的鍵盤/滑鼠操作時間",
+        "sessionTotal": "本次工作階段：{{count}} 次點擊",
+        "sessionDetail": "持續計數直到重置"
+      },
+      "badges": {
+        "title": "徽章櫃",
+        "subtitle": "為懶人和高效者解鎖里程碑",
+        "starter": "分頁觀光客",
+        "apprentice": "快捷鍵學徒",
+        "marathon": "滑鼠馬拉松選手",
+        "everest": "攀登聖母峰",
+        "earned": "{{count}} 個徽章",
+        "earnedLabel": "已獲得",
+        "goal": "{{count}} 次點擊",
+        "next": "再 {{remaining}} 次點擊獲得 {{badge}}",
+        "allEarned": "所有徽章已獲得——出去走走吧？",
+        "description": "≈ 節省 {{distance}} 公里的移動"
+      },
+      "metersPerClick": "每次點擊約 ~{{meters}} 公尺"
+    },
+    "jwtToothpick": {
+      "name": "JWT 暴力破解牙籤",
+      "shortName": "JWT BF",
+      "description": "針對 HMAC JWT 的弱密鑰教育測試工具",
+      "title": "JWT 暴力破解牙籤",
+      "subtitle": "在 DevUtils 中探測弱 HMAC 密鑰",
+      "tokenInput": "目標令牌",
+      "tokenDescription": "僅支援 HS256/384/512。令牌不會離開此應用程式。",
+      "warnings": {
+        "educational": "僅供教育用途。請只對您擁有的令牌使用。"
+      },
+      "details": {
+        "algorithm": "演算法：{{alg}}"
+      },
+      "wordlist": {
+        "title": "密碼字典",
+        "description": "每行一個密鑰。找到第一個匹配即停止。",
+        "hint": "最多 {{max}} 次猜測。重複項會被移除。"
+      },
+      "actions": {
+        "start": "開始猜測",
+        "stop": "停止",
+        "reset": "重置"
+      },
+      "errors": {
+        "tokenRequired": "請先貼上 JWT",
+        "invalidToken": "令牌不是有效的 JWT",
+        "unsupportedAlg": "僅支援 HS256/HS384/HS512（收到 {{alg}}）",
+        "noSecrets": "請至少新增一個密鑰來嘗試"
+      },
+      "progress": {
+        "title": "攻擊進度",
+        "description": "嘗試次數、速度和狀態",
+        "attempts": "已嘗試次數",
+        "speed": "每秒猜測數",
+        "elapsed": "已耗時",
+        "algorithm": "演算法",
+        "recent": "最近嘗試",
+        "empty": "尚無嘗試"
+      },
+      "status": {
+        "running": "執行中",
+        "finished": "已完成",
+        "stopped": "已停止",
+        "idle": "閒置"
+      },
+      "found": "密鑰已找到！",
+      "notFoundStopped": "在找到匹配前已停止。",
+      "notFoundYet": "尚未找到匹配。請嘗試更多猜測或更強的字典。",
+      "labels": {
+        "hit": "命中",
+        "miss": "未命中"
+      }
+    },
+    "tcpWhistle": {
+      "name": "TCP/UDP 哨子",
+      "shortName": "哨子",
+      "description": "製作封包、監聽埠口並模擬嘈雜網路",
+      "title": "TCP/UDP 哨子",
+      "subtitle": "發送原始封包、本地監聽，並模擬緩慢或格式錯誤的回覆",
+      "tabs": {
+        "send": "發送封包",
+        "listen": "監聽與模擬"
+      },
+      "send": {
+        "title": "發送封包",
+        "description": "發送 TCP/UDP 負載，可選擇延遲、分塊和垃圾位元組",
+        "preset": "使用預設",
+        "button": "發送封包"
+      },
+      "inputs": {
+        "host": "主機",
+        "port": "埠口",
+        "protocol": "協定",
+        "timeout": "逾時（毫秒）",
+        "payload": "負載",
+        "delay": "發送延遲（毫秒）",
+        "chunk": "分塊大小（位元組）",
+        "malformed": "注入垃圾位元組",
+        "malformedHint": "在負載後附加一些無效位元組",
+        "duration": "監聽持續時間（毫秒）"
+      },
+      "response": {
+        "title": "回應預覽",
+        "description": "往返時間和負載資料",
+        "sent": "已發送位元組",
+        "received": "已接收位元組",
+        "elapsed": "已耗時",
+        "protocol": "協定",
+        "text": "回應（UTF-8）",
+        "hex": "十六進位預覽",
+        "empty": "尚未擷取到回應"
+      },
+      "listen": {
+        "title": "監聽與回應",
+        "description": "本地綁定、擷取封包，並可選擇回應",
+        "echo": "回應回覆",
+        "echoLabel": "回應傳入負載",
+        "echoHint": "對到達的內容發送快速回覆",
+        "echoPayload": "回應負載",
+        "echoDelay": "回應延遲（毫秒）",
+        "button": "開始監聽"
+      },
+      "captures": {
+        "title": "擷取的流量",
+        "description": "監聽器開啟時收到的訊息",
+        "count": "次擷取",
+        "empty": "尚未收到任何內容。請嘗試向此埠口發送資料。",
+        "emptyText": "無文字負載"
+      },
+      "history": "最近執行",
+      "historyEmpty": "尚無歷史記錄。",
+      "notes": {
+        "title": "備註",
+        "slowNetwork": "使用延遲 + 分塊大小來模擬緩慢或不穩定的連線。",
+        "malformed": "切換垃圾位元組以查看服務如何處理格式錯誤的輸入。",
+        "localOnly": "監聽器綁定本地——非常適合快速重現問題。"
+      },
+      "errors": {
+        "hostRequired": "主機為必填",
+        "portInvalid": "埠口必須在 1-65535 之間",
+        "requestFailed": "請求失敗"
+      }
     }
   },
   "settings": {
     "title": "設定",
+    "subtitle": "自訂您的體驗",
+    "pressEscToClose": "按 Esc 關閉",
     "theme": "主題",
     "themeDescription": "在亮色和暗色模式之間切換",
     "light": "亮色",
@@ -828,5 +1003,12 @@
     "success": "成功",
     "warning": "警告",
     "info": "資訊"
+  },
+  "commandPalette": {
+    "title": "快速開啟",
+    "placeholder": "搜尋工具...",
+    "empty": "找不到工具",
+    "hint": "Cmd/Ctrl + K",
+    "tryDifferent": "請嘗試其他搜尋關鍵字"
   }
 }

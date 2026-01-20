@@ -5,11 +5,13 @@
   },
   "sidebar": {
     "title": "瑞士军刀",
+    "subtitle": "开发工具",
     "utilityTools": "实用工具",
     "funTools": "趣味工具",
     "settings": "设置",
     "collapse": "收起侧边栏",
-    "expand": "展开侧边栏"
+    "expand": "展开侧边栏",
+    "quickSearch": "快速搜索..."
   },
   "tabBar": {
     "utilities": "实用工具",
@@ -795,10 +797,183 @@
         "ghost": "幽灵",
         "doom": "Doom"
       }
+    },
+    "clickSaver": {
+      "name": "节省点击",
+      "shortName": "点击",
+      "description": "自动追踪使用 DevUtils 时节省的鼠标里程",
+      "title": "节省了多少次点击？",
+      "subtitle": "自动计算工具内的点击次数，随着使用解锁徽章。",
+      "inputs": {
+        "title": "自动追踪",
+        "description": "工具内的点击会自动计数。切换持久化或重置您的工作会话。",
+        "persist": "在此设备上记住总数"
+      },
+      "stats": {
+        "total": "目前节省的点击数",
+        "mouseMiles": "省去 Google 搜索的鼠标移动距离",
+        "lifetime": "累计点击数",
+        "session": "本次工作会话点击数：{{count}}",
+        "distanceLabel": "游标移动距离",
+        "timeSaved": "节省的游标操作时间",
+        "perClick": "每次点击约省 ~{{seconds}} 秒",
+        "distanceHint": "假设每次点击约移动 0.2 米"
+      },
+      "messages": {
+        "persistNote": "仅存储于本机——数据不会离开您的电脑。"
+      },
+      "actions": {
+        "resetSession": "重置工作会话计数器",
+        "timeHint": "每次点击约 ~{{seconds}} 秒",
+        "timeHintDetail": "省去的键盘/鼠标操作时间",
+        "sessionTotal": "本次工作会话：{{count}} 次点击",
+        "sessionDetail": "持续计数直到重置"
+      },
+      "badges": {
+        "title": "徽章陈列柜",
+        "subtitle": "为懒人和高效者解锁里程碑",
+        "starter": "分页观光客",
+        "apprentice": "快捷键学徒",
+        "marathon": "鼠标马拉松选手",
+        "everest": "攀登珠峰",
+        "earned": "{{count}} 个徽章",
+        "earnedLabel": "已获得",
+        "goal": "{{count}} 次点击",
+        "next": "再 {{remaining}} 次点击获得 {{badge}}",
+        "allEarned": "所有徽章已获得——出去走走吧？",
+        "description": "≈ 节省 {{distance}} 公里的移动"
+      },
+      "metersPerClick": "每次点击约 ~{{meters}} 米"
+    },
+    "jwtToothpick": {
+      "name": "JWT 暴力破解牙签",
+      "shortName": "JWT BF",
+      "description": "针对 HMAC JWT 的弱密钥教育测试工具",
+      "title": "JWT 暴力破解牙签",
+      "subtitle": "在 DevUtils 中探测弱 HMAC 密钥",
+      "tokenInput": "目标令牌",
+      "tokenDescription": "仅支持 HS256/384/512。令牌不会离开此应用程序。",
+      "warnings": {
+        "educational": "仅供教育用途。请只对您拥有的令牌使用。"
+      },
+      "details": {
+        "algorithm": "算法：{{alg}}"
+      },
+      "wordlist": {
+        "title": "密码字典",
+        "description": "每行一个密钥。找到第一个匹配即停止。",
+        "hint": "最多 {{max}} 次猜测。重复项会被移除。"
+      },
+      "actions": {
+        "start": "开始猜测",
+        "stop": "停止",
+        "reset": "重置"
+      },
+      "errors": {
+        "tokenRequired": "请先粘贴 JWT",
+        "invalidToken": "令牌不是有效的 JWT",
+        "unsupportedAlg": "仅支持 HS256/HS384/HS512（收到 {{alg}}）",
+        "noSecrets": "请至少添加一个密钥来尝试"
+      },
+      "progress": {
+        "title": "攻击进度",
+        "description": "尝试次数、速度和状态",
+        "attempts": "已尝试次数",
+        "speed": "每秒猜测数",
+        "elapsed": "已耗时",
+        "algorithm": "算法",
+        "recent": "最近尝试",
+        "empty": "尚无尝试"
+      },
+      "status": {
+        "running": "运行中",
+        "finished": "已完成",
+        "stopped": "已停止",
+        "idle": "空闲"
+      },
+      "found": "密钥已找到！",
+      "notFoundStopped": "在找到匹配前已停止。",
+      "notFoundYet": "尚未找到匹配。请尝试更多猜测或更强的字典。",
+      "labels": {
+        "hit": "命中",
+        "miss": "未命中"
+      }
+    },
+    "tcpWhistle": {
+      "name": "TCP/UDP 哨子",
+      "shortName": "哨子",
+      "description": "制作数据包、监听端口并模拟嘈杂网络",
+      "title": "TCP/UDP 哨子",
+      "subtitle": "发送原始数据包、本地监听，并模拟缓慢或格式错误的回复",
+      "tabs": {
+        "send": "发送数据包",
+        "listen": "监听与模拟"
+      },
+      "send": {
+        "title": "发送数据包",
+        "description": "发送 TCP/UDP 负载，可选择延迟、分块和垃圾字节",
+        "preset": "使用预设",
+        "button": "发送数据包"
+      },
+      "inputs": {
+        "host": "主机",
+        "port": "端口",
+        "protocol": "协议",
+        "timeout": "超时（毫秒）",
+        "payload": "负载",
+        "delay": "发送延迟（毫秒）",
+        "chunk": "分块大小（字节）",
+        "malformed": "注入垃圾字节",
+        "malformedHint": "在负载后附加一些无效字节",
+        "duration": "监听持续时间（毫秒）"
+      },
+      "response": {
+        "title": "响应预览",
+        "description": "往返时间和负载数据",
+        "sent": "已发送字节",
+        "received": "已接收字节",
+        "elapsed": "已耗时",
+        "protocol": "协议",
+        "text": "响应（UTF-8）",
+        "hex": "十六进制预览",
+        "empty": "尚未捕获到响应"
+      },
+      "listen": {
+        "title": "监听与响应",
+        "description": "本地绑定、捕获数据包，并可选择响应",
+        "echo": "响应回复",
+        "echoLabel": "响应传入负载",
+        "echoHint": "对到达的内容发送快速回复",
+        "echoPayload": "响应负载",
+        "echoDelay": "响应延迟（毫秒）",
+        "button": "开始监听"
+      },
+      "captures": {
+        "title": "捕获的流量",
+        "description": "监听器打开时收到的消息",
+        "count": "次捕获",
+        "empty": "尚未收到任何内容。请尝试向此端口发送数据。",
+        "emptyText": "无文本负载"
+      },
+      "history": "最近运行",
+      "historyEmpty": "尚无历史记录。",
+      "notes": {
+        "title": "备注",
+        "slowNetwork": "使用延迟 + 分块大小来模拟缓慢或不稳定的连接。",
+        "malformed": "切换垃圾字节以查看服务如何处理格式错误的输入。",
+        "localOnly": "监听器绑定本地——非常适合快速重现问题。"
+      },
+      "errors": {
+        "hostRequired": "主机为必填",
+        "portInvalid": "端口必须在 1-65535 之间",
+        "requestFailed": "请求失败"
+      }
     }
   },
   "settings": {
     "title": "设置",
+    "subtitle": "自定义您的体验",
+    "pressEscToClose": "按 Esc 关闭",
     "theme": "主题",
     "themeDescription": "在亮色和暗色模式之间切换",
     "light": "亮色",
@@ -828,5 +1003,12 @@
     "success": "成功",
     "warning": "警告",
     "info": "信息"
+  },
+  "commandPalette": {
+    "title": "快速开启",
+    "placeholder": "搜索工具...",
+    "empty": "找不到工具",
+    "hint": "Cmd/Ctrl + K",
+    "tryDifferent": "请尝试其他搜索关键字"
   }
 }

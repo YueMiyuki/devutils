@@ -651,16 +651,16 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
   };
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4">
-      <Tabs defaultValue="text" className="flex-1 flex flex-col">
+    <div className="flex h-full flex-col gap-4 p-4">
+      <Tabs defaultValue="text" className="flex flex-1 flex-col">
         <TabsList className="w-fit">
           <TabsTrigger value="text">{t("tools.base64.textTab")}</TabsTrigger>
           <TabsTrigger value="file">{t("tools.base64.fileTab")}</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="text" className="flex-1 flex flex-col gap-4 mt-4">
+        <TabsContent value="text" className="mt-4 flex flex-1 flex-col gap-4">
           {/* Mode & Actions */}
-          <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Tabs
                 value={mode}
@@ -707,18 +707,23 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
 
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={swapInputOutput}>
-                <ArrowDownUp className="w-4 h-4 mr-2" />
+                <ArrowDownUp className="mr-2 size-4" />
                 {t("tools.base64.swap")}
               </Button>
               <Button variant="outline" size="sm" onClick={clearAll}>
-                <Trash2 className="w-4 h-4 mr-2" />
+                <Trash2 className="mr-2 size-4" />
                 {t("common.clear")}
               </Button>
             </div>
           </div>
 
           {/* Input/Output Panels */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
+          <div
+            className="
+            grid flex-1 grid-cols-1 gap-4
+            lg:grid-cols-2
+          "
+          >
             <Card className="flex flex-col">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">
@@ -736,7 +741,7 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
                   }
                   value={inputText}
                   onChange={(e) => handleInputChange(e.target.value)}
-                  className="font-mono text-sm h-full min-h-48 resize-none"
+                  className="h-full min-h-48 resize-none font-mono text-sm"
                 />
               </CardContent>
             </Card>
@@ -754,7 +759,7 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
                       onClick={() => copyWithAnimation(outputText)}
                       className={copyAnimationClass}
                     >
-                      <Copy className="w-4 h-4 mr-2" />
+                      <Copy className="mr-2 size-4" />
                       {t("tools.base64.copy")}
                     </Button>
                   )}
@@ -762,14 +767,18 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
               </CardHeader>
               <CardContent className="flex-1">
                 {error ? (
-                  <div className="p-4 bg-destructive/10 rounded-md text-destructive text-sm">
+                  <div
+                    className="
+                    rounded-md bg-destructive/10 p-4 text-sm text-destructive
+                  "
+                  >
                     {error}
                   </div>
                 ) : (
                   <Textarea
                     value={outputText}
                     readOnly
-                    className="font-mono text-sm h-full min-h-48 resize-none"
+                    className="h-full min-h-48 resize-none font-mono text-sm"
                     placeholder={t("tools.base64.outputPlaceholder")}
                   />
                 )}
@@ -817,14 +826,23 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
           )}
         </TabsContent>
 
-        <TabsContent value="file" className="flex-1 flex flex-col gap-4 mt-4">
+        <TabsContent value="file" className="mt-4 flex flex-1 flex-col gap-4">
           {/* File Drop Zone */}
           <Card className="flex-1 border-2 border-dashed transition-colors">
-            <CardContent className="flex flex-col items-center justify-center h-full min-h-64 gap-4">
+            <CardContent
+              className="
+              flex h-full min-h-64 flex-col items-center justify-center gap-4
+            "
+            >
               {!fileInfo ? (
                 <>
-                  <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-                    <Upload className="w-8 h-8 text-muted-foreground" />
+                  <div
+                    className="
+                    flex size-16 items-center justify-center rounded-full
+                    bg-muted
+                  "
+                  >
+                    <Upload className="size-8 text-muted-foreground" />
                   </div>
                   <div className="text-center">
                     <p className="font-medium">
@@ -849,13 +867,18 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
                 </>
               ) : (
                 <>
-                  <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                  <div
+                    className="
+                    flex size-16 items-center justify-center rounded-full
+                    bg-muted
+                  "
+                  >
                     {isProcessing ? (
                       <div className="animate-pulse">
-                        <FileIcon className="w-8 h-8 text-muted-foreground" />
+                        <FileIcon className="size-8 text-muted-foreground" />
                       </div>
                     ) : (
-                      <CheckCircle2 className="w-8 h-8 text-success" />
+                      <CheckCircle2 className="size-8 text-success" />
                     )}
                   </div>
                   <div className="text-center">
@@ -867,7 +890,7 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
                   {isProcessing && (
                     <div className="w-full max-w-xs space-y-2">
                       <Progress value={progress} />
-                      <p className="text-sm text-center text-muted-foreground">
+                      <p className="text-center text-sm text-muted-foreground">
                         {t("tools.base64.file.processing")}{" "}
                         {progress.toFixed(0)}%
                       </p>
@@ -919,7 +942,7 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
                     onClick={() => copyWithAnimation(fileResult)}
                     className={copyAnimationClass}
                   >
-                    <Copy className="w-4 h-4 mr-2" />
+                    <Copy className="mr-2 size-4" />
                     {t("tools.base64.copy")}
                   </Button>
                 </div>
@@ -933,7 +956,7 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
                       : "")
                   }
                   readOnly
-                  className="font-mono text-xs h-32"
+                  className="h-32 font-mono text-xs"
                 />
               </CardContent>
             </Card>
@@ -960,10 +983,10 @@ export function Base64Tool({ tabId: _tabId }: Base64ToolProps) {
                 })}
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                className="font-mono text-sm min-h-24"
+                className="min-h-24 font-mono text-sm"
               />
               <Button onClick={downloadDecoded} disabled={!inputText}>
-                <Download className="w-4 h-4 mr-2" />
+                <Download className="mr-2 size-4" />
                 {t("tools.base64.file.downloadDecoded")}
               </Button>
             </CardContent>

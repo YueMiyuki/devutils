@@ -189,8 +189,8 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   };
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4 overflow-hidden">
-      <Tabs defaultValue="single" className="flex-1 flex flex-col min-h-0">
+    <div className="flex h-full flex-col gap-4 overflow-hidden p-4">
+      <Tabs defaultValue="single" className="flex min-h-0 flex-1 flex-col">
         <TabsList className="w-fit shrink-0">
           <TabsTrigger value="single">
             {t("tools.portDetective.singlePortTab")}
@@ -201,13 +201,33 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
         </TabsList>
 
         {showAdminWarning && (
-          <div className="mt-4 p-4 bg-amber-500/10 border border-amber-500/20 rounded-md flex items-start gap-3 shrink-0">
-            <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <div
+            className="
+            mt-4 flex shrink-0 items-start gap-3 rounded-md border
+            border-amber-500/20 bg-amber-500/10 p-4
+          "
+          >
+            <Info
+              className="
+              mt-0.5 size-5 shrink-0 text-amber-600
+              dark:text-amber-400
+            "
+            />
             <div className="flex-1 space-y-1">
-              <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+              <p
+                className="
+                text-sm font-medium text-amber-800
+                dark:text-amber-200
+              "
+              >
                 {t("tools.portDetective.adminWarning.title")}
               </p>
-              <p className="text-sm text-amber-700 dark:text-amber-300">
+              <p
+                className="
+                text-sm text-amber-700
+                dark:text-amber-300
+              "
+              >
                 {t("tools.portDetective.adminWarning.description")}
               </p>
             </div>
@@ -216,7 +236,7 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
 
         <TabsContent
           value="single"
-          className="flex-1 flex flex-col gap-4 mt-4 min-h-0 overflow-y-auto"
+          className="mt-4 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto"
         >
           <Card className="shrink-0">
             <CardHeader className="pb-3">
@@ -247,19 +267,24 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                   onClick={handleCheckSinglePort}
                   disabled={isCheckingPort}
                 >
-                  <Search className="w-4 h-4 mr-2" />
+                  <Search className="mr-2 size-4" />
                   {isCheckingPort
                     ? t("tools.portDetective.checking")
                     : t("tools.portDetective.check")}
                 </Button>
                 <Button variant="outline" onClick={clearSinglePort}>
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="size-4" />
                 </Button>
               </div>
 
               {error && (
-                <div className="p-4 bg-destructive/10 rounded-md text-destructive text-sm flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4" />
+                <div
+                  className="
+                  flex items-center gap-2 rounded-md bg-destructive/10 p-4
+                  text-sm text-destructive
+                "
+                >
+                  <AlertCircle className="size-4" />
                   {error}
                 </div>
               )}
@@ -267,15 +292,19 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
               {singlePortInfo && (
                 <div className="space-y-2">
                   {singlePortInfo.inUse ? (
-                    <div className="p-3 bg-muted rounded-lg space-y-2">
+                    <div className="space-y-2 rounded-lg bg-muted p-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold">
                             {t("tools.portDetective.port")}{" "}
                             {singlePortInfo.port}
                           </span>
-                          <span className="flex items-center gap-1 text-sm text-destructive">
-                            <XCircle className="w-4 h-4" />
+                          <span
+                            className="
+                            flex items-center gap-1 text-sm text-destructive
+                          "
+                          >
+                            <XCircle className="size-4" />
                             {t("tools.portDetective.inUse")}
                           </span>
                         </div>
@@ -290,7 +319,7 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                               )
                             }
                           >
-                            <XCircle className="w-4 h-4 mr-2" />
+                            <XCircle className="mr-2 size-4" />
                             {t("tools.portDetective.kill")}
                           </Button>
                         )}
@@ -315,13 +344,17 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                       )}
                     </div>
                   ) : (
-                    <div className="p-3 bg-green-500/10 rounded-lg">
+                    <div className="rounded-lg bg-green-500/10 p-3">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold">
                           {t("tools.portDetective.port")} {singlePortInfo.port}
                         </span>
-                        <span className="flex items-center gap-1 text-sm text-green-600">
-                          <CheckCircle2 className="w-4 h-4" />
+                        <span
+                          className="
+                          flex items-center gap-1 text-sm text-green-600
+                        "
+                        >
+                          <CheckCircle2 className="size-4" />
                           {t("tools.portDetective.available")}
                         </span>
                       </div>
@@ -335,7 +368,7 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
 
         <TabsContent
           value="scan"
-          className="flex-1 flex flex-col gap-4 mt-4 min-h-0 overflow-y-auto"
+          className="mt-4 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto"
         >
           <Card className="shrink-0">
             <CardHeader className="pb-3">
@@ -347,7 +380,7 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex gap-2 items-end">
+              <div className="flex items-end gap-2">
                 <div className="flex-1 space-y-2">
                   <label className="text-sm text-muted-foreground">
                     {t("tools.portDetective.startPort")}
@@ -374,21 +407,24 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                 </div>
                 <Button onClick={handleScanPorts} disabled={isScanning}>
                   <RefreshCw
-                    className={`w-4 h-4 mr-2 ${isScanning ? "animate-spin" : ""}`}
+                    className={`
+                      mr-2 size-4
+                      ${isScanning ? "animate-spin" : ""}
+                    `}
                   />
                   {isScanning
                     ? t("tools.portDetective.scanning")
                     : t("tools.portDetective.scan")}
                 </Button>
                 <Button variant="outline" onClick={clearScan}>
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="size-4" />
                 </Button>
               </div>
 
               {isScanning && (
                 <div className="space-y-2">
                   <Progress value={scanProgress} />
-                  <p className="text-sm text-center text-muted-foreground">
+                  <p className="text-center text-sm text-muted-foreground">
                     {t("tools.portDetective.scanningProgress")}{" "}
                     {scanProgress.toFixed(0)}%
                   </p>
@@ -396,8 +432,13 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
               )}
 
               {error && (
-                <div className="p-4 bg-destructive/10 rounded-md text-destructive text-sm flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4" />
+                <div
+                  className="
+                  flex items-center gap-2 rounded-md bg-destructive/10 p-4
+                  text-sm text-destructive
+                "
+                >
+                  <AlertCircle className="size-4" />
                   {error}
                 </div>
               )}
@@ -412,19 +453,23 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2">
+                    <div className="max-h-[60vh] space-y-2 overflow-y-auto pr-2">
                       {scanResults.map((result) => (
                         <div
                           key={result.port}
-                          className="p-3 bg-muted rounded-lg space-y-2"
+                          className="space-y-2 rounded-lg bg-muted p-3"
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <span className="font-semibold">
                                 {t("tools.portDetective.port")} {result.port}
                               </span>
-                              <span className="flex items-center gap-1 text-sm text-destructive">
-                                <XCircle className="w-4 h-4" />
+                              <span
+                                className="
+                                flex items-center gap-1 text-sm text-destructive
+                              "
+                              >
+                                <XCircle className="size-4" />
                                 {t("tools.portDetective.inUse")}
                               </span>
                             </div>
@@ -436,7 +481,7 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                                   handleKillProcess(result.pid!, result.port)
                                 }
                               >
-                                <XCircle className="w-4 h-4 mr-2" />
+                                <XCircle className="mr-2 size-4" />
                                 {t("tools.portDetective.kill")}
                               </Button>
                             )}

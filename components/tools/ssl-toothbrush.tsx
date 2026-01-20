@@ -81,7 +81,7 @@ function renderWarningBadge(key: WarningKey, text: string) {
       variant="outline"
       className={cn("gap-1 rounded-full px-3 py-1.5 text-xs", variantClass)}
     >
-      <AlertTriangle className="w-3 h-3" />
+      <AlertTriangle className="size-3" />
       {text}
     </Badge>
   );
@@ -124,9 +124,9 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
               : t("tools.sslToothbrush.status.invalid"),
         icon:
           result.validForHost === false ? (
-            <ShieldX className="w-4 h-4 text-destructive" />
+            <ShieldX className="size-4 text-destructive" />
           ) : (
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
+            <ShieldCheck className="size-4 text-emerald-500" />
           ),
         tone:
           result.validForHost === false
@@ -143,9 +143,9 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
               : t("tools.sslToothbrush.status.invalid"),
         icon:
           result.chainValid === false ? (
-            <ShieldX className="w-4 h-4 text-destructive" />
+            <ShieldX className="size-4 text-destructive" />
           ) : (
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
+            <ShieldCheck className="size-4 text-emerald-500" />
           ),
         tone:
           result.chainValid === false
@@ -161,7 +161,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                 count: result.daysRemaining,
               })
             : "—",
-        icon: <Clock3 className="w-4 h-4 text-blue-500" />,
+        icon: <Clock3 className="size-4 text-blue-500" />,
         tone:
           result.isExpired || result.aboutToExpire
             ? "border-amber-300/60 bg-amber-500/5"
@@ -236,8 +236,13 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
   }, [result]);
 
   return (
-    <div className="flex flex-col h-full min-h-0 p-4 gap-4 overflow-y-auto">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+    <div className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto p-4">
+      <div
+        className="
+        flex flex-col gap-3
+        lg:flex-row lg:items-start lg:justify-between
+      "
+      >
         <div className="min-w-0">
           <h2 className="text-lg font-semibold">
             {t("tools.sslToothbrush.title")}
@@ -247,7 +252,12 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
           </p>
         </div>
         {warningMessages.length > 0 && (
-          <div className="flex flex-wrap gap-2 justify-start lg:justify-end w-full lg:w-auto">
+          <div
+            className="
+            flex w-full flex-wrap justify-start gap-2
+            lg:w-auto lg:justify-end
+          "
+          >
             {warningMessages}
           </div>
         )}
@@ -267,7 +277,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2">
-                <Waves className="w-4 h-4" />
+                <Waves className="size-4" />
                 {t("tools.sslToothbrush.live.title")}
               </CardTitle>
               <CardDescription>
@@ -275,10 +285,15 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div
+                className="
+                grid grid-cols-1 gap-3
+                md:grid-cols-3
+              "
+              >
                 <div className="md:col-span-2">
-                  <label className="text-sm font-medium flex items-center gap-1">
-                    <Link2 className="w-4 h-4 text-muted-foreground" />
+                  <label className="flex items-center gap-1 text-sm font-medium">
+                    <Link2 className="size-4 text-muted-foreground" />
                     {t("tools.sslToothbrush.live.host")}
                   </label>
                   <Input
@@ -288,8 +303,8 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium flex items-center gap-1">
-                    <ShieldCheck className="w-4 h-4 text-muted-foreground" />
+                  <label className="flex items-center gap-1 text-sm font-medium">
+                    <ShieldCheck className="size-4 text-muted-foreground" />
                     {t("tools.sslToothbrush.live.port")}
                   </label>
                   <Input
@@ -300,9 +315,9 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                   />
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2 justify-end">
+              <div className="flex flex-wrap justify-end gap-2">
                 <Button onClick={doFetch} disabled={checking} className="gap-2">
-                  {checking && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {checking && <Loader2 className="size-4 animate-spin" />}
                   {t("tools.sslToothbrush.live.check")}
                 </Button>
               </div>
@@ -314,7 +329,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4" />
+                <ShieldCheck className="size-4" />
                 {t("tools.sslToothbrush.pem.title")}
               </CardTitle>
               <CardDescription>
@@ -329,7 +344,11 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                 placeholder="-----BEGIN CERTIFICATE-----"
               />
               <div className="flex flex-wrap justify-between gap-3">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div
+                  className="
+                  flex items-center gap-2 text-xs text-muted-foreground
+                "
+                >
                   {t("tools.sslToothbrush.pem.optionalHost")}
                   <Input
                     value={host}
@@ -344,7 +363,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                     size="sm"
                     onClick={() => setPem("")}
                   >
-                    <Trash2 className="w-4 h-4 mr-2" />
+                    <Trash2 className="mr-2 size-4" />
                     {t("common.clear")}
                   </Button>
                   <Button
@@ -353,7 +372,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                     size="sm"
                     className="gap-2"
                   >
-                    {checking && <Loader2 className="w-4 h-4 animate-spin" />}
+                    {checking && <Loader2 className="size-4 animate-spin" />}
                     {t("tools.sslToothbrush.pem.parse")}
                   </Button>
                 </div>
@@ -364,15 +383,20 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
       </Tabs>
 
       {error && (
-        <div className="p-3 rounded-md border border-destructive/40 bg-destructive/5 text-sm text-destructive">
+        <div
+          className="
+          rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm
+          text-destructive
+        "
+        >
           {error}
         </div>
       )}
 
-      <Card className="w-full min-h-[280px] shrink-0">
+      <Card className="min-h-[280px] w-full shrink-0">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4" />
+            <ShieldCheck className="size-4" />
             {t("tools.sslToothbrush.result.title")}
           </CardTitle>
           <CardDescription>
@@ -388,12 +412,17 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
 
           {result && (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div
+                className="
+                grid grid-cols-1 gap-3
+                md:grid-cols-3
+              "
+              >
                 {statusSummary?.map((item) => (
                   <div
                     key={item.label}
                     className={cn(
-                      "rounded-lg border p-3 flex items-center justify-between",
+                      "flex items-center justify-between rounded-lg border p-3",
                       item.tone,
                     )}
                   >
@@ -414,7 +443,12 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
 
               <Separator />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div
+                className="
+                grid grid-cols-1 gap-4
+                md:grid-cols-2
+              "
+              >
                 <div className="space-y-3">
                   <h4 className="text-sm font-semibold">
                     {t("tools.sslToothbrush.result.identity")}
@@ -435,7 +469,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                           size="icon"
                           onClick={() => copyWithAnimation(result.subject!)}
                         >
-                          <Copy className="w-4 h-4" />
+                          <Copy className="size-4" />
                         </Button>
                       )}
                     </div>
@@ -454,7 +488,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                           size="icon"
                           onClick={() => copyWithAnimation(result.issuer!)}
                         >
-                          <Copy className="w-4 h-4" />
+                          <Copy className="size-4" />
                         </Button>
                       )}
                     </div>
@@ -475,7 +509,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                             copyWithAnimation(result.serialNumber as string)
                           }
                         >
-                          <Copy className="w-4 h-4" />
+                          <Copy className="size-4" />
                         </Button>
                       )}
                     </div>
@@ -496,7 +530,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                             copyWithAnimation(result.fingerprint256 as string)
                           }
                         >
-                          <Copy className="w-4 h-4" />
+                          <Copy className="size-4" />
                         </Button>
                       )}
                     </div>
@@ -504,8 +538,8 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                 </div>
 
                 <div className="space-y-3">
-                  <h4 className="text-sm font-semibold flex items-center gap-2">
-                    <Clock3 className="w-4 h-4" />
+                  <h4 className="flex items-center gap-2 text-sm font-semibold">
+                    <Clock3 className="size-4" />
                     {t("tools.sslToothbrush.result.validity")}
                   </h4>
                   <div className="space-y-2 text-sm">
@@ -537,9 +571,13 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                           : "—"}
                       </span>
                     </div>
-                    <div className="relative h-2 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="
+                      relative h-2 overflow-hidden rounded-full bg-muted
+                    "
+                    >
                       <div
-                        className="absolute left-0 top-0 h-full bg-primary"
+                        className="absolute top-0 left-0 h-full bg-primary"
                         style={{ width: `${expiryProgress}%` }}
                       />
                     </div>
@@ -587,11 +625,15 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
                       className="gap-2"
                       onClick={() => copyWithAnimation(result.rawPem as string)}
                     >
-                      <Copy className="w-4 h-4" />
+                      <Copy className="size-4" />
                       {t("tools.sslToothbrush.result.copyPem")}
                     </Button>
                   </div>
-                  <pre className="bg-muted rounded-lg p-3 text-xs overflow-auto max-h-64">
+                  <pre
+                    className="
+                    max-h-64 overflow-auto rounded-lg bg-muted p-3 text-xs
+                  "
+                  >
                     {result.rawPem}
                   </pre>
                 </div>

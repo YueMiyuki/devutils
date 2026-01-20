@@ -378,7 +378,7 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
   /* eslint-enable react-hooks/set-state-in-effect */
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4 overflow-y-auto">
+    <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
       {/* Pattern Input */}
       <Card>
         <CardHeader className="pb-3">
@@ -396,12 +396,12 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
                 <div className="flex items-center gap-2">
                   {isValid ? (
                     <Badge variant="default" className="gap-1">
-                      <CheckCircle2 className="w-3 h-3" />
+                      <CheckCircle2 className="size-3" />
                       {t("tools.regexTester.valid")}
                     </Badge>
                   ) : (
                     <Badge variant="destructive" className="gap-1">
-                      <XCircle className="w-3 h-3" />
+                      <XCircle className="size-3" />
                       {t("tools.regexTester.invalid")}
                     </Badge>
                   )}
@@ -414,7 +414,7 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
                   onClick={() => copyWithAnimation(regexLiteral)}
                   className={cn("gap-1", copyAnimationClass)}
                 >
-                  <Copy className="w-3 h-3" />
+                  <Copy className="size-3" />
                   {t("tools.regexTester.copyPattern")}
                 </Button>
               )}
@@ -425,7 +425,12 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               {/* Leading slash */}
-              <div className="flex items-center justify-center w-8 h-10 bg-muted rounded-md border font-mono text-muted-foreground">
+              <div
+                className="
+                flex h-10 w-8 items-center justify-center rounded-md border
+                bg-muted font-mono text-muted-foreground
+              "
+              >
                 /
               </div>
 
@@ -434,18 +439,28 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
                 placeholder={t("tools.regexTester.patternPlaceholder")}
                 value={pattern}
                 onChange={(e) => handlePatternChange(e.target.value)}
-                className="font-mono flex-1"
+                className="flex-1 font-mono"
               />
 
               {/* Trailing slash + flags */}
-              <div className="flex items-center justify-center min-w-12 h-10 px-2 bg-muted rounded-md border font-mono text-muted-foreground">
+              <div
+                className="
+                flex h-10 min-w-12 items-center justify-center rounded-md border
+                bg-muted px-2 font-mono text-muted-foreground
+              "
+              >
                 /{flags}
               </div>
             </div>
 
             {error && (
-              <div className="p-2 bg-destructive/10 rounded-md text-destructive text-sm flex items-start gap-2">
-                <XCircle className="w-4 h-4 mt-0.5 shrink-0" />
+              <div
+                className="
+                flex items-start gap-2 rounded-md bg-destructive/10 p-2 text-sm
+                text-destructive
+              "
+              >
+                <XCircle className="mt-0.5 size-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -459,7 +474,7 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2">
                   <span className="font-mono">{flags || "none"}</span>
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-80">
@@ -478,11 +493,15 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center gap-2">
                         <span className="font-bold">{flag}</span>
-                        <span className="text-muted-foreground font-sans text-xs">
+                        <span
+                          className="
+                          font-sans text-xs text-muted-foreground
+                        "
+                        >
                           ({name})
                         </span>
                       </div>
-                      <span className="text-xs text-muted-foreground font-sans">
+                      <span className="font-sans text-xs text-muted-foreground">
                         {description}
                       </span>
                     </div>
@@ -499,7 +518,7 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
         <Card>
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <Info className="w-4 h-4" />
+              <Info className="size-4" />
               <CardTitle className="text-base">
                 {t("tools.regexTester.explanation.title")}
               </CardTitle>
@@ -510,9 +529,14 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
               {explainPattern().map((exp, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start gap-3 p-2 rounded-md bg-muted/50"
+                  className="flex items-start gap-3 rounded-md bg-muted/50 p-2"
                 >
-                  <code className="px-2 py-1 bg-background rounded text-sm font-mono shrink-0">
+                  <code
+                    className="
+                    shrink-0 rounded-sm bg-background px-2 py-1 font-mono
+                    text-sm
+                  "
+                  >
                     {exp.token}
                   </code>
                   <span className="text-sm text-muted-foreground">
@@ -526,7 +550,7 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
       )}
 
       {/* Test String */}
-      <Card className="flex-1 flex flex-col">
+      <Card className="flex flex-1 flex-col">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base">
@@ -534,7 +558,7 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
             </CardTitle>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={clearAll}>
-                <Trash2 className="w-4 h-4 mr-2" />
+                <Trash2 className="mr-2 size-4" />
                 {t("common.clear")}
               </Button>
             </div>
@@ -545,7 +569,7 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
             placeholder={t("tools.regexTester.testStringPlaceholder")}
             value={testString}
             onChange={(e) => handleTestStringChange(e.target.value)}
-            className="font-mono text-sm h-full min-h-32 resize-none"
+            className="h-full min-h-32 resize-none font-mono text-sm"
           />
         </CardContent>
       </Card>
@@ -568,13 +592,17 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2 max-h-64 overflow-y-auto">
+            <div className="max-h-64 space-y-2 overflow-y-auto">
               {matches.map((match, idx) => (
-                <div key={idx} className="p-3 rounded-md bg-muted/50 space-y-2">
+                <div key={idx} className="space-y-2 rounded-md bg-muted/50 p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary">#{idx + 1}</Badge>
-                      <code className="px-2 py-1 bg-background rounded text-sm font-mono">
+                      <code
+                        className="
+                        rounded-sm bg-background px-2 py-1 font-mono text-sm
+                      "
+                      >
                         {match.match}
                       </code>
                       <span className="text-xs text-muted-foreground">
@@ -587,18 +615,23 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
                       onClick={() => copyWithAnimation(match.match)}
                       className={cn("h-7", copyAnimationClass)}
                     >
-                      <Copy className="w-3 h-3" />
+                      <Copy className="size-3" />
                     </Button>
                   </div>
                   {match.groups.length > 0 && (
-                    <div className="pl-4 space-y-1">
+                    <div className="space-y-1 pl-4">
                       {match.groups.map((group, gIdx) => (
                         <div
                           key={gIdx}
                           className="text-sm text-muted-foreground"
                         >
                           {t("tools.regexTester.group")} {gIdx + 1}:{" "}
-                          <code className="px-1.5 py-0.5 bg-background rounded text-xs font-mono">
+                          <code
+                            className="
+                            rounded-sm bg-background px-1.5 py-0.5 font-mono
+                            text-xs
+                          "
+                          >
                             {group}
                           </code>
                         </div>
@@ -623,17 +656,26 @@ export function RegexTester({ tabId: _tabId }: RegexTesterProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div
+            className="
+            grid grid-cols-1 gap-2
+            md:grid-cols-2
+          "
+          >
             {commonPatterns.map((cp, idx) => (
               <Button
                 key={idx}
                 variant="outline"
-                className="h-auto p-3 justify-start text-left"
+                className="h-auto justify-start p-3 text-left"
                 onClick={() => applyPattern(cp)}
               >
-                <div className="flex flex-col gap-1 w-full">
-                  <span className="font-medium text-sm">{cp.name}</span>
-                  <code className="text-xs font-mono text-muted-foreground truncate">
+                <div className="flex w-full flex-col gap-1">
+                  <span className="text-sm font-medium">{cp.name}</span>
+                  <code
+                    className="
+                    truncate font-mono text-xs text-muted-foreground
+                  "
+                  >
                     {cp.pattern}
                   </code>
                   <span className="text-xs text-muted-foreground">

@@ -322,11 +322,11 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
   const formats = getColorFormats();
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4 overflow-y-auto">
+    <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className="flex-1 flex flex-col"
+        className="flex flex-1 flex-col"
       >
         <TabsList className="w-fit">
           <TabsTrigger value="picker">
@@ -337,7 +337,7 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="picker" className="flex-1 flex flex-col gap-4 mt-4">
+        <TabsContent value="picker" className="mt-4 flex flex-1 flex-col gap-4">
           {/* Color Picker */}
           <Card>
             <CardHeader className="pb-3">
@@ -351,7 +351,7 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
                   </CardDescription>
                 </div>
                 <Button variant="outline" size="sm" onClick={clearAll}>
-                  <Trash2 className="w-4 h-4 mr-2" />
+                  <Trash2 className="mr-2 size-4" />
                   {t("common.clear")}
                 </Button>
               </div>
@@ -360,7 +360,10 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
               <div className="flex items-center gap-4">
                 <div
                   className={cn(
-                    "w-full [&_.w-color-sketch]:shadow-none!",
+                    `
+                      w-full
+                      [&_.w-color-sketch]:shadow-none!
+                    `,
                     isDark && [
                       "[&_.w-color-sketch]:bg-card!",
                       "[&_.w-color-sketch]:border-border!",
@@ -426,25 +429,43 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
                       {harmony.colors.map((c, cIdx) => (
                         <div
                           key={cIdx}
-                          className="group relative flex-1 h-16 rounded-md border-2 border-border hover:border-primary transition-colors cursor-pointer overflow-hidden"
+                          className="
+                            group relative h-16 flex-1 cursor-pointer
+                            overflow-hidden rounded-md border-2 border-border
+                            transition-colors
+                            hover:border-primary
+                          "
                           style={{ backgroundColor: c }}
                           onClick={() => handleColorChange(c)}
                         >
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                          <div className="absolute bottom-1 right-1">
+                          <div
+                            className="
+                            absolute inset-0 bg-black/0 transition-colors
+                            group-hover:bg-black/10
+                          "
+                          />
+                          <div className="absolute right-1 bottom-1">
                             <Button
                               variant="secondary"
                               size="sm"
-                              className="h-6 px-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="
+                                h-6 px-2 opacity-0 transition-opacity
+                                group-hover:opacity-100
+                              "
                               onClick={(e) => {
                                 e.stopPropagation();
                                 copyWithAnimation(c);
                               }}
                             >
-                              <Copy className="w-3 h-3" />
+                              <Copy className="size-3" />
                             </Button>
                           </div>
-                          <span className="absolute bottom-1 left-1 text-xs font-mono bg-background/80 px-1.5 py-0.5 rounded">
+                          <span
+                            className="
+                            absolute bottom-1 left-1 rounded-sm bg-background/80
+                            px-1.5 py-0.5 font-mono text-xs
+                          "
+                          >
                             {c}
                           </span>
                         </div>
@@ -472,13 +493,25 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
                   {Object.entries(formats).map(([name, value]) => (
                     <div
                       key={name}
-                      className="flex items-center justify-between p-2 rounded-md bg-muted/50 hover:bg-muted transition-colors"
+                      className="
+                        flex items-center justify-between rounded-md bg-muted/50
+                        p-2 transition-colors
+                        hover:bg-muted
+                      "
                     >
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <span className="text-sm font-medium uppercase shrink-0 w-16">
+                      <div className="flex min-w-0 flex-1 items-center gap-3">
+                        <span
+                          className="
+                          w-16 shrink-0 text-sm font-medium uppercase
+                        "
+                        >
                           {name}
                         </span>
-                        <code className="text-sm font-mono text-muted-foreground truncate">
+                        <code
+                          className="
+                          truncate font-mono text-sm text-muted-foreground
+                        "
+                        >
                           {value}
                         </code>
                       </div>
@@ -488,7 +521,7 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
                         onClick={() => copyWithAnimation(value)}
                         className={cn("shrink-0", copyAnimationClass)}
                       >
-                        <Copy className="w-4 h-4" />
+                        <Copy className="size-4" />
                       </Button>
                     </div>
                   ))}
@@ -500,7 +533,7 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
 
         <TabsContent
           value="palette"
-          className="flex-1 flex flex-col gap-4 mt-4"
+          className="mt-4 flex flex-1 flex-col gap-4"
         >
           {/* Image Upload */}
           <Card>
@@ -515,34 +548,51 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
             <CardContent>
               <div
                 className={cn(
-                  "relative border-2 border-dashed rounded-lg p-8 transition-colors border-border hover:border-primary/50",
-                  isProcessing && "opacity-50 pointer-events-none",
+                  `
+                    relative rounded-lg border-2 border-dashed border-border p-8
+                    transition-colors
+                    hover:border-primary/50
+                  `,
+                  isProcessing && "pointer-events-none opacity-50",
                 )}
               >
                 {isProcessing ? (
-                  <div className="flex flex-col items-center justify-center gap-3 text-center">
-                    <div className="p-3 rounded-full bg-primary/20">
-                      <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  <div
+                    className="
+                    flex flex-col items-center justify-center gap-3 text-center
+                  "
+                  >
+                    <div className="rounded-full bg-primary/20 p-3">
+                      <div
+                        className="
+                        size-6 animate-spin rounded-full border-2 border-primary
+                        border-t-transparent
+                      "
+                      />
                     </div>
                     <div>
                       <p className="text-sm font-medium">
                         {t("tools.colorPicker.processing")}
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {t("tools.colorPicker.extractingColors")}
                       </p>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center gap-3 text-center">
-                    <div className="p-3 rounded-full bg-muted">
-                      <Upload className="w-6 h-6 text-muted-foreground" />
+                  <div
+                    className="
+                    flex flex-col items-center justify-center gap-3 text-center
+                  "
+                  >
+                    <div className="rounded-full bg-muted p-3">
+                      <Upload className="size-6 text-muted-foreground" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">
                         {t("tools.colorPicker.dragDropImage")}
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {t("tools.colorPicker.orClickToUpload")}
                       </p>
                     </div>
@@ -580,19 +630,40 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div
+                  className="
+                  grid grid-cols-2 gap-3
+                  md:grid-cols-5
+                "
+                >
                   {palette.map((c, idx) => (
                     <div
                       key={idx}
-                      className="group relative aspect-square rounded-md border-2 border-border hover:border-primary transition-colors cursor-pointer overflow-hidden"
+                      className="
+                        group relative aspect-square cursor-pointer
+                        overflow-hidden rounded-md border-2 border-border
+                        transition-colors
+                        hover:border-primary
+                      "
                       style={{ backgroundColor: c }}
                       onClick={() => {
                         handleColorChange(c);
                         setActiveTab("picker");
                       }}
                     >
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div
+                        className="
+                        absolute inset-0 bg-black/0 transition-colors
+                        group-hover:bg-black/10
+                      "
+                      />
+                      <div
+                        className="
+                        absolute inset-0 flex items-center justify-center
+                        opacity-0 transition-opacity
+                        group-hover:opacity-100
+                      "
+                      >
                         <Button
                           variant="secondary"
                           size="sm"
@@ -602,11 +673,17 @@ export function ColorPicker({ tabId: _tabId }: ColorPickerProps) {
                             copyWithAnimation(c);
                           }}
                         >
-                          <Copy className="w-3 h-3 mr-1" />
+                          <Copy className="mr-1 size-3" />
                           Copy
                         </Button>
                       </div>
-                      <span className="absolute bottom-1 left-1 right-1 text-xs font-mono bg-background/90 px-1.5 py-0.5 rounded text-center">
+                      <span
+                        className="
+                        absolute right-1 bottom-1 left-1 rounded-sm
+                        bg-background/90 px-1.5 py-0.5 text-center font-mono
+                        text-xs
+                      "
+                      >
                         {c}
                       </span>
                     </div>

@@ -14,6 +14,9 @@ Whether you’re crunching timestamps, slinging JWTs, wrestling with regex, or j
 - **Color Picker, QR Maker, Regex Tester, and more:** Like a toolbox, but way more fun.
 - **SSL Toothbrush:** Scrub those cert issues away with flair!
 - **Deploy Roulette:** Feeling lucky?
+- **How Many Clicks Did That Save?:** Track mouse miles avoided and earn goofy badges.
+- **JWT Brute-Force Toothpick (edu):** Stress-test weak HMAC secrets without leaving DevUtils.
+- **TCP/UDP Whistle:** Fire raw packets, listen locally, and fake slow or malformed replies.
 - **Totally extensible:** Got a weird edge case? Add a tool, become immortal.
 
 For a full list, dive into the `components/tools/` directory. Go wild.

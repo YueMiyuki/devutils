@@ -490,7 +490,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
   };
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4">
+    <div className="flex h-full flex-col gap-4 p-4">
       {/* Controls */}
       <Card>
         <CardContent className="py-4">
@@ -516,7 +516,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
               </Select>
             </div>
 
-            <ArrowRight className="w-4 h-4 text-muted-foreground" />
+            <ArrowRight className="size-4 text-muted-foreground" />
 
             <div className="flex items-center gap-2">
               <Label className="text-sm text-muted-foreground">
@@ -539,24 +539,24 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
               </Select>
             </div>
 
-            <div className="flex items-center gap-2 ml-auto">
+            <div className="ml-auto flex items-center gap-2">
               <Switch
                 id="auto-fix"
                 checked={autoFixEnabled}
                 onCheckedChange={setAutoFixEnabled}
               />
-              <Label htmlFor="auto-fix" className="text-sm cursor-pointer">
+              <Label htmlFor="auto-fix" className="cursor-pointer text-sm">
                 {t("tools.jsonCsv.autoFix")}
               </Label>
             </div>
 
             <Button variant="outline" size="sm" onClick={clearAll}>
-              <Trash2 className="w-4 h-4 mr-2" />
+              <Trash2 className="mr-2 size-4" />
               {t("common.clear")}
             </Button>
 
             <Button size="sm" onClick={convert}>
-              <Wand2 className="w-4 h-4 mr-2" />
+              <Wand2 className="mr-2 size-4" />
               {t("tools.jsonCsv.convert")}
             </Button>
           </div>
@@ -567,7 +567,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
       {(error || fixApplied) && (
         <div
           className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-md text-sm",
+            "flex items-center gap-2 rounded-md px-4 py-2 text-sm",
             error
               ? "bg-destructive/10 text-destructive"
               : "bg-success/10 text-success",
@@ -575,12 +575,12 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
         >
           {error ? (
             <>
-              <XCircle className="w-4 h-4" />
+              <XCircle className="size-4" />
               {error}
             </>
           ) : (
             <>
-              <CheckCircle2 className="w-4 h-4" />
+              <CheckCircle2 className="size-4" />
               {t("tools.jsonCsv.autoFixSuccess")}
             </>
           )}
@@ -588,10 +588,15 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
       )}
 
       {/* Input/Output Panels */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
+      <div
+        className="
+        grid flex-1 grid-cols-1 gap-4
+        lg:grid-cols-2
+      "
+      >
         <Card className="flex flex-col">
           <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-base">
               {t("tools.jsonCsv.input")}
               <Badge variant="secondary">{sourceFormat.toUpperCase()}</Badge>
             </CardTitle>
@@ -603,7 +608,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
               })}
               value={inputText}
               onChange={(e) => handleInputChange(e.target.value)}
-              className="font-mono text-sm h-full min-h-64 resize-none"
+              className="h-full min-h-64 resize-none font-mono text-sm"
             />
           </CardContent>
         </Card>
@@ -611,7 +616,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
         <Card className="flex flex-col">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-base">
                 {t("tools.jsonCsv.output")}
                 <Badge variant="secondary">{targetFormat.toUpperCase()}</Badge>
               </CardTitle>
@@ -622,7 +627,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
                   onClick={() => copyWithAnimation(outputText)}
                   className={copyAnimationClass}
                 >
-                  <Copy className="w-4 h-4 mr-2" />
+                  <Copy className="mr-2 size-4" />
                   {t("tools.jsonCsv.copy")}
                 </Button>
               )}
@@ -632,7 +637,7 @@ export function DataConverter({ tabId: _tabId }: DataConverterProps) {
             <Textarea
               value={outputText}
               readOnly
-              className="font-mono text-sm h-full min-h-64 resize-none"
+              className="h-full min-h-64 resize-none font-mono text-sm"
               placeholder={t("tools.jsonCsv.outputPlaceholder")}
             />
           </CardContent>

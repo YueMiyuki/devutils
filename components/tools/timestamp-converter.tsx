@@ -153,49 +153,63 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
           isFuture
             ? "tools.timestampConverter.timeIn.seconds"
             : "tools.timestampConverter.timeAgo.seconds",
-          { count: absDiffSec },
+          {
+            count: absDiffSec,
+          },
         );
       } else if (absDiffMin < 60) {
         return t(
           isFuture
             ? "tools.timestampConverter.timeIn.minutes"
             : "tools.timestampConverter.timeAgo.minutes",
-          { count: absDiffMin },
+          {
+            count: absDiffMin,
+          },
         );
       } else if (absDiffHour < 24) {
         return t(
           isFuture
             ? "tools.timestampConverter.timeIn.hours"
             : "tools.timestampConverter.timeAgo.hours",
-          { count: absDiffHour },
+          {
+            count: absDiffHour,
+          },
         );
       } else if (absDiffDay < 7) {
         return t(
           isFuture
             ? "tools.timestampConverter.timeIn.days"
             : "tools.timestampConverter.timeAgo.days",
-          { count: absDiffDay },
+          {
+            count: absDiffDay,
+          },
         );
       } else if (absDiffWeek < 4) {
         return t(
           isFuture
             ? "tools.timestampConverter.timeIn.weeks"
             : "tools.timestampConverter.timeAgo.weeks",
-          { count: absDiffWeek },
+          {
+            count: absDiffWeek,
+          },
         );
       } else if (absDiffMonth < 12) {
         return t(
           isFuture
             ? "tools.timestampConverter.timeIn.months"
             : "tools.timestampConverter.timeAgo.months",
-          { count: absDiffMonth },
+          {
+            count: absDiffMonth,
+          },
         );
       } else {
         return t(
           isFuture
             ? "tools.timestampConverter.timeIn.years"
             : "tools.timestampConverter.timeAgo.years",
-          { count: absDiffYear },
+          {
+            count: absDiffYear,
+          },
         );
       }
     };
@@ -291,7 +305,7 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
   const formats = getFormats();
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4 overflow-y-auto">
+    <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
       {/* Timestamp Input */}
       <Card>
         <CardHeader className="pb-3">
@@ -306,11 +320,11 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={setCurrentTimestamp}>
-                <Clock className="w-4 h-4 mr-2" />
+                <Clock className="mr-2 size-4" />
                 {t("tools.timestampConverter.now")}
               </Button>
               <Button variant="outline" size="sm" onClick={clearAll}>
-                <Trash2 className="w-4 h-4 mr-2" />
+                <Trash2 className="mr-2 size-4" />
                 {t("common.clear")}
               </Button>
             </div>
@@ -331,7 +345,7 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
         <Card>
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
+              <Calendar className="size-4" />
               <CardTitle className="text-base">
                 {t("tools.timestampConverter.formats")}
               </CardTitle>
@@ -341,28 +355,41 @@ export function TimestampConverter({ tabId: _tabId }: TimestampConverterProps) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div
+              className="
+              grid grid-cols-1 gap-2
+              md:grid-cols-2
+            "
+            >
               {Object.entries(formats).map(([name, value]) => (
                 <div
                   key={name}
-                  className="flex items-center justify-between p-2 rounded-md bg-muted/50 hover:bg-muted transition-colors"
+                  className="
+                    flex items-center justify-between rounded-md bg-muted/50 p-2
+                    transition-colors
+                    hover:bg-muted
+                  "
                 >
-                  <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                    <span className="text-xs font-medium uppercase text-muted-foreground">
+                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                    <span
+                      className="
+                      text-xs font-medium text-muted-foreground uppercase
+                    "
+                    >
                       {name.replace(/([A-Z])/g, " $1").trim()}
                     </span>
-                    <code className="text-sm font-mono truncate">{value}</code>
+                    <code className="truncate font-mono text-sm">{value}</code>
                   </div>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => handleCopyFormat(name, value)}
                     className={cn(
-                      "shrink-0 ml-2",
+                      "ml-2 shrink-0",
                       copiedFormat === name && "copy-success",
                     )}
                   >
-                    <Copy className="w-4 h-4" />
+                    <Copy className="size-4" />
                   </Button>
                 </div>
               ))}

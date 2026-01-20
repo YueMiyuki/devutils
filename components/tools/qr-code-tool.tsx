@@ -294,8 +294,8 @@ END:VCARD`;
   };
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4">
-      <Tabs defaultValue="generate" className="flex-1 flex flex-col">
+    <div className="flex h-full flex-col gap-4 p-4">
+      <Tabs defaultValue="generate" className="flex flex-1 flex-col">
         <TabsList className="w-fit">
           <TabsTrigger value="generate">
             {t("tools.qrCode.generateTab")}
@@ -305,7 +305,7 @@ END:VCARD`;
 
         <TabsContent
           value="generate"
-          className="flex-1 flex flex-col gap-4 mt-4"
+          className="mt-4 flex flex-1 flex-col gap-4"
         >
           {/* QR Type Selection */}
           <Card>
@@ -318,15 +318,18 @@ END:VCARD`;
               <RadioGroup
                 value={qrType}
                 onValueChange={(v) => handleTypeChange(v as QRType)}
-                className="grid grid-cols-2 md:grid-cols-5 gap-4"
+                className="
+                  grid grid-cols-2 gap-4
+                  md:grid-cols-5
+                "
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="text" id="text" />
                   <Label
                     htmlFor="text"
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex cursor-pointer items-center gap-2"
                   >
-                    <FileText className="w-4 h-4" />
+                    <FileText className="size-4" />
                     {t("tools.qrCode.types.text")}
                   </Label>
                 </div>
@@ -334,9 +337,9 @@ END:VCARD`;
                   <RadioGroupItem value="url" id="url" />
                   <Label
                     htmlFor="url"
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex cursor-pointer items-center gap-2"
                   >
-                    <QrCodeIcon className="w-4 h-4" />
+                    <QrCodeIcon className="size-4" />
                     {t("tools.qrCode.types.url")}
                   </Label>
                 </div>
@@ -344,9 +347,9 @@ END:VCARD`;
                   <RadioGroupItem value="json" id="json" />
                   <Label
                     htmlFor="json"
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex cursor-pointer items-center gap-2"
                   >
-                    <FileText className="w-4 h-4" />
+                    <FileText className="size-4" />
                     {t("tools.qrCode.types.json")}
                   </Label>
                 </div>
@@ -354,9 +357,9 @@ END:VCARD`;
                   <RadioGroupItem value="wifi" id="wifi" />
                   <Label
                     htmlFor="wifi"
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex cursor-pointer items-center gap-2"
                   >
-                    <Wifi className="w-4 h-4" />
+                    <Wifi className="size-4" />
                     {t("tools.qrCode.types.wifi")}
                   </Label>
                 </div>
@@ -364,9 +367,9 @@ END:VCARD`;
                   <RadioGroupItem value="vcard" id="vcard" />
                   <Label
                     htmlFor="vcard"
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex cursor-pointer items-center gap-2"
                   >
-                    <User className="w-4 h-4" />
+                    <User className="size-4" />
                     {t("tools.qrCode.types.vcard")}
                   </Label>
                 </div>
@@ -393,7 +396,7 @@ END:VCARD`;
                   }
                   value={qrData}
                   onChange={(e) => setQrData(e.target.value)}
-                  className="font-mono text-sm h-full min-h-48 resize-none"
+                  className="h-full min-h-48 resize-none font-mono text-sm"
                 />
               </CardContent>
             </Card>
@@ -424,10 +427,14 @@ END:VCARD`;
                   placeholder={t("tools.qrCode.jsonPlaceholder")}
                   value={jsonData}
                   onChange={(e) => handleJsonChange(e.target.value)}
-                  className="font-mono text-sm h-full min-h-48 resize-none"
+                  className="h-full min-h-48 resize-none font-mono text-sm"
                 />
                 {jsonError && (
-                  <div className="p-2 bg-destructive/10 rounded-md text-destructive text-xs">
+                  <div
+                    className="
+                    rounded-md bg-destructive/10 p-2 text-xs text-destructive
+                  "
+                  >
                     {jsonError}
                   </div>
                 )}
@@ -560,11 +567,11 @@ END:VCARD`;
           {/* Actions */}
           <div className="flex gap-2">
             <Button onClick={generateQRCode} size="sm">
-              <QrCodeIcon className="w-4 h-4 mr-2" />
+              <QrCodeIcon className="mr-2 size-4" />
               {t("tools.qrCode.generate")}
             </Button>
             <Button variant="outline" size="sm" onClick={clearAll}>
-              <Trash2 className="w-4 h-4 mr-2" />
+              <Trash2 className="mr-2 size-4" />
               {t("common.clear")}
             </Button>
           </div>
@@ -573,7 +580,11 @@ END:VCARD`;
           {error && (
             <Card>
               <CardContent className="py-4">
-                <div className="p-4 bg-destructive/10 rounded-md text-destructive text-sm">
+                <div
+                  className="
+                  rounded-md bg-destructive/10 p-4 text-sm text-destructive
+                "
+                >
                   {error}
                 </div>
               </CardContent>
@@ -594,7 +605,7 @@ END:VCARD`;
                       onClick={() => copyWithAnimation(generateQRData())}
                       className={copyAnimationClass}
                     >
-                      <Copy className="w-4 h-4 mr-2" />
+                      <Copy className="mr-2 size-4" />
                       {t("tools.qrCode.copyData")}
                     </Button>
                     <Button
@@ -602,7 +613,7 @@ END:VCARD`;
                       size="sm"
                       onClick={downloadQRCode}
                     >
-                      <Download className="w-4 h-4 mr-2" />
+                      <Download className="mr-2 size-4" />
                       {t("tools.qrCode.download")}
                     </Button>
                   </div>
@@ -614,14 +625,14 @@ END:VCARD`;
                   alt="QR Code"
                   width={400}
                   height={400}
-                  className="border rounded-lg shadow-md"
+                  className="rounded-lg border shadow-md"
                 />
               </CardContent>
             </Card>
           )}
         </TabsContent>
 
-        <TabsContent value="scan" className="flex-1 flex flex-col gap-4 mt-4">
+        <TabsContent value="scan" className="mt-4 flex flex-1 flex-col gap-4">
           <Card className="flex-1">
             <CardHeader className="pb-3">
               <CardTitle className="text-base">
@@ -632,8 +643,13 @@ END:VCARD`;
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex flex-col items-center gap-4 p-8 border-2 border-dashed rounded-lg">
-                <Upload className="w-12 h-12 text-muted-foreground" />
+              <div
+                className="
+                flex flex-col items-center gap-4 rounded-lg border-2
+                border-dashed p-8
+              "
+              >
+                <Upload className="size-12 text-muted-foreground" />
                 <Button
                   variant="outline"
                   onClick={() => fileInputRef.current?.click()}
@@ -650,7 +666,11 @@ END:VCARD`;
               </div>
 
               {error && (
-                <div className="p-4 bg-destructive/10 rounded-md text-destructive text-sm">
+                <div
+                  className="
+                  rounded-md bg-destructive/10 p-4 text-sm text-destructive
+                "
+                >
                   {error}
                 </div>
               )}
@@ -669,7 +689,7 @@ END:VCARD`;
                           onClick={() => copyWithAnimation(scannedResult)}
                           className={copyAnimationClass}
                         >
-                          <Copy className="w-4 h-4 mr-2" />
+                          <Copy className="mr-2 size-4" />
                           {t("tools.qrCode.copy")}
                         </Button>
                         <Button
@@ -677,7 +697,7 @@ END:VCARD`;
                           size="sm"
                           onClick={clearScanner}
                         >
-                          <Trash2 className="w-4 h-4 mr-2" />
+                          <Trash2 className="mr-2 size-4" />
                           {t("common.clear")}
                         </Button>
                       </div>
@@ -687,7 +707,7 @@ END:VCARD`;
                     <Textarea
                       value={scannedResult}
                       readOnly
-                      className="font-mono text-sm min-h-32"
+                      className="min-h-32 font-mono text-sm"
                     />
                   </CardContent>
                 </Card>
