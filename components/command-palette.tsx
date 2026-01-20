@@ -177,7 +177,7 @@ export function CommandPalette() {
       {/* Radial glow from center */}
       <div
         className={cn(
-          "absolute top-[20vh] left-1/2 h-[400px] w-[800px] -translate-x-1/2",
+          "absolute top-[20vh] left-1/2 h-100 w-200 -translate-x-1/2",
           "bg-gradient-radial from-foreground/5 via-foreground/2 to-transparent",
           "pointer-events-none rounded-full blur-3xl",
           isClosing ? "animate-glow-out" : "animate-glow-in",
@@ -325,7 +325,7 @@ export function CommandPalette() {
           </div>
 
           {/* Results list */}
-          <div className="scrollbar-thin max-h-[400px] overflow-y-auto">
+          <div className="scrollbar-thin max-h-100 overflow-y-auto">
             <div className="p-3">
               {filtered.length === 0 ? (
                 <div

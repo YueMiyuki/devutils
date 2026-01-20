@@ -312,7 +312,7 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
               value={token}
               onChange={(e) => setToken(e.target.value)}
               placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-              className="min-h-[140px]"
+              className="min-h-35"
             />
 
             <div
@@ -362,7 +362,7 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
             <Textarea
               value={wordlist}
               onChange={(e) => setWordlist(e.target.value)}
-              className="min-h-[160px]"
+              className="min-h-40"
               placeholder="secret\nchangeme\nsupersecret"
             />
             <p className="text-[11px] text-muted-foreground">
@@ -516,7 +516,7 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
                   "
                 >
                   <div>
-                    <p className="max-w-[200px] truncate font-medium">
+                    <p className="max-w-50 truncate font-medium">
                       {attempt.secret}
                     </p>
                     <p className="text-xs text-muted-foreground">

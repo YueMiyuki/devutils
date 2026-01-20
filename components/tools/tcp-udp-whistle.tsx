@@ -361,7 +361,7 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
                 <Textarea
                   value={payload}
                   onChange={(e) => setPayload(e.target.value)}
-                  className="min-h-[120px]"
+                  className="min-h-30"
                   placeholder="ping"
                 />
                 <div className="flex flex-wrap gap-2">
@@ -513,7 +513,7 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
                   <Textarea
                     value={sendResult?.response?.text ?? ""}
                     readOnly
-                    className="min-h-[140px]"
+                    className="min-h-35"
                   />
                 </div>
                 <div className="space-y-1">
@@ -522,7 +522,7 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
                   </p>
                   <div
                     className="
-                    min-h-[140px] rounded-md border bg-muted/50 p-3 font-mono
+                    min-h-35 rounded-md border bg-muted/50 p-3 font-mono
                     text-xs break-all
                   "
                   >
