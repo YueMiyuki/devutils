@@ -92,7 +92,6 @@ async function verifySecret(
   try {
     await jwtVerify(token, new TextEncoder().encode(candidate), {
       algorithms: [algorithm],
-      clockTolerance: "0",
     });
     return true;
   } catch {
@@ -156,6 +155,7 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
   const [error, setError] = useState<string | null>(null);
   const [attemptLog, setAttemptLog] = useState<Attempt[]>([]);
   const abortRef = useRef(false);
+  const runIdRef = useRef(0);
 
   const header = useMemo(() => decodeHeader(token), [token]);
   const algorithm =
@@ -186,6 +186,10 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
       return;
     }
 
+    // Increment run id to invalidate any previous run
+    runIdRef.current += 1;
+    const localRunId = runIdRef.current;
+
     setError(null);
     setStatus("running");
     setAttempted(0);
@@ -200,8 +204,11 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
       token,
       algorithm,
       secrets,
-      shouldAbort: () => abortRef.current,
+      shouldAbort: () => abortRef.current || runIdRef.current !== localRunId,
       onProgress: (attempt) => {
+        // Ignore updates from stale runs
+        if (runIdRef.current !== localRunId) return;
+
         setAttempted(attempt.attemptsMade);
         setElapsedMs(attempt.elapsedMs);
         setAttemptLog((prev) =>
@@ -232,6 +239,9 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
         }
       },
     });
+
+    // Verify result is for current run before applying final state
+    if (runIdRef.current !== localRunId) return;
 
     setElapsedMs(result.elapsedMs);
     setAttempted(result.attemptsMade);
@@ -508,9 +518,9 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
               md:grid-cols-2
             "
             >
-              {attemptLog.map((attempt) => (
+              {attemptLog.map((attempt, index) => (
                 <div
-                  key={`${attempt.secret}-${attempt.elapsedMs}`}
+                  key={`${attempt.secret}-${index}`}
                   className="
                     flex items-center justify-between rounded-md border p-3
                   "

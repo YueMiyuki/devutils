@@ -2,7 +2,7 @@ const STORAGE_KEY = "devutils-click-tracker";
 
 type Listener = (state: ClickTrackerState) => void;
 
-export interface ClickTrackerState {
+interface ClickTrackerState {
   lifetime: number;
   session: number;
   persist: boolean;
@@ -13,6 +13,11 @@ let session = 0;
 let persist = true;
 const listeners = new Set<Listener>();
 let initialized = false;
+
+function getState(): ClickTrackerState {
+  init();
+  return { lifetime, session, persist };
+}
 
 function notify() {
   const snapshot = getState();
@@ -73,11 +78,6 @@ export function setClickPersist(enabled: boolean) {
   persist = enabled;
   persistState();
   notify();
-}
-
-export function getState(): ClickTrackerState {
-  init();
-  return { lifetime, session, persist };
 }
 
 export function subscribeClickTracker(listener: Listener): () => void {

@@ -10,7 +10,6 @@ import {
   GitBranch,
   Hash,
   Key,
-  MousePointerClick,
   Pipette,
   RadioTower,
   Rocket,

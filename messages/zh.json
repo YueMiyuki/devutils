@@ -846,127 +846,127 @@
       "metersPerClick": "每次点击约 ~{{meters}} 米"
     },
     "jwtToothpick": {
-      "name": "JWT Brute-Force Toothpick",
+      "name": "JWT 暴力破解牙签",
       "shortName": "JWT BF",
-      "description": "Educational weak-secret tester for HMAC JWTs",
-      "title": "JWT Brute-Force Toothpick",
-      "subtitle": "Probe weak HMAC secrets without leaving DevUtils",
-      "tokenInput": "Target token",
-      "tokenDescription": "Only HS256/384/512 are supported. Token never leaves this app.",
+      "description": "针对 HMAC JWT 的弱密钥教育测试工具",
+      "title": "JWT 暴力破解牙签",
+      "subtitle": "在 DevUtils 中探测弱 HMAC 密钥",
+      "tokenInput": "目标令牌",
+      "tokenDescription": "仅支持 HS256/384/512。令牌不会离开此应用程序。",
       "warnings": {
-        "educational": "Educational only. Use against tokens you own."
+        "educational": "仅供教育用途。请只对您拥有的令牌使用。"
       },
       "details": {
-        "algorithm": "Algorithm: {{alg}}"
+        "algorithm": "算法：{{alg}}"
       },
       "wordlist": {
-        "title": "Wordlist",
-        "description": "One secret per line. We'll stop at the first hit.",
-        "hint": "Max {{max}} guesses. Duplicates are removed."
+        "title": "密码字典",
+        "description": "每行一个密钥。找到第一个匹配即停止。",
+        "hint": "最多 {{max}} 次猜测。重复项会被移除。"
       },
       "actions": {
-        "start": "Start guessing",
-        "stop": "Stop",
-        "reset": "Reset"
+        "start": "开始猜测",
+        "stop": "停止",
+        "reset": "重置"
       },
       "errors": {
-        "tokenRequired": "Paste a JWT first",
-        "invalidToken": "Token is not a valid JWT",
-        "unsupportedAlg": "Only HS256/HS384/HS512 are supported (got {{alg}})",
-        "noSecrets": "Add at least one secret to try"
+        "tokenRequired": "请先粘贴 JWT",
+        "invalidToken": "令牌不是有效的 JWT",
+        "unsupportedAlg": "仅支持 HS256/HS384/HS512（收到 {{alg}}）",
+        "noSecrets": "请至少添加一个密钥来尝试"
       },
       "progress": {
-        "title": "Attack progress",
-        "description": "Attempts, speed, and status",
-        "attempts": "Attempts tried",
-        "speed": "Guesses per second",
-        "elapsed": "Elapsed",
-        "algorithm": "Algorithm",
-        "recent": "Recent attempts",
-        "empty": "No attempts yet"
+        "title": "攻击进度",
+        "description": "尝试次数、速度和状态",
+        "attempts": "已尝试次数",
+        "speed": "每秒猜测数",
+        "elapsed": "已耗时",
+        "algorithm": "算法",
+        "recent": "最近尝试",
+        "empty": "尚无尝试"
       },
       "status": {
-        "running": "Running",
-        "finished": "Finished",
-        "stopped": "Stopped",
-        "idle": "Idle"
+        "running": "运行中",
+        "finished": "已完成",
+        "stopped": "已停止",
+        "idle": "空闲"
       },
-      "found": "Secret recovered!",
-      "notFoundStopped": "Stopped before finding a match.",
-      "notFoundYet": "No match yet. Try more guesses or a stronger wordlist.",
+      "found": "密钥已找到！",
+      "notFoundStopped": "在找到匹配前已停止。",
+      "notFoundYet": "尚未找到匹配。请尝试更多猜测或更强的字典。",
       "labels": {
-        "hit": "Hit",
-        "miss": "Miss"
+        "hit": "命中",
+        "miss": "未命中"
       }
     },
     "tcpWhistle": {
-      "name": "TCP/UDP Whistle",
-      "shortName": "Whistle",
-      "description": "Craft packets, listen on ports, and simulate noisy networks",
-      "title": "TCP/UDP Whistle",
-      "subtitle": "Send raw packets, listen locally, and fake slow or malformed replies",
+      "name": "TCP/UDP 哨子",
+      "shortName": "哨子",
+      "description": "制作数据包、监听端口并模拟嘈杂网络",
+      "title": "TCP/UDP 哨子",
+      "subtitle": "发送原始数据包、本地监听，并模拟缓慢或格式错误的回复",
       "tabs": {
-        "send": "Send packets",
-        "listen": "Listen & simulate"
+        "send": "发送数据包",
+        "listen": "监听与模拟"
       },
       "send": {
-        "title": "Send packet",
-        "description": "Fire TCP/UDP payloads with optional delay, chunking, and junk bytes",
-        "preset": "Use preset",
-        "button": "Send packet"
+        "title": "发送数据包",
+        "description": "发送 TCP/UDP 负载，可选择延迟、分块和垃圾字节",
+        "preset": "使用预设",
+        "button": "发送数据包"
       },
       "inputs": {
-        "host": "Host",
-        "port": "Port",
-        "protocol": "Protocol",
-        "timeout": "Timeout (ms)",
-        "payload": "Payload",
-        "delay": "Send delay (ms)",
-        "chunk": "Chunk size (bytes)",
-        "malformed": "Inject junk bytes",
-        "malformedHint": "Appends a few bad bytes to the payload",
-        "duration": "Listen duration (ms)"
+        "host": "主机",
+        "port": "端口",
+        "protocol": "协议",
+        "timeout": "超时（毫秒）",
+        "payload": "负载",
+        "delay": "发送延迟（毫秒）",
+        "chunk": "分块大小（字节）",
+        "malformed": "注入垃圾字节",
+        "malformedHint": "在负载后附加一些无效字节",
+        "duration": "监听持续时间（毫秒）"
       },
       "response": {
-        "title": "Response preview",
-        "description": "Round-trip timings and payload data",
-        "sent": "Bytes sent",
-        "received": "Bytes received",
-        "elapsed": "Elapsed",
-        "protocol": "Protocol",
-        "text": "Response (UTF-8)",
-        "hex": "Hex preview",
-        "empty": "No response captured yet"
+        "title": "响应预览",
+        "description": "往返时间和负载数据",
+        "sent": "已发送字节",
+        "received": "已接收字节",
+        "elapsed": "已耗时",
+        "protocol": "协议",
+        "text": "响应（UTF-8）",
+        "hex": "十六进制预览",
+        "empty": "尚未捕获到响应"
       },
       "listen": {
-        "title": "Listen & echo",
-        "description": "Bind locally, capture packets, and optionally echo back",
-        "echo": "Echo replies",
-        "echoLabel": "Echo incoming payloads",
-        "echoHint": "Send a quick reply to whatever arrives",
-        "echoPayload": "Echo payload",
-        "echoDelay": "Echo delay (ms)",
-        "button": "Start listening"
+        "title": "监听与响应",
+        "description": "本地绑定、捕获数据包，并可选择响应",
+        "echo": "响应回复",
+        "echoLabel": "响应传入负载",
+        "echoHint": "对到达的内容发送快速回复",
+        "echoPayload": "响应负载",
+        "echoDelay": "响应延迟（毫秒）",
+        "button": "开始监听"
       },
       "captures": {
-        "title": "Captured traffic",
-        "description": "Messages received while the listener was open",
-        "count": "captures",
-        "empty": "Nothing heard yet. Try sending to this port.",
-        "emptyText": "No text payload"
+        "title": "捕获的流量",
+        "description": "监听器打开时收到的消息",
+        "count": "次捕获",
+        "empty": "尚未收到任何内容。请尝试向此端口发送数据。",
+        "emptyText": "无文本负载"
       },
-      "history": "Recent runs",
-      "historyEmpty": "No history yet.",
+      "history": "最近运行",
+      "historyEmpty": "尚无历史记录。",
       "notes": {
-        "title": "Notes",
-        "slowNetwork": "Use delay + chunk size to mimic a slow or shaky link.",
-        "malformed": "Toggle junk bytes to see how services handle malformed input.",
-        "localOnly": "Listeners bind locally—perfect for quick repros."
+        "title": "备注",
+        "slowNetwork": "使用延迟 + 分块大小来模拟缓慢或不稳定的连接。",
+        "malformed": "切换垃圾字节以查看服务如何处理格式错误的输入。",
+        "localOnly": "监听器绑定本地——非常适合快速重现问题。"
       },
       "errors": {
-        "hostRequired": "Host is required",
-        "portInvalid": "Port must be between 1-65535",
-        "requestFailed": "Request failed"
+        "hostRequired": "主机为必填",
+        "portInvalid": "端口必须在 1-65535 之间",
+        "requestFailed": "请求失败"
       }
     }
   },

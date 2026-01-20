@@ -223,11 +223,19 @@ async function handleTcpListen(req: WhistleRequest) {
   const maxCapture = Math.min(req.maxCapture ?? 10, 25);
   const echoPayload = buildPayload(req.echoPayload, req.malformed);
   const captures: CaptureEntry[] = [];
+  const activeSockets = new Set<net.Socket>();
 
   return new Promise((resolve, reject) => {
     const server = net.createServer((socket) => {
+      activeSockets.add(socket);
       const started = Date.now();
       let collected = Buffer.alloc(0);
+
+      const removeSocket = () => {
+        activeSockets.delete(socket);
+      };
+
+      socket.on("close", removeSocket);
 
       socket.on("data", (chunk: Buffer) => {
         collected = Buffer.concat([collected, chunk]).subarray(
@@ -262,6 +270,7 @@ async function handleTcpListen(req: WhistleRequest) {
       });
 
       socket.on("error", (err) => {
+        removeSocket();
         captures.push({
           at: new Date().toISOString(),
           remoteAddress: socket.remoteAddress,
@@ -278,6 +287,12 @@ async function handleTcpListen(req: WhistleRequest) {
 
     server.listen(req.port, () => {
       setTimeout(() => {
+        // Force-close all active sockets before closing the server
+        for (const socket of activeSockets) {
+          socket.destroy();
+        }
+        activeSockets.clear();
+
         server.close(() => {
           resolve({
             ok: true,

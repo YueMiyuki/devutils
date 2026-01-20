@@ -802,12 +802,8 @@
   letter-spacing: -0.02em;
 }
 
-/* Smooth transitions for all interactive elements */
-button,
-a,
-input,
-textarea,
-select {
+/* Smooth transitions utility class */
+.smooth-transition {
   transition-property:
     color, background-color, border-color, box-shadow, transform, opacity;
   transition-duration: 200ms;
