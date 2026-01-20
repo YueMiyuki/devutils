@@ -51,7 +51,7 @@ Want to build a tool? Found a bug? Think you can design a cooler logo? PRs, issu
 
 1. Fork it 🪁
 2. Create your feature branch: `git checkout -b my-awesome-feature`
-3. Commit your changes: `git commit -m 'Add some feature'`
+3. Commit your changes: `git commit -m 'Add some feature'`  
    (You would have to pass our pre-commit checks here, good luck with that!)
 4. Push to the branch: `git push origin my-awesome-feature`
 5. Create a new Pull Request
