@@ -83,6 +83,20 @@ function validateHost(host?: string): string | null {
     return "Host is required";
   }
   if (host.length > 255) return "Host too long";
+
+  const normalizedHost = host.trim().toLowerCase();
+  const allowedHosts = ["localhost", "127.0.0.1", "::1", "[::1]"];
+
+  // Check if it's an allowed host
+  if (!allowedHosts.includes(normalizedHost)) {
+    // Allow IPv4 loopback range (127.0.0.0/8)
+    const ipv4Regex =
+      /^127\.(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){2}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    if (!ipv4Regex.test(normalizedHost)) {
+      return "Only localhost/loopback addresses are allowed for security reasons";
+    }
+  }
+
   return null;
 }
 

@@ -31,6 +31,7 @@ interface Attempt {
   secret: string;
   success: boolean;
   elapsedMs: number;
+  id?: string;
 }
 
 interface AttemptProgress extends Attempt {
@@ -222,6 +223,7 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
               secret: attempt.secret,
               success: attempt.success,
               elapsedMs: attempt.elapsedMs,
+              id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             },
             ...prev,
           ].slice(0, 6),
@@ -524,9 +526,9 @@ export function JwtToothpick({ tabId: _tabId }: JwtToothpickProps) {
               md:grid-cols-2
             "
             >
-              {attemptLog.map((attempt, index) => (
+              {attemptLog.map((attempt) => (
                 <div
-                  key={`${attempt.secret}-${index}`}
+                  key={attempt.id!}
                   className="
                     flex items-center justify-between rounded-md border p-3
                   "
