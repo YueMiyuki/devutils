@@ -36,7 +36,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 24
 
       - name: setup pnpm
         uses: pnpm/action-setup@v4
@@ -44,26 +44,19 @@ jobs:
           version: 10
 
       - name: get pnpm store directory
-        id: pnpm-cache
+        id: pnpm-store
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+          echo "NODE_VERSION=$(node --version)" >> $GITHUB_OUTPUT
 
-      - name: setup pnpm cache
+      - name: setup pnpm store cache
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ${{ steps.pnpm-store.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-node-${{ steps.pnpm-store.outputs.NODE_VERSION }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: setup node_modules cache
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
+            ${{ runner.os }}-pnpm-store-node-${{ steps.pnpm-store.outputs.NODE_VERSION }}-
 
       - name: setup Rust cache
         uses: swatinem/rust-cache@v2
