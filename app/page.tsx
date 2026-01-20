@@ -71,7 +71,9 @@ export default function Home() {
           });
 
           if (confirmed) {
-            appWindow.close();
+            // Use exit from @tauri-apps/plugin-process for clean app termination
+            const { exit } = await import("@tauri-apps/plugin-process");
+            await exit(0);
           }
         });
 

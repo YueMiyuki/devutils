@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Activity,
   History,
   Inbox,
@@ -27,39 +36,14 @@ import {
   Timer,
   Waves,
 } from "lucide-react";
+import {
+  whistle,
+  type WhistleSendResponse,
+  type WhistleListenResponse,
+} from "@/lib/api";
+import { isTauri } from "@/lib/tauri";
 
 type Protocol = "tcp" | "udp";
-
-interface SendResult {
-  ok: boolean;
-  mode: "tcp-send" | "udp-send";
-  elapsedMs: number;
-  bytesSent: number;
-  bytesReceived: number;
-  response: {
-    text: string;
-    hex: string;
-    bytes: number;
-  };
-}
-
-interface CaptureEntry {
-  at: string;
-  remoteAddress?: string | null;
-  remotePort?: number | null;
-  bytes: number;
-  hex: string;
-  text: string;
-  elapsedMs?: number;
-  note?: string;
-}
-
-interface ListenResult {
-  ok: boolean;
-  mode: "tcp-listen" | "udp-listen";
-  durationMs: number;
-  captures: CaptureEntry[];
-}
 
 interface HistoryEntry {
   id: string;
@@ -80,7 +64,14 @@ function formatDate(input: string) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
   const { t } = useTranslation();
+  const [showNotAvailableDialog, setShowNotAvailableDialog] = useState(false);
   const [sendProtocol, setSendProtocol] = useState<Protocol>("tcp");
+
+  useEffect(() => {
+    if (!isTauri()) {
+      setShowNotAvailableDialog(true);
+    }
+  }, []);
   const [host, setHost] = useState("127.0.0.1");
   const [port, setPort] = useState("9000");
   const [payload, setPayload] = useState("ping");
@@ -89,7 +80,9 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
   const [timeoutMs, setTimeoutMs] = useState("4000");
   const [malformed, setMalformed] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const [sendResult, setSendResult] = useState<SendResult | null>(null);
+  const [sendResult, setSendResult] = useState<WhistleSendResponse | null>(
+    null,
+  );
 
   const [listenProtocol, setListenProtocol] = useState<Protocol>("udp");
   const [listenPort, setListenPort] = useState("9001");
@@ -98,7 +91,8 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
   const [echoReply, setEchoReply] = useState(true);
   const [echoPayload, setEchoPayload] = useState("ack");
   const [respondDelay, setRespondDelay] = useState("150");
-  const [listenResult, setListenResult] = useState<ListenResult | null>(null);
+  const [listenResult, setListenResult] =
+    useState<WhistleListenResponse | null>(null);
   const [isListening, setIsListening] = useState(false);
 
   const [sendError, setSendError] = useState<string | null>(null);
@@ -141,25 +135,17 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
     setSendResult(null);
 
     try {
-      const res = await fetch("/api/whistle", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mode: `${sendProtocol}-send`,
-          host: host.trim(),
-          port: portNumber,
-          payload,
-          delayMs: delay,
-          chunkSize: chunk || undefined,
-          timeoutMs: timeout,
-          malformed,
-        }),
-      });
+      const data = (await whistle({
+        mode: `${sendProtocol}-send`,
+        host: host.trim(),
+        port: portNumber,
+        payload,
+        delayMs: delay,
+        chunkSize: chunk || undefined,
+        timeoutMs: timeout,
+        malformed,
+      })) as WhistleSendResponse;
 
-      const data = (await res.json()) as SendResult & { error?: string };
-      if (!res.ok) {
-        throw new Error(data.error || "Request failed");
-      }
       setSendResult(data);
       setHistory((prev) =>
         [
@@ -201,25 +187,15 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
     setListenAbortController(abortController);
 
     try {
-      const res = await fetch("/api/whistle", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mode: `${listenProtocol}-listen`,
-          port: portNumber,
-          durationMs: 600000,
-          echo: echoReply,
-          echoPayload,
-          respondDelayMs: replyDelay,
-          maxCapture: 12,
-        }),
-        signal: abortController.signal,
-      });
-
-      const data = (await res.json()) as ListenResult & { error?: string };
-      if (!res.ok) {
-        throw new Error(data.error || "Request failed");
-      }
+      const data = (await whistle({
+        mode: `${listenProtocol}-listen`,
+        port: portNumber,
+        durationMs: 600000,
+        echo: echoReply,
+        echoPayload,
+        respondDelayMs: replyDelay,
+        maxCapture: 12,
+      })) as WhistleListenResponse;
 
       setListenResult(data);
       setHistory((prev) =>
@@ -264,6 +240,25 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
 
   return (
     <div className="h-full space-y-4 overflow-auto p-4">
+      <AlertDialog
+        open={showNotAvailableDialog}
+        onOpenChange={setShowNotAvailableDialog}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("tools.tcpWhistle.desktopOnly.title")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("tools.tcpWhistle.desktopOnly.description")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction>{t("common.ok")}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="flex items-center gap-3">
         <div
           className="

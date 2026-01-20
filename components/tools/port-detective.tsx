@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,6 +15,15 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Search,
   Trash2,
   RefreshCw,
@@ -26,6 +35,7 @@ import {
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
+import { isTauri } from "@/lib/tauri";
 
 interface PortInfo {
   port: number;
@@ -42,6 +52,7 @@ interface PortDetectiveProps {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   const { t } = useTranslation();
+  const [showNotAvailableDialog, setShowNotAvailableDialog] = useState(false);
   const [singlePort, setSinglePort] = useState<string>("3000");
   const [singlePortInfo, setSinglePortInfo] = useState<PortInfo | null>(null);
   const [isCheckingPort, setIsCheckingPort] = useState(false);
@@ -52,6 +63,12 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isTauri()) {
+      setShowNotAvailableDialog(true);
+    }
+  }, []);
 
   const checkPort = useCallback(
     async (port: number) => {
@@ -190,6 +207,25 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-hidden p-4">
+      <AlertDialog
+        open={showNotAvailableDialog}
+        onOpenChange={setShowNotAvailableDialog}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("tools.portDetective.desktopOnly.title")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("tools.portDetective.desktopOnly.description")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction>{t("common.ok")}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Tabs defaultValue="single" className="flex min-h-0 flex-1 flex-col">
         <TabsList className="w-fit shrink-0">
           <TabsTrigger value="single">

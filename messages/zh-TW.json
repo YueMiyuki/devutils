@@ -588,6 +588,10 @@
       "adminWarning": {
         "title": "需要管理員權限",
         "description": "使用管理員/root 權限執行此應用以查看連接埠使用的程序資訊（PID 和程序名稱）。在 macOS/Linux 上，使用 sudo 執行。在 Windows 上，以管理員身份執行。"
+      },
+      "desktopOnly": {
+        "title": "需要桌面應用",
+        "description": "此工具需要桌面應用程式才能運行。連接埠掃描和程序管理在 Web 預覽環境中無法使用。"
       }
     },
     "sslToothbrush": {
@@ -968,6 +972,10 @@
         "hostRequired": "主機為必填",
         "portInvalid": "埠口必須在 1-65535 之間",
         "requestFailed": "請求失敗"
+      },
+      "desktopOnly": {
+        "title": "需要桌面應用",
+        "description": "此工具需要桌面應用程式才能運行。TCP/UDP 套接字操作在 Web 預覽環境中無法使用。"
       }
     }
   },
@@ -988,6 +996,7 @@
   },
   "common": {
     "close": "關閉",
+    "ok": "確定",
     "save": "儲存",
     "cancel": "取消",
     "delete": "刪除",
