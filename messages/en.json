@@ -602,6 +602,10 @@
       "adminWarning": {
         "title": "Admin privileges required",
         "description": "Run this app with administrator/root privileges to see process information (PID and process name) for ports in use. On macOS/Linux, run with sudo. On Windows, run as Administrator."
+      },
+      "desktopOnly": {
+        "title": "Desktop App Required",
+        "description": "This tool requires the desktop app to function. Port scanning and process management are not available in the web preview environment."
       }
     },
     "sslToothbrush": {
@@ -982,6 +986,10 @@
         "hostRequired": "Host is required",
         "portInvalid": "Port must be between 1-65535",
         "requestFailed": "Request failed"
+      },
+      "desktopOnly": {
+        "title": "Desktop App Required",
+        "description": "This tool requires the desktop app to function. TCP/UDP socket operations are not available in the web preview environment."
       }
     }
   },
@@ -1001,6 +1009,7 @@
     "traditionalChinese": "繁體中文"
   },
   "common": {
+    "ok": "OK",
     "close": "Close",
     "save": "Save",
     "cancel": "Cancel",

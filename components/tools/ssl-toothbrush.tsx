@@ -28,33 +28,7 @@ import {
 } from "lucide-react";
 import { useCopyAnimation } from "@/hooks/use-copy-animation";
 import { cn } from "@/lib/utils";
-
-type WarningKey =
-  | "expired"
-  | "expiresSoon"
-  | "hostnameMismatch"
-  | "chainInvalid";
-
-interface CertificateResult {
-  source: "remote" | "pem";
-  subject: string | null;
-  subjectCN: string | null;
-  issuer: string | null;
-  issuerCN: string | null;
-  san: string[];
-  validFrom: string | null;
-  validTo: string | null;
-  daysRemaining: number | null;
-  isExpired: boolean;
-  aboutToExpire: boolean;
-  chainValid: boolean | null;
-  authorizationError: string | null;
-  validForHost: boolean | null;
-  rawPem: string | null;
-  serialNumber: string | null;
-  fingerprint256: string | null;
-  warnings: WarningKey[];
-}
+import { certCheck, type CertificatePayload, type WarningKey } from "@/lib/api";
 
 interface SSLToothbrushProps {
   tabId: string;
@@ -95,7 +69,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
   const [pem, setPem] = useState("");
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<CertificateResult | null>(null);
+  const [result, setResult] = useState<CertificatePayload | null>(null);
   const { copyWithAnimation } = useCopyAnimation();
 
   const warningMessages = useMemo(() => {
@@ -178,18 +152,10 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
     setChecking(true);
     setError(null);
     try {
-      const response = await fetch("/api/cert-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          host: host.trim(),
-          port: parseInt(port, 10) || 443,
-        }),
+      const data = await certCheck({
+        host: host.trim(),
+        port: parseInt(port, 10) || 443,
       });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Request failed");
-      }
       setResult(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Request failed");
@@ -207,15 +173,10 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
     setChecking(true);
     setError(null);
     try {
-      const response = await fetch("/api/cert-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ host: host.trim() || undefined, certPem: pem }),
+      const data = await certCheck({
+        host: host.trim() || undefined,
+        certPem: pem,
       });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Request failed");
-      }
       setResult(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Request failed");
@@ -340,7 +301,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
               <Textarea
                 value={pem}
                 onChange={(e) => setPem(e.target.value)}
-                className="min-h-[180px] font-mono text-xs"
+                className="min-h-44 font-mono text-xs"
                 placeholder="-----BEGIN CERTIFICATE-----"
               />
               <div className="flex flex-wrap justify-between gap-3">
@@ -393,7 +354,7 @@ export function SSLToothbrush({ tabId: _tabId }: SSLToothbrushProps) {
         </div>
       )}
 
-      <Card className="min-h-[280px] w-full shrink-0">
+      <Card className="min-h-72 w-full shrink-0">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
             <ShieldCheck className="size-4" />

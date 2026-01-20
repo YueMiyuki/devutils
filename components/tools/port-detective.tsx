@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,6 +15,15 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Search,
   Trash2,
   RefreshCw,
@@ -26,6 +35,7 @@ import {
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
+import { isTauri } from "@/lib/tauri";
 
 interface PortInfo {
   port: number;
@@ -42,6 +52,7 @@ interface PortDetectiveProps {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   const { t } = useTranslation();
+  const [showNotAvailableDialog, setShowNotAvailableDialog] = useState(false);
   const [singlePort, setSinglePort] = useState<string>("3000");
   const [singlePortInfo, setSinglePortInfo] = useState<PortInfo | null>(null);
   const [isCheckingPort, setIsCheckingPort] = useState(false);
@@ -53,8 +64,19 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   const [scanProgress, setScanProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
+  const isDesktop = isTauri();
+
+  useEffect(() => {
+    if (!isDesktop) {
+      setShowNotAvailableDialog(true);
+    }
+  }, [isDesktop]);
+
   const checkPort = useCallback(
     async (port: number) => {
+      if (!isDesktop) {
+        throw new Error(t("tools.portDetective.desktopOnly.description"));
+      }
       try {
         const result = await invoke<PortInfo>("check_port", { port });
         return result;
@@ -66,10 +88,12 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
         );
       }
     },
-    [t],
+    [t, isDesktop],
   );
 
   const handleCheckSinglePort = async () => {
+    if (!isDesktop) return;
+
     const port = parseInt(singlePort);
     if (isNaN(port) || port < 1 || port > 65535) {
       setError(t("tools.portDetective.errors.invalidPort"));
@@ -97,6 +121,8 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   };
 
   const handleKillProcess = async (pid: number, port?: number) => {
+    if (!isDesktop) return;
+
     try {
       await invoke("kill_process", { pid });
       toast.success(t("tools.portDetective.success.processKilled"));
@@ -118,6 +144,8 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
   };
 
   const handleScanPorts = async () => {
+    if (!isDesktop) return;
+
     const startPort = parseInt(scanStartPort);
     const endPort = parseInt(scanEndPort);
 
@@ -190,6 +218,25 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
 
   return (
     <div className="flex h-full flex-col gap-4 overflow-hidden p-4">
+      <AlertDialog
+        open={showNotAvailableDialog}
+        onOpenChange={setShowNotAvailableDialog}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("tools.portDetective.desktopOnly.title")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("tools.portDetective.desktopOnly.description")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction>{t("common.ok")}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Tabs defaultValue="single" className="flex min-h-0 flex-1 flex-col">
         <TabsList className="w-fit shrink-0">
           <TabsTrigger value="single">
@@ -265,7 +312,7 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                 />
                 <Button
                   onClick={handleCheckSinglePort}
-                  disabled={isCheckingPort}
+                  disabled={!isDesktop || isCheckingPort}
                 >
                   <Search className="mr-2 size-4" />
                   {isCheckingPort
@@ -312,6 +359,7 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                           <Button
                             variant="destructive"
                             size="sm"
+                            disabled={!isDesktop}
                             onClick={() =>
                               handleKillProcess(
                                 singlePortInfo.pid!,
@@ -405,7 +453,10 @@ export function PortDetective({ tabId: _tabId }: PortDetectiveProps) {
                     onChange={(e) => setScanEndPort(e.target.value)}
                   />
                 </div>
-                <Button onClick={handleScanPorts} disabled={isScanning}>
+                <Button
+                  onClick={handleScanPorts}
+                  disabled={!isDesktop || isScanning}
+                >
                   <RefreshCw
                     className={`
                       mr-2 size-4

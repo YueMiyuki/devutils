@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Activity,
   History,
   Inbox,
@@ -27,39 +36,14 @@ import {
   Timer,
   Waves,
 } from "lucide-react";
+import {
+  whistle,
+  type WhistleSendResponse,
+  type WhistleListenResponse,
+} from "@/lib/api";
+import { isTauri } from "@/lib/tauri";
 
 type Protocol = "tcp" | "udp";
-
-interface SendResult {
-  ok: boolean;
-  mode: "tcp-send" | "udp-send";
-  elapsedMs: number;
-  bytesSent: number;
-  bytesReceived: number;
-  response: {
-    text: string;
-    hex: string;
-    bytes: number;
-  };
-}
-
-interface CaptureEntry {
-  at: string;
-  remoteAddress?: string | null;
-  remotePort?: number | null;
-  bytes: number;
-  hex: string;
-  text: string;
-  elapsedMs?: number;
-  note?: string;
-}
-
-interface ListenResult {
-  ok: boolean;
-  mode: "tcp-listen" | "udp-listen";
-  durationMs: number;
-  captures: CaptureEntry[];
-}
 
 interface HistoryEntry {
   id: string;
@@ -80,6 +64,7 @@ function formatDate(input: string) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
   const { t } = useTranslation();
+  const [showNotAvailableDialog, setShowNotAvailableDialog] = useState(false);
   const [sendProtocol, setSendProtocol] = useState<Protocol>("tcp");
   const [host, setHost] = useState("127.0.0.1");
   const [port, setPort] = useState("9000");
@@ -89,21 +74,40 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
   const [timeoutMs, setTimeoutMs] = useState("4000");
   const [malformed, setMalformed] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const [sendResult, setSendResult] = useState<SendResult | null>(null);
+  const [sendResult, setSendResult] = useState<WhistleSendResponse | null>(
+    null,
+  );
 
   const [listenProtocol, setListenProtocol] = useState<Protocol>("udp");
   const [listenPort, setListenPort] = useState("9001");
-  const [listenAbortController, setListenAbortController] =
-    useState<AbortController | null>(null);
   const [echoReply, setEchoReply] = useState(true);
   const [echoPayload, setEchoPayload] = useState("ack");
   const [respondDelay, setRespondDelay] = useState("150");
-  const [listenResult, setListenResult] = useState<ListenResult | null>(null);
+  const [listenResult, setListenResult] =
+    useState<WhistleListenResponse | null>(null);
   const [isListening, setIsListening] = useState(false);
+  const stopListeningRef = useRef(false);
 
   const [sendError, setSendError] = useState<string | null>(null);
   const [listenError, setListenError] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+
+  const isAvailable = isTauri();
+
+  useEffect(() => {
+    if (!isAvailable) {
+      setShowNotAvailableDialog(true);
+    }
+  }, [isAvailable]);
+
+  // Cleanup effect: stop listening if component unmounts while active
+  useEffect(() => {
+    return () => {
+      if (stopListeningRef.current === false && isListening) {
+        stopListeningRef.current = true;
+      }
+    };
+  }, [isListening]);
 
   const protocolBadge = useMemo(
     () =>
@@ -122,6 +126,8 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
   );
 
   const handleSend = async () => {
+    if (!isAvailable) return;
+
     const portNumber = parseInt(port, 10);
     const delay = Math.max(parseInt(delayMs, 10) || 0, 0);
     const chunk = Math.max(parseInt(chunkSize, 10) || 0, 0);
@@ -141,25 +147,17 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
     setSendResult(null);
 
     try {
-      const res = await fetch("/api/whistle", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mode: `${sendProtocol}-send`,
-          host: host.trim(),
-          port: portNumber,
-          payload,
-          delayMs: delay,
-          chunkSize: chunk || undefined,
-          timeoutMs: timeout,
-          malformed,
-        }),
-      });
+      const data = (await whistle({
+        mode: `${sendProtocol}-send`,
+        host: host.trim(),
+        port: portNumber,
+        payload,
+        delayMs: delay,
+        chunkSize: chunk || undefined,
+        timeoutMs: timeout,
+        malformed,
+      })) as WhistleSendResponse;
 
-      const data = (await res.json()) as SendResult & { error?: string };
-      if (!res.ok) {
-        throw new Error(data.error || "Request failed");
-      }
       setSendResult(data);
       setHistory((prev) =>
         [
@@ -185,6 +183,8 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
   };
 
   const handleListen = async () => {
+    if (!isAvailable) return;
+
     const portNumber = parseInt(listenPort, 10);
     const replyDelay = Math.max(parseInt(respondDelay, 10) || 0, 0);
 
@@ -196,49 +196,68 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
     setListenError(null);
     setIsListening(true);
     setListenResult(null);
+    stopListeningRef.current = false;
 
-    const abortController = new AbortController();
-    setListenAbortController(abortController);
+    const allCaptures: WhistleListenResponse["captures"] = [];
+    const maxCaptures = 12;
+    const pollDurationMs = 3000; // Short polling interval
+    const maxTotalDurationMs = 600000; // 10 minutes max
+    const startTime = Date.now();
 
     try {
-      const res = await fetch("/api/whistle", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      while (
+        !stopListeningRef.current &&
+        allCaptures.length < maxCaptures &&
+        Date.now() - startTime < maxTotalDurationMs
+      ) {
+        const data = (await whistle({
           mode: `${listenProtocol}-listen`,
           port: portNumber,
-          durationMs: 600000,
+          durationMs: pollDurationMs,
           echo: echoReply,
           echoPayload,
           respondDelayMs: replyDelay,
-          maxCapture: 12,
-        }),
-        signal: abortController.signal,
-      });
+          maxCapture: maxCaptures - allCaptures.length,
+        })) as WhistleListenResponse;
 
-      const data = (await res.json()) as ListenResult & { error?: string };
-      if (!res.ok) {
-        throw new Error(data.error || "Request failed");
+        if (data.captures.length > 0) {
+          allCaptures.push(...data.captures);
+          // Update result incrementally so user sees captures as they arrive
+          setListenResult({
+            ok: true,
+            mode: data.mode,
+            durationMs: Date.now() - startTime,
+            captures: [...allCaptures],
+          });
+        }
       }
 
-      setListenResult(data);
-      setHistory((prev) =>
-        [
-          {
-            id: crypto.randomUUID(),
-            type: "listen" as const,
-            protocol: listenProtocol,
-            summary: `${data.captures.length} capture${data.captures.length === 1 ? "" : "s"}`,
-            at: new Date().toISOString(),
-          },
-          ...prev,
-        ].slice(0, 8),
-      );
+      // Final result
+      const finalResult: WhistleListenResponse = {
+        ok: true,
+        mode: `${listenProtocol}-listen` as "tcp-listen" | "udp-listen",
+        durationMs: Date.now() - startTime,
+        captures: allCaptures,
+      };
+      setListenResult(finalResult);
+
+      if (allCaptures.length > 0) {
+        setHistory((prev) =>
+          [
+            {
+              id: crypto.randomUUID(),
+              type: "listen" as const,
+              protocol: listenProtocol,
+              summary: `${allCaptures.length} capture${allCaptures.length === 1 ? "" : "s"}`,
+              at: new Date().toISOString(),
+            },
+            ...prev,
+          ].slice(0, 8),
+        );
+      }
     } catch (err) {
-      if (err instanceof Error && err.name === "AbortError") {
-        // User stopped listening, this is expected
-        setListenError(null);
-      } else {
+      // Only show error if we weren't intentionally stopped
+      if (!stopListeningRef.current) {
         setListenError(
           err instanceof Error
             ? err.message
@@ -247,15 +266,11 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
       }
     } finally {
       setIsListening(false);
-      setListenAbortController(null);
     }
   };
 
   const handleStopListening = () => {
-    if (listenAbortController) {
-      listenAbortController.abort();
-      setListenAbortController(null);
-    }
+    stopListeningRef.current = true;
   };
 
   const lastResponseHex =
@@ -264,6 +279,25 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
 
   return (
     <div className="h-full space-y-4 overflow-auto p-4">
+      <AlertDialog
+        open={showNotAvailableDialog}
+        onOpenChange={setShowNotAvailableDialog}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("tools.tcpWhistle.desktopOnly.title")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("tools.tcpWhistle.desktopOnly.description")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction>{t("common.ok")}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="flex items-center gap-3">
         <div
           className="
@@ -446,7 +480,10 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
               </div>
 
               <div className="flex items-center gap-2">
-                <Button onClick={handleSend} disabled={isSending}>
+                <Button
+                  onClick={handleSend}
+                  disabled={!isAvailable || isSending}
+                >
                   <Send className="mr-2 size-4" />
                   {t("tools.tcpWhistle.send.button")}
                 </Button>
@@ -668,15 +705,15 @@ export function TcpUdpWhistle({ tabId: _tabId }: TcpUdpWhistleProps) {
               </div>
 
               <div className="flex items-center gap-2">
-                {!isListening ? (
-                  <Button onClick={handleListen}>
-                    <Inbox className="mr-2 size-4" />
-                    {t("tools.tcpWhistle.listen.button")}
-                  </Button>
-                ) : (
+                {isListening ? (
                   <Button onClick={handleStopListening} variant="destructive">
                     <Square className="mr-2 size-4" />
                     {t("tools.tcpWhistle.listen.stopButton")}
+                  </Button>
+                ) : (
+                  <Button onClick={handleListen} disabled={!isAvailable}>
+                    <Inbox className="mr-2 size-4" />
+                    {t("tools.tcpWhistle.listen.button")}
                   </Button>
                 )}
                 {listenError && (

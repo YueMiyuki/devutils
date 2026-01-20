@@ -36,12 +36,41 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 24
 
       - name: setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
+
+      - name: get pnpm store directory
+        id: pnpm-store
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+          echo "NODE_VERSION=$(node --version)" >> $GITHUB_OUTPUT
+
+      - name: setup pnpm store cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-node-${{ steps.pnpm-store.outputs.NODE_VERSION }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-node-${{ steps.pnpm-store.outputs.NODE_VERSION }}-
+
+      - name: setup Next.js cache
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-
+
+      - name: setup Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable

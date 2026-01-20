@@ -24,15 +24,21 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: asset: https://asset.localhost; font-src 'self' data:",
+      "csp": null,
       "capabilities": [
         {
           "identifier": "main-capability",
-          "windows": ["main"],
+          "windows": ["*"],
           "permissions": [
             "core:default",
             "dialog:default",
-            "fs:allow-read-file"
+            "core:window:allow-close",
+            "core:window:allow-destroy",
+            "core:app:allow-app-hide",
+            "core:app:allow-app-show",
+            "core:app:default",
+            "process:default",
+            "process:allow-exit"
           ]
         }
       ]
