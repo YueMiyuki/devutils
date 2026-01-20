@@ -320,12 +320,12 @@ export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
   }, [cronExpression, frequency, calculateNextRuns]);
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4 overflow-y-auto">
+    <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
       {/* Builder Section */}
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
+            <Clock className="size-4" />
             <CardTitle className="text-base">
               {t("tools.cronGenerator.builder")}
             </CardTitle>
@@ -511,20 +511,24 @@ export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
               onClick={() => copyWithAnimation(cronExpression)}
               className={copyAnimationClass}
             >
-              <Copy className="w-4 h-4 mr-2" />
+              <Copy className="mr-2 size-4" />
               {t("tools.cronGenerator.copy")}
             </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="p-4 rounded-md bg-muted/50 font-mono text-lg text-center">
+          <div
+            className="
+            rounded-md bg-muted/50 p-4 text-center font-mono text-lg
+          "
+          >
             {cronExpression}
           </div>
 
           {/* Cron format guide */}
-          <div className="p-3 rounded-md bg-muted/30 text-sm space-y-2">
+          <div className="space-y-2 rounded-md bg-muted/30 p-3 text-sm">
             <div className="font-medium">{t("tools.cronGenerator.format")}</div>
-            <code className="text-xs font-mono block">
+            <code className="block font-mono text-xs">
               * * * * *
               <br />│ │ │ │ │
               <br />│ │ │ │ └─ {t("tools.cronGenerator.formatDayOfWeek")} (0-6)
@@ -542,7 +546,7 @@ export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
+            <Calendar className="size-4" />
             <CardTitle className="text-base">
               {t("tools.cronGenerator.nextRuns")}
             </CardTitle>
@@ -556,12 +560,12 @@ export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
             {nextRuns.map((run, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 p-2 rounded-md bg-muted/50"
+                className="flex items-center gap-3 rounded-md bg-muted/50 p-2"
               >
                 <Badge variant="outline" className="shrink-0">
                   {i + 1}
                 </Badge>
-                <span className="text-sm font-mono">{run}</span>
+                <span className="font-mono text-sm">{run}</span>
               </div>
             ))}
           </div>
@@ -579,7 +583,12 @@ export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+          <div
+            className="
+            grid grid-cols-2 gap-2
+            md:grid-cols-3
+          "
+          >
             {[
               { label: "Every minute", freq: "every-minute" },
               { label: "Every hour", freq: "hourly" },
@@ -598,7 +607,7 @@ export function CronGenerator({ tabId: _tabId }: CronGeneratorProps) {
                 key={i}
                 variant="outline"
                 size="sm"
-                className="h-auto py-2 px-3 text-xs"
+                className="h-auto px-3 py-2 text-xs"
                 onClick={() => {
                   setFrequency(preset.freq);
                   if (preset.h) setHour(preset.h);

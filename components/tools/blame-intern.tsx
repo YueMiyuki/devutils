@@ -172,10 +172,15 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
 
   return (
     <TooltipProvider>
-      <div className="h-full p-6 space-y-6">
+      <div className="h-full space-y-6 p-6">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-orange-500/10 text-orange-500">
-            <GitBranch className="w-5 h-5" />
+          <div
+            className="
+            flex size-10 items-center justify-center rounded-lg bg-orange-500/10
+            text-orange-500
+          "
+          >
+            <GitBranch className="size-5" />
           </div>
           <div>
             <h1 className="text-xl font-semibold">
@@ -187,7 +192,12 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div
+          className="
+          grid gap-6
+          lg:grid-cols-2
+        "
+        >
           <Card>
             <CardHeader>
               <CardTitle className="text-base">
@@ -204,7 +214,12 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                 </Label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <User
+                      className="
+                      absolute top-1/2 left-3 size-4 -translate-y-1/2
+                      text-muted-foreground
+                    "
+                    />
                     <Input
                       id="intern-name"
                       value={internName}
@@ -231,17 +246,21 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
 
               <Button
                 onClick={generateBlameHistory}
-                className="w-full transition-all duration-200 active:scale-[0.98] hover:shadow-md"
+                className="
+                  w-full transition-all duration-200
+                  hover:shadow-md
+                  active:scale-[0.98]
+                "
                 disabled={isGenerating}
               >
                 {isGenerating ? (
                   <>
-                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    <RefreshCw className="mr-2 size-4 animate-spin" />
                     {t("tools.blameIntern.generating")}
                   </>
                 ) : (
                   <>
-                    <AlertTriangle className="w-4 h-4 mr-2" />
+                    <AlertTriangle className="mr-2 size-4" />
                     {t("tools.blameIntern.generate")}
                   </>
                 )}
@@ -250,7 +269,11 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardHeader
+              className="
+              flex flex-row items-center justify-between space-y-0
+            "
+            >
               <div>
                 <CardTitle className="text-base">
                   {t("tools.blameIntern.output")}
@@ -264,16 +287,21 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                   variant="outline"
                   size="sm"
                   onClick={copyGitLog}
-                  className={`${copyAnimationClass} transition-all duration-200 active:scale-95 hover:bg-primary hover:text-primary-foreground bg-transparent`}
+                  className={`
+                    ${copyAnimationClass}
+                    bg-transparent transition-all duration-200
+                    hover:bg-primary hover:text-primary-foreground
+                    active:scale-95
+                  `}
                 >
                   {copiedLog ? (
                     <>
-                      <Check className="w-4 h-4 mr-2 text-green-500" />
+                      <Check className="mr-2 size-4 text-green-500" />
                       {t("tools.blameIntern.copied")}
                     </>
                   ) : (
                     <>
-                      <Copy className="w-4 h-4 mr-2" />
+                      <Copy className="mr-2 size-4" />
                       {t("tools.blameIntern.copyLog")}
                     </>
                   )}
@@ -283,8 +311,13 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
             <CardContent>
               <ScrollArea className="h-80">
                 {commits.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-center py-12 text-muted-foreground">
-                    <GitBranch className="w-12 h-12 mb-4 opacity-20" />
+                  <div
+                    className="
+                    flex h-full flex-col items-center justify-center py-12
+                    text-center text-muted-foreground
+                  "
+                  >
+                    <GitBranch className="mb-4 size-12 opacity-20" />
                     <p className="text-sm">
                       {t("tools.blameIntern.noHistory")}
                     </p>
@@ -300,19 +333,37 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                       return (
                         <div
                           key={commit.hash}
-                          className={`p-3 rounded-lg border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer group ${
-                            isInternCommit
-                              ? "border-destructive/50 bg-destructive/5 hover:border-destructive"
-                              : "border-border bg-muted/30 hover:border-primary/50"
-                          }`}
+                          className={`
+                            group cursor-pointer rounded-lg border p-3
+                            transition-all duration-200
+                            hover:-translate-y-0.5 hover:shadow-md
+                            ${
+                              isInternCommit
+                                ? `
+                                border-destructive/50 bg-destructive/5
+                                hover:border-destructive
+                              `
+                                : `
+                                border-border bg-muted/30
+                                hover:border-primary/50
+                              `
+                            }
+                          `}
                           onClick={() => copyCommit(commit)}
                         >
                           <div className="flex items-start gap-3">
-                            <Avatar className="w-8 h-8 transition-transform group-hover:scale-110">
+                            <Avatar
+                              className="
+                              size-8 transition-transform
+                              group-hover:scale-110
+                            "
+                            >
                               <AvatarFallback
                                 className={
                                   isInternCommit
-                                    ? "bg-destructive text-destructive-foreground"
+                                    ? `
+                                      bg-destructive text-destructive-foreground
+                                    `
                                     : ""
                                 }
                               >
@@ -322,15 +373,15 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                                   .join("")}
                               </AvatarFallback>
                             </Avatar>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className="font-medium text-sm">
+                            <div className="min-w-0 flex-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-sm font-medium">
                                   {commit.author}
                                 </span>
                                 {isInternCommit && (
                                   <Badge
                                     variant="destructive"
-                                    className="text-[10px] animate-pulse"
+                                    className="animate-pulse text-[10px]"
                                   >
                                     {t("tools.blameIntern.internBadge")}
                                   </Badge>
@@ -338,12 +389,26 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <div
-                                      className={`ml-auto transition-all duration-200 ${isCopied ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+                                      className={`
+                                        ml-auto transition-all duration-200
+                                        ${
+                                          isCopied
+                                            ? `opacity-100`
+                                            : `
+                                          opacity-0
+                                          group-hover:opacity-100
+                                        `
+                                        }
+                                      `}
                                     >
                                       {isCopied ? (
-                                        <Check className="w-4 h-4 text-green-500" />
+                                        <Check className="size-4 text-green-500" />
                                       ) : (
-                                        <Copy className="w-4 h-4 text-muted-foreground" />
+                                        <Copy
+                                          className="
+                                          size-4 text-muted-foreground
+                                        "
+                                        />
                                       )}
                                     </div>
                                   </TooltipTrigger>
@@ -358,11 +423,20 @@ export function BlameIntern({ tabId: _tabId }: BlameInternProps) {
                                   </TooltipContent>
                                 </Tooltip>
                               </div>
-                              <code className="text-xs text-muted-foreground font-mono">
+                              <code
+                                className="
+                                font-mono text-xs text-muted-foreground
+                              "
+                              >
                                 {commit.hash}
                               </code>
                               <p className="mt-1 text-sm">{commit.message}</p>
-                              <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                              <div
+                                className="
+                                mt-2 flex items-center gap-2 text-xs
+                                text-muted-foreground
+                              "
+                              >
                                 <span>{commit.date}</span>
                                 <span>•</span>
                                 <span className="font-mono">

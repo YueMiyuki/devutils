@@ -204,10 +204,15 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
       : 0;
 
   return (
-    <div className="h-full p-6 space-y-6">
+    <div className="h-full space-y-6 p-6">
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-500/10 text-red-500">
-          <Rocket className="w-5 h-5" />
+        <div
+          className="
+          flex size-10 items-center justify-center rounded-lg bg-red-500/10
+          text-red-500
+        "
+        >
+          <Rocket className="size-5" />
         </div>
         <div>
           <h1 className="text-xl font-semibold">
@@ -219,15 +224,28 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div
+        className="
+        grid gap-6
+        lg:grid-cols-3
+      "
+      >
         {/* Main Spinner */}
         <Card className="lg:col-span-2">
           <CardContent className="pt-6">
-            <div className="flex flex-col items-center justify-center py-12 space-y-8">
+            <div
+              className="
+              flex flex-col items-center justify-center space-y-8 py-12
+            "
+            >
               {/* Deploy Settings */}
-              <div className="w-full max-w-md space-y-4 p-4 rounded-lg border bg-muted/30">
-                <h3 className="font-semibold text-sm flex items-center gap-2">
-                  <Terminal className="w-4 h-4" />
+              <div
+                className="
+                w-full max-w-md space-y-4 rounded-lg border bg-muted/30 p-4
+              "
+              >
+                <h3 className="flex items-center gap-2 text-sm font-semibold">
+                  <Terminal className="size-4" />
                   {t("tools.deployRoulette.config")}
                 </h3>
 
@@ -251,7 +269,7 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
                       onClick={handleBrowseDirectory}
                       title={t("tools.deployRoulette.browseDirectory")}
                     >
-                      <FolderOpen className="w-4 h-4" />
+                      <FolderOpen className="size-4" />
                     </Button>
                   </div>
                 </div>
@@ -273,28 +291,39 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
               {/* Big Red Button */}
               <div className="relative">
                 <div
-                  className={`absolute inset-0 rounded-full ${isSpinning ? "animate-ping" : ""} bg-red-500/30`}
+                  className={`
+                    absolute inset-0 rounded-full
+                    ${isSpinning ? `animate-ping` : ""}
+                    bg-red-500/30
+                  `}
                 />
                 <Button
                   onClick={spin}
                   disabled={isSpinning}
-                  className={`relative w-40 h-40 rounded-full text-xl font-bold shadow-2xl transition-all duration-300 ${
-                    isSpinning
-                      ? "bg-linear-to-br from-yellow-500 to-orange-600 scale-95"
-                      : "bg-linear-to-br from-red-500 to-red-700 hover:scale-105 hover:shadow-red-500/50"
-                  }`}
+                  className={`
+                    relative size-40 rounded-full text-xl font-bold shadow-2xl
+                    transition-all duration-300
+                    ${
+                      isSpinning
+                        ? "scale-95 bg-linear-to-br from-yellow-500 to-orange-600"
+                        : `
+                        bg-linear-to-br from-red-500 to-red-700
+                        hover:scale-105 hover:shadow-red-500/50
+                      `
+                    }
+                  `}
                 >
                   {isSpinning ? (
                     <div className="flex flex-col items-center">
-                      <Skull className="w-8 h-8 animate-bounce" />
-                      <span className="text-sm mt-2">
+                      <Skull className="size-8 animate-bounce" />
+                      <span className="mt-2 text-sm">
                         {t("tools.deployRoulette.spinning")}
                       </span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">
-                      <Rocket className="w-8 h-8" />
-                      <span className="text-sm mt-2">
+                      <Rocket className="size-8" />
+                      <span className="mt-2 text-sm">
                         {t("tools.deployRoulette.deploy")}
                       </span>
                     </div>
@@ -306,7 +335,7 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
               {isSpinning && (
                 <div className="w-full max-w-xs space-y-2">
                   <Progress value={spinProgress} className="h-3" />
-                  <p className="text-sm text-center text-muted-foreground">
+                  <p className="text-center text-sm text-muted-foreground">
                     {t("tools.deployRoulette.determiningFate")}
                   </p>
                 </div>
@@ -315,25 +344,28 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
               {/* Result Display */}
               {lastResult && !isSpinning && (
                 <div
-                  className={`flex flex-col items-center p-6 rounded-xl border-2 ${
-                    lastResult === "deploy"
-                      ? "border-green-500 bg-green-500/10"
-                      : "border-red-500 bg-red-500/10"
-                  }`}
+                  className={`
+                    flex flex-col items-center rounded-xl border-2 p-6
+                    ${lastResult === "deploy" ? "border-green-500 bg-green-500/10" : "border-red-500 bg-red-500/10"}
+                  `}
                 >
                   {lastResult === "deploy" ? (
                     <>
-                      <Rocket className="w-12 h-12 text-green-500 mb-2" />
+                      <Rocket className="mb-2 size-12 text-green-500" />
                       <span className="text-xl font-bold text-green-500">
                         {t("tools.deployRoulette.deploying")}
                       </span>
-                      <code className="mt-2 text-sm text-muted-foreground font-mono">
+                      <code
+                        className="
+                        mt-2 font-mono text-sm text-muted-foreground
+                      "
+                      >
                         {deployCommand}
                       </code>
                     </>
                   ) : (
                     <>
-                      <Music className="w-12 h-12 text-red-500 mb-2" />
+                      <Music className="mb-2 size-12 text-red-500" />
                       <span className="text-xl font-bold text-red-500">
                         {t("tools.deployRoulette.rickrolled")}
                       </span>
@@ -346,8 +378,12 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
               )}
 
               {/* Warning */}
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <AlertTriangle className="w-4 h-4" />
+              <div
+                className="
+                flex items-center gap-2 text-sm text-muted-foreground
+              "
+              >
+                <AlertTriangle className="size-4" />
                 <span>{t("tools.deployRoulette.warning")}</span>
               </div>
             </div>
@@ -374,7 +410,11 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4 text-center">
-                <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                <div
+                  className="
+                  rounded-lg border border-green-500/20 bg-green-500/10 p-3
+                "
+                >
                   <span className="text-2xl font-bold text-green-500">
                     {stats.deploys}
                   </span>
@@ -382,7 +422,11 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
                     {t("tools.deployRoulette.deploys")}
                   </p>
                 </div>
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                <div
+                  className="
+                  rounded-lg border border-red-500/20 bg-red-500/10 p-3
+                "
+                >
                   <span className="text-2xl font-bold text-red-500">
                     {stats.rickrolls}
                   </span>
@@ -397,14 +441,14 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
           {/* History Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <History className="w-4 h-4" />
+              <CardTitle className="flex items-center gap-2 text-base">
+                <History className="size-4" />
                 {t("tools.deployRoulette.history")}
               </CardTitle>
             </CardHeader>
             <CardContent>
               {history.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">
+                <p className="py-4 text-center text-sm text-muted-foreground">
                   {t("tools.deployRoulette.noHistory")}
                 </p>
               ) : (
@@ -412,7 +456,10 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
                   {history.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
+                      className="
+                        flex items-center justify-between rounded-lg bg-muted/50
+                        p-2
+                      "
                     >
                       <span className="text-xs text-muted-foreground">
                         {new Date(item.timestamp).toLocaleTimeString()}
@@ -438,7 +485,7 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
         <DialogContent className="sm:max-w-4xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Music className="w-5 h-5 text-red-500" />
+              <Music className="size-5 text-red-500" />
               {t("tools.deployRoulette.rickrollDialog.title")}
             </DialogTitle>
             <DialogDescription>
@@ -446,7 +493,11 @@ export function DeployRoulette({ tabId: _tabId }: DeployRouletteProps) {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="aspect-video w-full rounded-lg overflow-hidden bg-black">
+          <div
+            className="
+            aspect-video w-full overflow-hidden rounded-lg bg-black
+          "
+          >
             <iframe
               width="100%"
               height="100%"

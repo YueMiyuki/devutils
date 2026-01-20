@@ -118,18 +118,21 @@ export function WebSocketFishScaler({
     const { label, tone } = mapping[readyState] || mapping[3];
     const className =
       tone === "success"
-        ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/40"
+        ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-500"
         : tone === "warn"
-          ? "bg-amber-500/10 text-amber-600 border-amber-500/40"
+          ? "border-amber-500/40 bg-amber-500/10 text-amber-600"
           : tone === "info"
-            ? "bg-blue-500/10 text-blue-500 border-blue-500/40"
+            ? "border-blue-500/40 bg-blue-500/10 text-blue-500"
             : "bg-muted text-muted-foreground";
     return (
       <Badge
         variant="outline"
-        className={`gap-1 px-2.5 py-1 text-xs rounded-full ${className}`}
+        className={`
+          gap-1 rounded-full px-2.5 py-1 text-xs
+          ${className}
+        `}
       >
-        <Signal className="w-3 h-3" />
+        <Signal className="size-3" />
         {label}
       </Badge>
     );
@@ -410,7 +413,7 @@ export function WebSocketFishScaler({
   );
 
   return (
-    <div className="flex flex-col h-full min-h-0 p-4 gap-4 overflow-y-auto">
+    <div className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto p-4">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold">
@@ -423,11 +426,16 @@ export function WebSocketFishScaler({
         {statusBadge}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div
+        className="
+        grid grid-cols-1 gap-4
+        lg:grid-cols-3
+      "
+      >
         <Card className="lg:col-span-2">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2">
-              <PlugZap className="w-4 h-4" />
+              <PlugZap className="size-4" />
               {t("tools.websocketFish.connection.title")}
             </CardTitle>
             <CardDescription>
@@ -445,8 +453,12 @@ export function WebSocketFishScaler({
             />
 
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Waves className="w-4 h-4" />
+              <div
+                className="
+                flex items-center gap-2 text-sm text-muted-foreground
+              "
+              >
+                <Waves className="size-4" />
                 {t("tools.websocketFish.reconnect.label")}
               </div>
               <Select
@@ -483,7 +495,7 @@ export function WebSocketFishScaler({
                 disabled={connecting || readyState === WebSocket.OPEN}
                 className="gap-2"
               >
-                {connecting && <Loader2 className="w-4 h-4 animate-spin" />}
+                {connecting && <Loader2 className="size-4 animate-spin" />}
                 {t("tools.websocketFish.actions.connect")}
               </Button>
               <Button
@@ -492,7 +504,7 @@ export function WebSocketFishScaler({
                 disabled={readyState !== WebSocket.OPEN}
                 className="gap-2"
               >
-                <Square className="w-4 h-4" />
+                <Square className="size-4" />
                 {t("tools.websocketFish.actions.disconnect")}
               </Button>
             </div>
@@ -502,7 +514,7 @@ export function WebSocketFishScaler({
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2">
-              <Activity className="w-4 h-4" />
+              <Activity className="size-4" />
               {t("tools.websocketFish.payload.title")}
             </CardTitle>
             <CardDescription>
@@ -516,7 +528,7 @@ export function WebSocketFishScaler({
               className="min-h-[120px] font-mono text-xs"
               placeholder={t("tools.websocketFish.payload.placeholder")}
             />
-            <div className="flex flex-wrap items-center gap-3 justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <Select
                   value={sendFormat}
@@ -553,7 +565,7 @@ export function WebSocketFishScaler({
                   onClick={handleSend}
                   disabled={readyState !== WebSocket.OPEN}
                 >
-                  <ArrowUp className="w-4 h-4" />
+                  <ArrowUp className="size-4" />
                   {t("tools.websocketFish.actions.send")}
                 </Button>
               </div>
@@ -563,23 +575,32 @@ export function WebSocketFishScaler({
       </div>
 
       {error && (
-        <div className="p-3 rounded-md border border-destructive/40 bg-destructive/5 text-sm text-destructive">
+        <div
+          className="
+          rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm
+          text-destructive
+        "
+        >
           {error}
         </div>
       )}
 
-      <Card className="flex-1 min-h-[550px] w-full min-w-0 overflow-hidden">
+      <Card className="min-h-[550px] w-full min-w-0 flex-1 overflow-hidden">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="size-4" />
             {t("tools.websocketFish.log.title")}
           </CardTitle>
           <CardDescription>
             {t("tools.websocketFish.log.description")}
           </CardDescription>
         </CardHeader>
-        <CardContent className="h-full flex flex-col gap-3 min-h-0 min-w-0 overflow-hidden">
-          <div className="flex justify-between items-center">
+        <CardContent
+          className="
+          flex h-full min-h-0 min-w-0 flex-col gap-3 overflow-hidden
+        "
+        >
+          <div className="flex items-center justify-between">
             <div className="text-xs text-muted-foreground">
               {t("tools.websocketFish.log.hint")}
             </div>
@@ -588,11 +609,16 @@ export function WebSocketFishScaler({
               onClick={() => setMessages([])}
               className="gap-2"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="size-4" />
               {t("tools.websocketFish.actions.clear")}
             </Button>
           </div>
-          <ScrollArea className="flex-1 w-full rounded-md border min-h-[250px] min-w-0 max-w-full overflow-hidden">
+          <ScrollArea
+            className="
+            min-h-[250px] w-full max-w-full min-w-0 flex-1 overflow-hidden
+            rounded-md border
+          "
+          >
             <div className="divide-y">
               {messages.length === 0 && (
                 <div className="p-4 text-sm text-muted-foreground">
@@ -602,7 +628,7 @@ export function WebSocketFishScaler({
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className="p-3 flex flex-col gap-2 bg-background"
+                  className="flex flex-col gap-2 bg-background p-3"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
@@ -611,11 +637,11 @@ export function WebSocketFishScaler({
                         className="gap-1 px-2 py-1 text-[11px]"
                       >
                         {msg.direction === "sent" ? (
-                          <ArrowUp className="w-3 h-3" />
+                          <ArrowUp className="size-3" />
                         ) : msg.direction === "received" ? (
-                          <ArrowDown className="w-3 h-3" />
+                          <ArrowDown className="size-3" />
                         ) : (
-                          <Activity className="w-3 h-3" />
+                          <Activity className="size-3" />
                         )}
                         {t(
                           `tools.websocketFish.labels.${msg.direction}` as const,
@@ -637,16 +663,31 @@ export function WebSocketFishScaler({
                           size="icon"
                           onClick={() => copyWithAnimation(msg.hex ?? "")}
                         >
-                          <Copy className="w-4 h-4" />
+                          <Copy className="size-4" />
                         </Button>
                       )}
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                    <pre className="bg-muted rounded-md p-2 text-xs overflow-auto min-h-[60px] font-mono break-all whitespace-pre-wrap">
+                  <div
+                    className="
+                    grid grid-cols-1 gap-2
+                    lg:grid-cols-2
+                  "
+                  >
+                    <pre
+                      className="
+                      min-h-[60px] overflow-auto rounded-md bg-muted p-2
+                      font-mono text-xs break-all whitespace-pre-wrap
+                    "
+                    >
                       {msg.text || "—"}
                     </pre>
-                    <pre className="bg-muted rounded-md p-2 text-[11px] overflow-auto min-h-[60px] font-mono break-all whitespace-pre-wrap">
+                    <pre
+                      className="
+                      min-h-[60px] overflow-auto rounded-md bg-muted p-2
+                      font-mono text-[11px] break-all whitespace-pre-wrap
+                    "
+                    >
                       {msg.hex || t("tools.websocketFish.labels.noHex")}
                     </pre>
                   </div>

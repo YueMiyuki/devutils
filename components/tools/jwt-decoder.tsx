@@ -250,8 +250,8 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
   };
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4">
-      <Tabs defaultValue="decode" className="flex-1 flex flex-col">
+    <div className="flex h-full flex-col gap-4 p-4">
+      <Tabs defaultValue="decode" className="flex flex-1 flex-col">
         <TabsList className="w-fit">
           <TabsTrigger value="decode">
             {t("tools.jwtDecoder.decodeTab")}
@@ -261,7 +261,7 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="decode" className="flex-1 flex flex-col gap-4 mt-4">
+        <TabsContent value="decode" className="mt-4 flex flex-1 flex-col gap-4">
           {/* Token Input */}
           <Card>
             <CardHeader className="pb-3">
@@ -276,7 +276,7 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                     onClick={handlePaste}
                     className={copyAnimationClass}
                   >
-                    <ClipboardPaste className="w-4 h-4 mr-2" />
+                    <ClipboardPaste className="mr-2 size-4" />
                     {t("tools.jwtDecoder.paste")}
                   </Button>
                   <Button
@@ -288,7 +288,7 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                       setError(null);
                     }}
                   >
-                    <Trash2 className="w-4 h-4 mr-2" />
+                    <Trash2 className="mr-2 size-4" />
                     {t("common.clear")}
                   </Button>
                 </div>
@@ -299,11 +299,15 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                 placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 value={token}
                 onChange={(e) => handleTokenChange(e.target.value)}
-                className="font-mono text-sm min-h-24"
+                className="min-h-24 font-mono text-sm"
               />
               {error && (
-                <p className="text-destructive text-sm mt-2 flex items-center gap-1">
-                  <XCircle className="w-4 h-4" />
+                <p
+                  className="
+                  mt-2 flex items-center gap-1 text-sm text-destructive
+                "
+                >
+                  <XCircle className="size-4" />
                   {error}
                 </p>
               )}
@@ -312,11 +316,16 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
 
           {/* Decoded Output */}
           {decoded && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
+            <div
+              className="
+              grid flex-1 grid-cols-1 gap-4
+              lg:grid-cols-2
+            "
+            >
               {/* Header */}
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-base">
                     {t("tools.jwtDecoder.header")}
                     <Badge variant="secondary">
                       {decoded.header.alg as string}
@@ -329,7 +338,11 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                       {Object.entries(decoded.header).map(([key, value]) => (
                         <div
                           key={key}
-                          className="flex justify-between items-start py-1 border-b border-border last:border-0"
+                          className="
+                            flex items-start justify-between border-b
+                            border-border py-1
+                            last:border-0
+                          "
                         >
                           <span className="text-sm text-muted-foreground">
                             {key}
@@ -358,9 +371,9 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                         )}
                       >
                         {isExpired ? (
-                          <AlertTriangle className="w-3 h-3" />
+                          <AlertTriangle className="size-3" />
                         ) : (
-                          <Clock className="w-3 h-3" />
+                          <Clock className="size-3" />
                         )}
                         {countdown}
                       </Badge>
@@ -373,7 +386,11 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                       {Object.entries(decoded.payload).map(([key, value]) => (
                         <div
                           key={key}
-                          className="flex justify-between items-start py-1 border-b border-border last:border-0"
+                          className="
+                            flex items-start justify-between border-b
+                            border-border py-1
+                            last:border-0
+                          "
                         >
                           <span className="text-sm text-muted-foreground">
                             {key}
@@ -395,7 +412,11 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-2">
-                    <code className="flex-1 p-3 bg-muted rounded-md font-mono text-sm break-all">
+                    <code
+                      className="
+                      flex-1 rounded-md bg-muted p-3 font-mono text-sm break-all
+                    "
+                    >
                       {decoded.signature}
                     </code>
                     <Button
@@ -404,7 +425,7 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                       onClick={() => copyWithAnimation(decoded.signature)}
                       className={copyAnimationClass}
                     >
-                      <Copy className="w-4 h-4" />
+                      <Copy className="size-4" />
                     </Button>
                   </div>
                 </CardContent>
@@ -415,9 +436,14 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
 
         <TabsContent
           value="generate"
-          className="flex-1 flex flex-col gap-4 mt-4"
+          className="mt-4 flex flex-1 flex-col gap-4"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div
+            className="
+            grid grid-cols-1 gap-4
+            lg:grid-cols-2
+          "
+          >
             {/* Header Editor */}
             <Card>
               <CardHeader className="pb-3">
@@ -429,7 +455,7 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                 <Textarea
                   value={customHeader}
                   onChange={(e) => setCustomHeader(e.target.value)}
-                  className="font-mono text-sm min-h-32"
+                  className="min-h-32 font-mono text-sm"
                 />
               </CardContent>
             </Card>
@@ -445,7 +471,7 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                 <Textarea
                   value={customPayload}
                   onChange={(e) => setCustomPayload(e.target.value)}
-                  className="font-mono text-sm min-h-32"
+                  className="min-h-32 font-mono text-sm"
                 />
               </CardContent>
             </Card>
@@ -469,7 +495,7 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                 className="font-mono"
               />
               <Button onClick={generateToken}>
-                <RefreshCw className="w-4 h-4 mr-2" />
+                <RefreshCw className="mr-2 size-4" />
                 {t("tools.jwtDecoder.generateToken")}
               </Button>
             </CardContent>
@@ -489,13 +515,17 @@ export function JwtDecoder({ tabId: _tabId }: JwtDecoderProps) {
                     onClick={() => copyWithAnimation(generatedToken)}
                     className={copyAnimationClass}
                   >
-                    <Copy className="w-4 h-4 mr-2" />
+                    <Copy className="mr-2 size-4" />
                     {t("tools.jwtDecoder.copy")}
                   </Button>
                 </div>
               </CardHeader>
               <CardContent>
-                <code className="block p-3 bg-muted rounded-md font-mono text-sm break-all">
+                <code
+                  className="
+                  block rounded-md bg-muted p-3 font-mono text-sm break-all
+                "
+                >
                   {generatedToken}
                 </code>
               </CardContent>

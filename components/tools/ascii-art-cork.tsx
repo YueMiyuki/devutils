@@ -66,7 +66,6 @@ export function ASCIIArtCork({ tabId: _tabId }: ASCIIArtCorkProps) {
     [t],
   );
 
-  // Fonts stay dynamically loaded instead of bloating the main bundle.
   const ensureFont = useCallback(async (fontName: FontOption) => {
     if (loadedFontsRef.current.has(fontName)) return;
     const fontModule = await fontImports[fontName]();
@@ -159,7 +158,7 @@ export function ASCIIArtCork({ tabId: _tabId }: ASCIIArtCorkProps) {
   }, [font, frame, padding, text, uppercase, scheduleRender]);
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4 overflow-y-auto">
+    <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold">
@@ -176,16 +175,21 @@ export function ASCIIArtCork({ tabId: _tabId }: ASCIIArtCorkProps) {
           onClick={() => copyWithAnimation(art)}
           disabled={!art}
         >
-          <Copy className="w-4 h-4" />
+          <Copy className="size-4" />
           {t("tools.asciiCork.actions.copy")}
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div
+        className="
+        grid grid-cols-1 gap-4
+        lg:grid-cols-3
+      "
+      >
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2">
-              <Braces className="w-4 h-4" />
+              <Braces className="size-4" />
               {t("tools.asciiCork.input.title")}
             </CardTitle>
             <CardDescription>
@@ -213,7 +217,7 @@ export function ASCIIArtCork({ tabId: _tabId }: ASCIIArtCorkProps) {
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-muted-foreground" />
+                  <Palette className="size-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">
                     {t("tools.asciiCork.input.font")}
                   </span>
@@ -272,17 +276,22 @@ export function ASCIIArtCork({ tabId: _tabId }: ASCIIArtCorkProps) {
                 variant="secondary"
                 onClick={() => scheduleRender(text)}
               >
-                <Wand2 className="w-4 h-4" />
+                <Wand2 className="size-4" />
                 {t("tools.asciiCork.actions.render")}
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="lg:col-span-2 flex flex-col">
+        <Card
+          className="
+          flex flex-col
+          lg:col-span-2
+        "
+        >
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="size-4" />
               {t("tools.asciiCork.output.title")}
             </CardTitle>
             <CardDescription>
@@ -292,14 +301,19 @@ export function ASCIIArtCork({ tabId: _tabId }: ASCIIArtCorkProps) {
           <CardContent className="flex-1">
             <div className="relative h-full">
               {loading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-sm rounded-md z-10">
-                  <Loader2 className="w-6 h-6 animate-spin" />
+                <div
+                  className="
+                  absolute inset-0 z-10 flex items-center justify-center
+                  rounded-md bg-background/60 backdrop-blur-sm
+                "
+                >
+                  <Loader2 className="size-6 animate-spin" />
                 </div>
               )}
               <Textarea
                 value={art}
                 readOnly
-                className="min-h-[320px] h-full font-mono text-xs"
+                className="h-full min-h-[320px] font-mono text-xs"
               />
             </div>
           </CardContent>

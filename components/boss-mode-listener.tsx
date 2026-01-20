@@ -92,48 +92,99 @@ export function BossModeListener() {
 
   return (
     <div
-      className="fixed inset-0 z-100 bg-background overflow-auto cursor-pointer"
+      className="fixed inset-0 z-100 cursor-pointer overflow-auto bg-background"
       onClick={hideDecoy}
     >
-      <div className="h-full flex flex-col">
-        <div className="bg-[#217346] dark:bg-[#185c37] text-white px-4 py-2 flex items-center gap-4">
-          <TableProperties className="w-6 h-6" />
+      <div className="flex h-full flex-col">
+        <div
+          className="
+          flex items-center gap-4 bg-[#217346] px-4 py-2 text-white
+          dark:bg-[#185c37]
+        "
+        >
+          <TableProperties className="size-6" />
           <span className="font-semibold">Q4 Revenue Analysis - Excel</span>
           <div className="flex-1" />
           <Badge
             variant="secondary"
-            className="bg-white/20 hover:bg-white/30 text-white"
+            className="
+              bg-white/20 text-white
+              hover:bg-white/30
+            "
           >
             AutoSave On
           </Badge>
         </div>
 
-        <div className="bg-muted border-b px-4 py-2 flex gap-6 text-xs">
-          <span className="font-medium text-[#217346] dark:text-[#4ade80]">
+        <div className="flex gap-6 border-b bg-muted px-4 py-2 text-xs">
+          <span
+            className="
+            font-medium text-[#217346]
+            dark:text-[#4ade80]
+          "
+          >
             Home
           </span>
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
+          <span
+            className="
+            cursor-pointer text-muted-foreground transition-colors
+            hover:text-foreground
+          "
+          >
             Insert
           </span>
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
+          <span
+            className="
+            cursor-pointer text-muted-foreground transition-colors
+            hover:text-foreground
+          "
+          >
             Page Layout
           </span>
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
+          <span
+            className="
+            cursor-pointer text-muted-foreground transition-colors
+            hover:text-foreground
+          "
+          >
             Formulas
           </span>
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
+          <span
+            className="
+            cursor-pointer text-muted-foreground transition-colors
+            hover:text-foreground
+          "
+          >
             Data
           </span>
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
+          <span
+            className="
+            cursor-pointer text-muted-foreground transition-colors
+            hover:text-foreground
+          "
+          >
             Review
           </span>
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
+          <span
+            className="
+            cursor-pointer text-muted-foreground transition-colors
+            hover:text-foreground
+          "
+          >
             View
           </span>
         </div>
 
-        <div className="bg-background border-b px-4 py-1 flex items-center gap-2 text-sm">
-          <span className="font-mono text-xs bg-muted px-2 py-0.5 rounded border">
+        <div
+          className="
+          flex items-center gap-2 border-b bg-background px-4 py-1 text-sm
+        "
+        >
+          <span
+            className="
+            rounded-sm border bg-muted px-2 py-0.5 font-mono text-xs
+          "
+          >
             A1
           </span>
           <span className="text-muted-foreground">fx</span>
@@ -142,8 +193,8 @@ export function BossModeListener() {
           </span>
         </div>
 
-        <div className="flex-1 p-4 overflow-auto bg-background">
-          <h2 className="text-xl font-bold mb-4 text-foreground">
+        <div className="flex-1 overflow-auto bg-background p-4">
+          <h2 className="mb-4 text-xl font-bold text-foreground">
             Quarterly Revenue Report FY2024
           </h2>
 
@@ -161,7 +212,12 @@ export function BossModeListener() {
                 <TableRow key={row.quarter}>
                   <TableCell className="font-medium">{row.quarter}</TableCell>
                   <TableCell>{row.revenue}</TableCell>
-                  <TableCell className="text-green-600 dark:text-green-400">
+                  <TableCell
+                    className="
+                    text-green-600
+                    dark:text-green-400
+                  "
+                  >
                     {row.growth}
                   </TableCell>
                   <TableCell>{row.forecast}</TableCell>
@@ -170,7 +226,7 @@ export function BossModeListener() {
             </TableBody>
           </Table>
 
-          <h3 className="text-lg font-semibold mb-3 text-foreground">
+          <h3 className="mb-3 text-lg font-semibold text-foreground">
             Monthly Breakdown
           </h3>
 
@@ -196,47 +252,81 @@ export function BossModeListener() {
           </Table>
         </div>
 
-        <div className="bg-muted border-t px-2 py-1 flex items-center gap-1">
+        <div className="flex items-center gap-1 border-t bg-muted px-2 py-1">
           <div className="flex items-center">
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6 text-muted-foreground"
+              className="size-6 text-muted-foreground"
             >
-              <ChevronLeft className="h-3 w-3" />
+              <ChevronLeft className="size-3" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6 text-muted-foreground"
+              className="size-6 text-muted-foreground"
             >
-              <ChevronRight className="h-3 w-3" />
+              <ChevronRight className="size-3" />
             </Button>
           </div>
-          <div className="flex gap-0.5 ml-2">
-            <div className="px-3 py-1 text-xs bg-background border border-b-0 rounded-t font-medium cursor-pointer">
+          <div className="ml-2 flex gap-0.5">
+            <div
+              className="
+              cursor-pointer rounded-t border border-b-0 bg-background px-3 py-1
+              text-xs font-medium
+            "
+            >
               Q4 Summary
             </div>
-            <div className="px-3 py-1 text-xs bg-muted/50 border border-b-0 rounded-t text-muted-foreground cursor-pointer hover:bg-muted">
+            <div
+              className="
+              cursor-pointer rounded-t border border-b-0 bg-muted/50 px-3 py-1
+              text-xs text-muted-foreground
+              hover:bg-muted
+            "
+            >
               Monthly Data
             </div>
-            <div className="px-3 py-1 text-xs bg-muted/50 border border-b-0 rounded-t text-muted-foreground cursor-pointer hover:bg-muted">
+            <div
+              className="
+              cursor-pointer rounded-t border border-b-0 bg-muted/50 px-3 py-1
+              text-xs text-muted-foreground
+              hover:bg-muted
+            "
+            >
               Charts
             </div>
-            <div className="px-3 py-1 text-xs bg-muted/50 border border-b-0 rounded-t text-muted-foreground cursor-pointer hover:bg-muted">
+            <div
+              className="
+              cursor-pointer rounded-t border border-b-0 bg-muted/50 px-3 py-1
+              text-xs text-muted-foreground
+              hover:bg-muted
+            "
+            >
               Raw Data
             </div>
           </div>
         </div>
 
-        <div className="bg-[#217346] dark:bg-[#185c37] text-white px-4 py-1 text-xs flex items-center justify-between">
+        <div
+          className="
+          flex items-center justify-between bg-[#217346] px-4 py-1 text-xs
+          text-white
+          dark:bg-[#185c37]
+        "
+        >
           <span>Ready</span>
           <span>Sum: $6,149,369 | Average: $1,024,895 | Count: 6</span>
         </div>
       </div>
 
-      <div className="fixed bottom-4 right-4 bg-foreground/90 text-background px-3 py-2 rounded-lg text-sm flex items-center gap-2 shadow-lg">
-        <X className="w-4 h-4" />
+      <div
+        className="
+        fixed right-4 bottom-4 flex items-center gap-2 rounded-lg
+        bg-foreground/90 px-3 py-2 text-sm text-background shadow-lg
+      "
+      >
+        <X className="size-4" />
         Click anywhere or press any key to close
       </div>
     </div>

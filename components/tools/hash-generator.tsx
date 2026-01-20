@@ -478,8 +478,8 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
   };
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4">
-      <Tabs defaultValue="text" className="flex-1 flex flex-col">
+    <div className="flex h-full flex-col gap-4 p-4">
+      <Tabs defaultValue="text" className="flex flex-1 flex-col">
         <TabsList className="w-fit">
           <TabsTrigger value="text">
             {t("tools.hashGenerator.textTab")}
@@ -489,10 +489,10 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="text" className="flex-1 flex flex-col gap-4 mt-4">
+        <TabsContent value="text" className="mt-4 flex flex-1 flex-col gap-4">
           {/* Algorithm Selection & Actions */}
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <Select
                 value={algorithm}
                 onValueChange={(v) => handleAlgorithmChange(v as HashAlgorithm)}
@@ -536,7 +536,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
             </div>
 
             <Button variant="outline" size="sm" onClick={clearAll}>
-              <Trash2 className="w-4 h-4 mr-2" />
+              <Trash2 className="mr-2 size-4" />
               {t("common.clear")}
             </Button>
           </div>
@@ -552,7 +552,12 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                   {t("tools.hashGenerator.argon2ParamsDescription")}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <CardContent
+                className="
+                grid grid-cols-2 gap-4
+                md:grid-cols-3
+              "
+              >
                 <div className="space-y-2">
                   <label className="text-sm text-muted-foreground">
                     {t("tools.hashGenerator.iterations")}
@@ -613,7 +618,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                     }}
                   />
                 </div>
-                <div className="space-y-2 col-span-2">
+                <div className="col-span-2 space-y-2">
                   <label className="text-sm text-muted-foreground">
                     {t("tools.hashGenerator.salt")} (
                     {t("tools.hashGenerator.optional")})
@@ -630,7 +635,12 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
           )}
 
           {/* Input/Output Panels */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
+          <div
+            className="
+            grid flex-1 grid-cols-1 gap-4
+            lg:grid-cols-2
+          "
+          >
             <Card className="flex flex-col">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">
@@ -642,7 +652,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                   placeholder={t("tools.hashGenerator.inputPlaceholder")}
                   value={inputText}
                   onChange={(e) => handleInputChange(e.target.value)}
-                  className="font-mono text-sm h-full min-h-48 resize-none"
+                  className="h-full min-h-48 resize-none font-mono text-sm"
                 />
               </CardContent>
             </Card>
@@ -660,7 +670,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                       onClick={() => copyWithAnimation(outputHash)}
                       className={copyAnimationClass}
                     >
-                      <Copy className="w-4 h-4 mr-2" />
+                      <Copy className="mr-2 size-4" />
                       {t("tools.hashGenerator.copy")}
                     </Button>
                   )}
@@ -668,14 +678,18 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
               </CardHeader>
               <CardContent className="flex-1">
                 {error ? (
-                  <div className="p-4 bg-destructive/10 rounded-md text-destructive text-sm">
+                  <div
+                    className="
+                    rounded-md bg-destructive/10 p-4 text-sm text-destructive
+                  "
+                  >
                     {error}
                   </div>
                 ) : (
                   <Textarea
                     value={outputHash}
                     readOnly
-                    className="font-mono text-sm h-full min-h-48 resize-none"
+                    className="h-full min-h-48 resize-none font-mono text-sm"
                     placeholder={
                       isProcessing
                         ? t("tools.hashGenerator.processing")
@@ -720,9 +734,9 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
           )}
         </TabsContent>
 
-        <TabsContent value="file" className="flex-1 flex flex-col gap-4 mt-4">
+        <TabsContent value="file" className="mt-4 flex flex-1 flex-col gap-4">
           {/* Algorithm Selection */}
-          <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex flex-wrap items-center gap-4">
             <Select
               value={algorithm}
               onValueChange={(v) => handleAlgorithmChange(v as HashAlgorithm)}
@@ -767,11 +781,20 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
 
           {/* File Drop Zone */}
           <Card className="flex-1 border-2 border-dashed transition-colors">
-            <CardContent className="flex flex-col items-center justify-center h-full min-h-64 gap-4">
+            <CardContent
+              className="
+              flex h-full min-h-64 flex-col items-center justify-center gap-4
+            "
+            >
               {!fileInfo ? (
                 <>
-                  <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-                    <Upload className="w-8 h-8 text-muted-foreground" />
+                  <div
+                    className="
+                    flex size-16 items-center justify-center rounded-full
+                    bg-muted
+                  "
+                  >
+                    <Upload className="size-8 text-muted-foreground" />
                   </div>
                   <div className="text-center">
                     <p className="font-medium">
@@ -796,13 +819,18 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                 </>
               ) : (
                 <>
-                  <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                  <div
+                    className="
+                    flex size-16 items-center justify-center rounded-full
+                    bg-muted
+                  "
+                  >
                     {isProcessing ? (
                       <div className="animate-pulse">
-                        <FileIcon className="w-8 h-8 text-muted-foreground" />
+                        <FileIcon className="size-8 text-muted-foreground" />
                       </div>
                     ) : (
-                      <CheckCircle2 className="w-8 h-8 text-success" />
+                      <CheckCircle2 className="size-8 text-success" />
                     )}
                   </div>
                   <div className="text-center">
@@ -814,7 +842,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                   {isProcessing && (
                     <div className="w-full max-w-xs space-y-2">
                       <Progress value={progress} />
-                      <p className="text-sm text-center text-muted-foreground">
+                      <p className="text-center text-sm text-muted-foreground">
                         {t("tools.hashGenerator.file.processing")} {progress}%
                       </p>
                     </div>
@@ -863,7 +891,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                     onClick={() => copyWithAnimation(fileResult)}
                     className={copyAnimationClass}
                   >
-                    <Copy className="w-4 h-4 mr-2" />
+                    <Copy className="mr-2 size-4" />
                     {t("tools.hashGenerator.copy")}
                   </Button>
                 </div>
@@ -872,7 +900,7 @@ export function HashGenerator({ tabId: _tabId }: HashGeneratorProps) {
                 <Textarea
                   value={fileResult}
                   readOnly
-                  className="font-mono text-xs h-32"
+                  className="h-32 font-mono text-xs"
                 />
               </CardContent>
             </Card>

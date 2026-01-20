@@ -795,6 +795,177 @@
         "ghost": "幽灵",
         "doom": "Doom"
       }
+    },
+    "clickSaver": {
+      "name": "Clicks Saved",
+      "shortName": "Clicks",
+      "description": "Automatically track mouse miles saved while using DevUtils",
+      "title": "How Many Clicks Did That Save?",
+      "subtitle": "Auto-counts clicks inside tools. Badges unlock as you work.",
+      "inputs": {
+        "title": "Automatic tracking",
+        "description": "Clicks inside tools are auto-counted. Toggle persistence or reset your session.",
+        "persist": "Remember totals on this device"
+      },
+      "stats": {
+        "total": "Clicks spared so far",
+        "mouseMiles": "Mouse miles traveled instead of Googling",
+        "lifetime": "Lifetime clicks",
+        "session": "Session clicks: {{count}}",
+        "distanceLabel": "Pointer distance",
+        "timeSaved": "Pointer time saved",
+        "perClick": "~{{seconds}}s per click avoided",
+        "distanceHint": "Assumes ~0.2m of hand travel per click"
+      },
+      "messages": {
+        "persistNote": "Stored locally only—no data leaves your machine."
+      },
+      "actions": {
+        "resetSession": "Reset session counter",
+        "timeHint": "~{{seconds}}s per click",
+        "timeHintDetail": "Roughly keyboard/mouse wiggle avoided",
+        "sessionTotal": "Session: {{count}} clicks",
+        "sessionDetail": "Keeps counting until you reset"
+      },
+      "badges": {
+        "title": "Badge cabinet",
+        "subtitle": "Unlock milestones for the lazy and efficient",
+        "starter": "Tab Tourist",
+        "apprentice": "Shortcut Apprentice",
+        "marathon": "Mouse Marathoner",
+        "everest": "Climbed Everest",
+        "earned": "{{count}} badges",
+        "earnedLabel": "Earned",
+        "goal": "{{count}} clicks",
+        "next": "{{badge}} in {{remaining}} clicks",
+        "allEarned": "All badges earned—go touch grass?",
+        "description": "≈ {{distance}} km of travel avoided"
+      },
+      "metersPerClick": "~{{meters}}m per click"
+    },
+    "jwtToothpick": {
+      "name": "JWT Brute-Force Toothpick",
+      "shortName": "JWT BF",
+      "description": "Educational weak-secret tester for HMAC JWTs",
+      "title": "JWT Brute-Force Toothpick",
+      "subtitle": "Probe weak HMAC secrets without leaving DevUtils",
+      "tokenInput": "Target token",
+      "tokenDescription": "Only HS256/384/512 are supported. Token never leaves this app.",
+      "warnings": {
+        "educational": "Educational only. Use against tokens you own."
+      },
+      "details": {
+        "algorithm": "Algorithm: {{alg}}"
+      },
+      "wordlist": {
+        "title": "Wordlist",
+        "description": "One secret per line. We'll stop at the first hit.",
+        "hint": "Max {{max}} guesses. Duplicates are removed."
+      },
+      "actions": {
+        "start": "Start guessing",
+        "stop": "Stop",
+        "reset": "Reset"
+      },
+      "errors": {
+        "tokenRequired": "Paste a JWT first",
+        "invalidToken": "Token is not a valid JWT",
+        "unsupportedAlg": "Only HS256/HS384/HS512 are supported (got {{alg}})",
+        "noSecrets": "Add at least one secret to try"
+      },
+      "progress": {
+        "title": "Attack progress",
+        "description": "Attempts, speed, and status",
+        "attempts": "Attempts tried",
+        "speed": "Guesses per second",
+        "elapsed": "Elapsed",
+        "algorithm": "Algorithm",
+        "recent": "Recent attempts",
+        "empty": "No attempts yet"
+      },
+      "status": {
+        "running": "Running",
+        "finished": "Finished",
+        "stopped": "Stopped",
+        "idle": "Idle"
+      },
+      "found": "Secret recovered!",
+      "notFoundStopped": "Stopped before finding a match.",
+      "notFoundYet": "No match yet. Try more guesses or a stronger wordlist.",
+      "labels": {
+        "hit": "Hit",
+        "miss": "Miss"
+      }
+    },
+    "tcpWhistle": {
+      "name": "TCP/UDP Whistle",
+      "shortName": "Whistle",
+      "description": "Craft packets, listen on ports, and simulate noisy networks",
+      "title": "TCP/UDP Whistle",
+      "subtitle": "Send raw packets, listen locally, and fake slow or malformed replies",
+      "tabs": {
+        "send": "Send packets",
+        "listen": "Listen & simulate"
+      },
+      "send": {
+        "title": "Send packet",
+        "description": "Fire TCP/UDP payloads with optional delay, chunking, and junk bytes",
+        "preset": "Use preset",
+        "button": "Send packet"
+      },
+      "inputs": {
+        "host": "Host",
+        "port": "Port",
+        "protocol": "Protocol",
+        "timeout": "Timeout (ms)",
+        "payload": "Payload",
+        "delay": "Send delay (ms)",
+        "chunk": "Chunk size (bytes)",
+        "malformed": "Inject junk bytes",
+        "malformedHint": "Appends a few bad bytes to the payload",
+        "duration": "Listen duration (ms)"
+      },
+      "response": {
+        "title": "Response preview",
+        "description": "Round-trip timings and payload data",
+        "sent": "Bytes sent",
+        "received": "Bytes received",
+        "elapsed": "Elapsed",
+        "protocol": "Protocol",
+        "text": "Response (UTF-8)",
+        "hex": "Hex preview",
+        "empty": "No response captured yet"
+      },
+      "listen": {
+        "title": "Listen & echo",
+        "description": "Bind locally, capture packets, and optionally echo back",
+        "echo": "Echo replies",
+        "echoLabel": "Echo incoming payloads",
+        "echoHint": "Send a quick reply to whatever arrives",
+        "echoPayload": "Echo payload",
+        "echoDelay": "Echo delay (ms)",
+        "button": "Start listening"
+      },
+      "captures": {
+        "title": "Captured traffic",
+        "description": "Messages received while the listener was open",
+        "count": "captures",
+        "empty": "Nothing heard yet. Try sending to this port.",
+        "emptyText": "No text payload"
+      },
+      "history": "Recent runs",
+      "historyEmpty": "No history yet.",
+      "notes": {
+        "title": "Notes",
+        "slowNetwork": "Use delay + chunk size to mimic a slow or shaky link.",
+        "malformed": "Toggle junk bytes to see how services handle malformed input.",
+        "localOnly": "Listeners bind locally—perfect for quick repros."
+      },
+      "errors": {
+        "hostRequired": "Host is required",
+        "portInvalid": "Port must be between 1-65535",
+        "requestFailed": "Request failed"
+      }
     }
   },
   "settings": {
@@ -828,5 +999,11 @@
     "success": "成功",
     "warning": "警告",
     "info": "信息"
+  },
+  "commandPalette": {
+    "title": "Quick Open",
+    "placeholder": "Search tools...",
+    "empty": "No tools found",
+    "hint": "Cmd/Ctrl + K"
   }
 }

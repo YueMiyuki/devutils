@@ -262,7 +262,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
   );
 
   return (
-    <div className="flex flex-col h-full p-4 gap-4 overflow-y-auto">
+    <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold">
@@ -273,16 +273,21 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={regenerateAll}>
-          <RefreshCcw className="w-4 h-4 mr-2" />
+          <RefreshCcw className="mr-2 size-4" />
           {t("tools.loremTweezers.actions.refreshAll")}
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div
+        className="
+        grid grid-cols-1 gap-4
+        lg:grid-cols-2
+      "
+      >
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
+              <FileText className="size-4" />
               {t("tools.loremTweezers.text.title")}
             </CardTitle>
             <CardDescription>
@@ -322,7 +327,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
                 </SelectContent>
               </Select>
               <Button size="sm" onClick={regenerateLorem} className="gap-2">
-                <Sparkles className="w-4 h-4" />
+                <Sparkles className="size-4" />
                 {t("tools.loremTweezers.actions.generate")}
               </Button>
             </div>
@@ -338,7 +343,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
                 className="gap-2"
                 onClick={() => copyWithAnimation(loremText)}
               >
-                <Copy className="w-4 h-4" />
+                <Copy className="size-4" />
                 {t("tools.loremTweezers.actions.copy")}
               </Button>
             </div>
@@ -349,7 +354,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2">
-                <Mail className="w-4 h-4" />
+                <Mail className="size-4" />
                 {t("tools.loremTweezers.identity.title")}
               </CardTitle>
               <CardDescription>
@@ -369,7 +374,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
                   size="icon"
                   onClick={() => copyWithAnimation(email)}
                 >
-                  <Copy className="w-4 h-4" />
+                  <Copy className="size-4" />
                 </Button>
               </div>
               <div className="flex items-start justify-between gap-2">
@@ -386,7 +391,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
                   size="icon"
                   onClick={() => copyWithAnimation(address)}
                 >
-                  <Copy className="w-4 h-4" />
+                  <Copy className="size-4" />
                 </Button>
               </div>
             </CardContent>
@@ -395,7 +400,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2">
-                <WalletCards className="w-4 h-4" />
+                <WalletCards className="size-4" />
                 {t("tools.loremTweezers.payment.title")}
               </CardTitle>
               <CardDescription>
@@ -446,7 +451,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
                   size="icon"
                   onClick={() => copyWithAnimation(cardNumber)}
                 >
-                  <Copy className="w-4 h-4" />
+                  <Copy className="size-4" />
                 </Button>
               </div>
 
@@ -489,7 +494,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
                   size="icon"
                   onClick={() => copyWithAnimation(ibanValue)}
                 >
-                  <Copy className="w-4 h-4" />
+                  <Copy className="size-4" />
                 </Button>
               </div>
             </CardContent>
@@ -498,7 +503,7 @@ export function LoremTweezers({ tabId: _tabId }: LoremTweezersProps) {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2">
-                <LocateFixed className="w-4 h-4" />
+                <LocateFixed className="size-4" />
                 {t("tools.loremTweezers.meta.title")}
               </CardTitle>
               <CardDescription>
